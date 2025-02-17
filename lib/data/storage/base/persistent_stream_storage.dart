@@ -26,12 +26,12 @@ abstract class PersistentStreamStorage<T> extends StreamStorage<T> {
   }
 
   @override
-  void update(T value) {
+  Future<void> update(T value) async {
     super.update(value);
     if (value != null) {
-      persistentStorage.set(value);
+      await persistentStorage.set(value);
     } else {
-      persistentStorage.delete();
+      await persistentStorage.delete();
     }
   }
 }

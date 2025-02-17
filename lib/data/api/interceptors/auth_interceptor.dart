@@ -11,8 +11,7 @@ class AuthInterceptor extends QueuedInterceptor {
   bool refreshing = false;
   final failedRequests = [];
 
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  void _addAuthorizationHeader(RequestOptions options) {
     final token = authStorage.value?.token;
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -20,36 +19,54 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    _addAuthorizationHeader(options);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode != 401) {
       handler.next(err);
     }
 
+    failedRequests.add({'err': err, 'handler': handler});
+
     if (refreshing) {
-      handler.next(err);
       return;
+    }
+
+    final data = await refreshToken();
+    if (data.statusCode != 200) {
+      return handler.next(err);
     }
   }
 
-  Future<void> refreshToken() async {
+  Future<Response> refreshToken() async {
     final refreshToken = authStorage.value?.refreshToken;
     final response = await retryDio.post('/user/refresh-token', data: {'refresh_token': refreshToken});
 
     if (response.statusCode == 200) {
-      authStorage.update(Auth.fromJson(response.data));
+      await authStorage.update(Auth.fromJson(response.data));
+      await _retry(response.data['data']['accessToken']);
+      refreshing = false;
     }
+    return response;
   }
 
-  Future<Response> _retry(RequestOptions requestOptions) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers,
-    );
-    return retryDio.request(
-      requestOptions.path,
-      data: requestOptions.data,
-      queryParameters: requestOptions.queryParameters,
-      options: options,
-    );
+  Future<void> _retry(RequestOptions requestOptions) async {
+    for (var i = 0; i < failedRequests.length; i++) {
+      RequestOptions requestOptions = failedRequests[i]['err'].requestOptions;
+
+      _addAuthorizationHeader(requestOptions);
+
+      await retryDio.fetch(requestOptions).then(
+        failedRequests[i]['handler'].resolve,
+        onError: (error) async {
+          failedRequests[i]['handler'].reject(error);
+        },
+      );
+    }
+
+    failedRequests.clear();
   }
 }
