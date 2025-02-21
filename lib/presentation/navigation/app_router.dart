@@ -5,9 +5,6 @@ import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(
-          page: LoginRoute.page,
-          initial: true,
-        ),
+        AutoRoute(page: AuthRoute.page, initial: true),
       ];
 }

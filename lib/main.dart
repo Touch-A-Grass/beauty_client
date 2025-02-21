@@ -1,8 +1,8 @@
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/di/di.dart';
+import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/navigation/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
@@ -35,8 +35,8 @@ class _AppState extends State<App> {
       authStorage: widget.authStorage,
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [S.delegate],
+        supportedLocales: S.delegate.supportedLocales,
         routerConfig: appRouter.config(),
       ),
     );

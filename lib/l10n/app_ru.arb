@@ -1,9 +1,0 @@
-{
-  "login": "Вход",
-  "register": "Регистрация",
-  "name": "Имя",
-  "phone": "Телефон",
-  "password": "Пароль",
-  "loginButton": "Войти",
-  "registerButton": "Зарегистрироваться"
-}
