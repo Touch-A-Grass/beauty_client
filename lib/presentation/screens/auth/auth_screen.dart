@@ -6,13 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class AuthScreen extends StatelessWidget {
-  const AuthScreen({super.key});
+  final VoidCallback onLoggedIn;
+
+  const AuthScreen({super.key, required this.onLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc(),
-      child: const AuthWidget(),
+      create: (context) => AuthBloc(context.read()),
+      child: AuthWidget(onLoggedIn: onLoggedIn),
     );
   }
 }

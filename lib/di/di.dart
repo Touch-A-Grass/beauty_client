@@ -1,9 +1,13 @@
+import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/api/dio_factory.dart';
 import 'package:beauty_client/data/repositories/auth_repository.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/domain/repositories/auth_repository.dart';
+import 'package:beauty_client/domain/use_cases/logout_use_case.dart';
+import 'package:beauty_client/presentation/navigation/navigation_state_updater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class Di extends StatelessWidget {
   final AuthStorage authStorage;
@@ -22,8 +26,12 @@ class Di extends StatelessWidget {
         //   Storages
         RepositoryProvider.value(value: authStorage),
         RepositoryProvider(create: (context) => DioFactory.create(context.read())),
+        RepositoryProvider(create: (context) => BeautyClient(context.read())),
         //   Repositories
-        RepositoryProvider<AuthRepository>(create: (context) => AuthRepositoryImpl()),
+        RepositoryProvider<AuthRepository>(create: (context) => AuthRepositoryImpl(context.read(), context.read())),
+        //   Logic
+        RepositoryProvider(create: (context) => LogoutUseCase(context.read())),
+        ChangeNotifierProvider(create: (context) => NavigationStateUpdater(context.read())),
       ],
       child: child,
     );

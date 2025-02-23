@@ -26,7 +26,7 @@ class AuthInterceptor extends QueuedInterceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode != 401) {
-      handler.next(err);
+      return handler.next(err);
     }
 
     failedRequests.add({'err': err, 'handler': handler});

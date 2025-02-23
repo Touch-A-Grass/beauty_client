@@ -3,5 +3,9 @@
   "telegramConfirmedButton": "Готово",
   "telegramRedirectButton": "Перейти в бота",
   "telegramConfirmDescription": "1. Нажмите \"Перейти в бота\"\n2. Подтвердите аккаунт в боте\n3. Подтвердите авторизацию",
-  "changePhoneButton": "Изменить номер"
+  "changePhoneButton": "Изменить номер",
+  "telegramResendInMessage": "Отправить повторно через {time}",
+  "telegramResendButton": "Отправить повторно",
+  "profile": "Профиль",
+  "logoutButton": "Выйти"
 }

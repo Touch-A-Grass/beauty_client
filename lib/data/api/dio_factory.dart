@@ -1,4 +1,3 @@
-import 'package:beauty_client/data/api/interceptors/auth_interceptor.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:dio/dio.dart';
 
@@ -7,7 +6,11 @@ class DioFactory {
     final dio = Dio();
     final retryDio = Dio();
 
-    dio.interceptors.add(AuthInterceptor(authStorage: authStorage, retryDio: retryDio));
+    // dio.interceptors.add(AuthInterceptor(authStorage: authStorage, retryDio: retryDio));
+    dio.interceptors.add(LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+    ));
 
     return dio;
   }
