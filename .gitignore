@@ -13,6 +13,7 @@ migrate_working_dir/
 *.gr.dart
 *.freezed.dart
 lib/generated
+android/app/.cxx
 
 # IntelliJ related
 *.iml
