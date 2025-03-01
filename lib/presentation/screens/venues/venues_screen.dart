@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
+import 'package:beauty_client/presentation/screens/venues/bloc/venues_bloc.dart';
+import 'package:beauty_client/presentation/screens/venues/widget/venues_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class VenuesScreen extends StatelessWidget {
@@ -8,6 +10,9 @@ class VenuesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AppOverlay(child: Scaffold(body: Center(child: Text('Venues Screen'))));
+    return BlocProvider(
+      create: (context) => VenuesBloc(context.read()),
+      child: const VenuesWidget(),
+    );
   }
 }
