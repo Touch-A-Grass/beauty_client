@@ -1,3 +1,4 @@
+import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/venue_theme_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,8 +10,9 @@ class Venue with _$Venue {
   const factory Venue({
     required String id,
     required String name,
+    required Location location,
     @Default('') String description,
-    required VenueThemeConfig theme,
+    @Default(VenueThemeConfig()) VenueThemeConfig theme,
   }) = _Venue;
 
   factory Venue.fromJson(Map<String, dynamic> json) => _$VenueFromJson(json);

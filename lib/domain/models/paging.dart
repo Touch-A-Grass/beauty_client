@@ -7,8 +7,12 @@ class Paging<T> {
     this.hasNext = true,
   });
 
-  Paging<T> next(List<T> data, {bool refresh = false}) => Paging<T>(
-        data: refresh ? data : this.data + data,
-        hasNext: data.isNotEmpty,
-      );
+  Paging<T> next(List<T> data, {bool refresh = false}) {
+    return Paging<T>(
+      data: refresh ? data : [...this.data, ...data],
+      hasNext: data.isNotEmpty,
+    );
+  }
+
+  int offset(bool refresh) => refresh ? 0 : data.length;
 }

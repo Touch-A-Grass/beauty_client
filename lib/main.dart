@@ -1,6 +1,7 @@
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/di/di.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/location_listener.dart';
 import 'package:beauty_client/presentation/navigation/app_router.dart';
 import 'package:beauty_client/presentation/navigation/guards/auth_guard.dart';
 import 'package:beauty_client/presentation/navigation/navigation_state_updater.dart';
@@ -38,12 +39,14 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [S.delegate],
-      supportedLocales: S.delegate.supportedLocales,
-      routerConfig: appRouter.config(
-        reevaluateListenable: context.read<NavigationStateUpdater>(),
+    return LocationListener(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [S.delegate],
+        supportedLocales: S.delegate.supportedLocales,
+        routerConfig: appRouter.config(
+          reevaluateListenable: context.read<NavigationStateUpdater>(),
+        ),
       ),
     );
   }

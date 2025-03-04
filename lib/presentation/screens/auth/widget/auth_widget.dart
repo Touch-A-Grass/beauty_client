@@ -46,8 +46,8 @@ class _AuthWidgetState extends State<AuthWidget> {
               curr.error != null &&
               !identical(prev.error, curr.error),
           listener: (context, state) {
-            if (state is! AuthCodeState) return;
-            context.showErrorSnackBar(state.error?.message ?? '');
+            if (state is! AuthCodeState || state.error == null) return;
+            context.showErrorSnackBar(state.error!);
           },
         ),
         BlocListener<AuthBloc, AuthState>(

@@ -18,11 +18,15 @@ class AppRouter extends RootStackRouter {
           initial: true,
           guards: [authGuard],
           children: [
-            AutoRoute(page: HomeRoute.page, initial: true, children: [
-              AutoRoute(page: VenuesRoute.page, initial: true),
-              AutoRoute(page: OrdersRoute.page),
-              AutoRoute(page: ProfileRoute.page),
-            ]),
+            AutoRoute(
+              page: HomeRoute.page,
+              initial: true,
+              children: [
+                AutoRoute(page: VenuesRoute.page, initial: true),
+                AutoRoute(page: OrdersRoute.page),
+                AutoRoute(page: ProfileRoute.page),
+              ],
+            ),
           ],
         ),
       ];
