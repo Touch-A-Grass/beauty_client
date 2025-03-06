@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/di/di.dart';
 import 'package:beauty_client/generated/l10n.dart';
@@ -6,8 +8,10 @@ import 'package:beauty_client/presentation/navigation/app_router.dart';
 import 'package:beauty_client/presentation/navigation/guards/auth_guard.dart';
 import 'package:beauty_client/presentation/navigation/navigation_state_updater.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:json_theme/json_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +22,28 @@ void main() async {
   final authStorage = AuthStorage(secureStorage: secureStorage);
   await authStorage.init();
 
-  runApp(Di(authStorage: authStorage, child: const App()));
+  runApp(
+    Di(
+      authStorage: authStorage,
+      child: App(
+        lightTheme: await decodeTheme('assets/appainter_theme.json'),
+        darkTheme: await decodeTheme('assets/appainter_theme_dark.json'),
+      ),
+    ),
+  );
+}
+
+Future<ThemeData?> decodeTheme(String assetPath) async {
+  final themeStr = await rootBundle.loadString(assetPath);
+  final themeJson = jsonDecode(themeStr);
+  return ThemeDecoder.decodeThemeData(themeJson);
 }
 
 class App extends StatefulWidget {
-  const App({super.key});
+  final ThemeData? lightTheme;
+  final ThemeData? darkTheme;
+
+  const App({super.key, required this.lightTheme, required this.darkTheme});
 
   @override
   State<App> createState() => _AppState();
@@ -41,6 +62,8 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return LocationListener(
       child: MaterialApp.router(
+        theme: widget.lightTheme,
+        darkTheme: widget.darkTheme,
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [S.delegate],
         supportedLocales: S.delegate.supportedLocales,

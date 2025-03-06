@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
+import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/list/bloc/venue_list_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,9 @@ class VenueListWidget extends StatelessWidget {
         builder: (context, state) => ListView.separated(
           itemBuilder: (context, index) => VenueListItem(
             venue: state.venues.data[index],
-            onClick: () {},
+            onClick: () {
+              context.pushRoute(VenueDetailsRoute(venueId: state.venues.data[index].id));
+            },
           ),
           separatorBuilder: (context, index) => const SizedBox(height: 16),
           itemCount: state.venues.data.length,

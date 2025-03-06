@@ -10,30 +10,38 @@ class VenueListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onClick,
+    return DecoratedBox(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 128,
-                  child: CachedNetworkImage(imageUrl: venue.theme.photo, fit: BoxFit.cover),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onClick,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 128,
+                    child: CachedNetworkImage(imageUrl: venue.theme.photo, fit: BoxFit.cover),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(venue.name, style: Theme.of(context).textTheme.headlineSmall),
-              if (venue.description.isNotEmpty) ...[
                 const SizedBox(height: 10),
-                Text(venue.description, style: Theme.of(context).textTheme.bodyMedium),
+                Text(venue.name, style: Theme.of(context).textTheme.headlineSmall),
+                if (venue.description.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Text(venue.description, style: Theme.of(context).textTheme.bodyMedium),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

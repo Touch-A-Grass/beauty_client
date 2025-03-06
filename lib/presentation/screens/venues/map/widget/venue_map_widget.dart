@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/map/bloc/venue_map_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
+import 'package:beauty_client/presentation/util/theme_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -58,6 +61,7 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.flutter_map_example',
+                  tileBuilder: context.isDark ? _darkModeTileBuilder : null,
                 ),
                 MarkerLayer(markers: buildMarkers(state.venues)),
               ],
@@ -68,7 +72,14 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
               left: 16,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
-                child: selectedVenue == null ? const SizedBox.shrink() : VenueListItem(venue: selectedVenue!),
+                child: selectedVenue == null
+                    ? const SizedBox.shrink()
+                    : VenueListItem(
+                        venue: selectedVenue!,
+                        onClick: () {
+                          context.pushRoute(VenueDetailsRoute(venueId: selectedVenue!.id));
+                        },
+                      ),
               ),
             ),
           ],
@@ -113,6 +124,22 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
         ),
       )
       .toList();
+
+  Widget _darkModeTileBuilder(
+    BuildContext context,
+    Widget tileWidget,
+    TileImage tile,
+  ) {
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix(<double>[
+        -0.2126, -0.7152, -0.0722, 0, 255, // Red channel
+        -0.2126, -0.7152, -0.0722, 0, 255, // Green channel
+        -0.2126, -0.7152, -0.0722, 0, 255, // Blue channel
+        0, 0, 0, 1, 0, // Alpha channel
+      ]),
+      child: tileWidget,
+    );
+  }
 
   LatLng fromLocation(Location location) => LatLng(location.latitude, location.longitude);
 

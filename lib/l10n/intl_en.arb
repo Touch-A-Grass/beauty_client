@@ -7,5 +7,8 @@
   "telegramResendInMessage": "Отправить повторно через {time}",
   "telegramResendButton": "Отправить повторно",
   "profile": "Профиль",
-  "logoutButton": "Выйти"
+  "logoutButton": "Выйти",
+  "serviceTime": "{time} мин.",
+  "dashboardListButton": "Список",
+  "dashboardMapButton": "Карта"
 }

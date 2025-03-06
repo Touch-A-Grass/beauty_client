@@ -1,6 +1,7 @@
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/domain/models/auth.dart';
+import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -24,4 +25,7 @@ abstract class BeautyClient {
     @Query('limit') required int limit,
     @Query('offset') required int offset,
   });
+
+  @GET('/venue/services')
+  Future<List<Service>> venueServices(@Query('id') String venueId);
 }
