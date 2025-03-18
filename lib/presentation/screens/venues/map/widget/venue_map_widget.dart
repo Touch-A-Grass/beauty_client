@@ -77,7 +77,8 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                     : VenueListItem(
                         venue: selectedVenue!,
                         onClick: () {
-                          context.pushRoute(VenueDetailsRoute(venueId: selectedVenue!.id));
+                          final venue = selectedVenue!;
+                          context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
                         },
                       ),
               ),

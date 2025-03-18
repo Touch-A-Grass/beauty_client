@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.1
+  sdk: ^3.7.0
 
 dependencies:
   flutter:
@@ -34,12 +34,13 @@ dependencies:
   geolocator: ^13.0.2
   latlong2:
   json_theme: ^8.0.0+2
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   build_runner: ^2.4.14
   json_serializable:
   freezed: ^2.5.7

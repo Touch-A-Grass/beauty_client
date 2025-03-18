@@ -20,12 +20,15 @@ abstract class BeautyClient {
 
   @GET('/venue')
   Future<List<Venue>> venues({
-    @Query('latitude') required double latitude,
-    @Query('longitude') required double longitude,
+    @Query('latitude') double? latitude,
+    @Query('longitude') double? longitude,
     @Query('limit') required int limit,
     @Query('offset') required int offset,
   });
 
-  @GET('/venue/services')
-  Future<List<Service>> venueServices(@Query('id') String venueId);
+  @GET('/venue/{id}/services')
+  Future<List<Service>> venueServices(@Path('id') String venueId);
+
+  @GET('/venue/{id}')
+  Future<Venue> getVenue(@Path('id') String id);
 }

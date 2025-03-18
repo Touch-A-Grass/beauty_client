@@ -12,12 +12,14 @@ class VenueRepositoryImpl implements VenueRepository {
   VenueRepositoryImpl(this._api, this.locationStorage);
 
   @override
-  Future<List<Venue>> getVenues({Location? location, required int limit, required int offset}) {
-    final userLocation = location ?? locationStorage.value;
+  Future<List<Venue>> getVenues({Location? location, required int limit, required int offset}) async {
+    return [Venue(id: 'abcsgbzxcvbnm', name: 'Тестовый', location: location ?? locationStorage.value)];
+
+    final userLocation = location;
 
     return _api.venues(
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
+      latitude: userLocation?.latitude,
+      longitude: userLocation?.longitude,
       limit: limit,
       offset: offset,
     );
@@ -25,7 +27,26 @@ class VenueRepositoryImpl implements VenueRepository {
 
   @override
   Future<List<Service>> getServices(String venueId) async {
-    return _api.venueServices('78f46b6d-0c74-4424-b42c-2fd2b2d4f658');
+    return [
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+    ];
     return _api.venueServices(venueId);
+  }
+
+  @override
+  Future<Venue> getVenue(String venueId) async {
+    return Venue(
+      id: 'abcsgbzxcvbnm',
+      description: 'Лучший салон в Иркутске на улице Бульвар Гагарина',
+      name: 'Итали в цирке',
+      location: locationStorage.value,
+    );
+    return _api.getVenue(venueId);
   }
 }

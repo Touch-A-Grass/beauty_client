@@ -10,5 +10,6 @@
   "logoutButton": "Выйти",
   "serviceTime": "~{time} мин.",
   "dashboardListButton": "Список",
-  "dashboardMapButton": "Карта"
+  "dashboardMapButton": "Карта",
+  "noVenuesNearbyMessage": "Нет салонов в ближайшем радиусе"
 }

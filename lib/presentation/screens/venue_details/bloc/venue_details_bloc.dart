@@ -12,21 +12,43 @@ part 'venue_details_state.dart';
 class VenueDetailsBloc extends Bloc<VenueDetailsEvent, VenueDetailsState> {
   final VenueRepository venueRepository;
 
-  VenueDetailsBloc(this.venueRepository, {required String venueId}) : super(const VenueDetailsState()) {
+  VenueDetailsBloc(
+    this.venueRepository, {
+    required String venueId,
+    Venue? venue,
+  }) : super(VenueDetailsState(venue: venue)) {
     on<_Started>((event, emit) async {
+      add(const VenueDetailsEvent.servicesRequested());
+      add(const VenueDetailsEvent.venuesRequested());
+    });
+
+    on<_ServicesRequested>((event, emit) async {
       emit(state.copyWith(isLoadingServices: true));
       try {
         final services = await venueRepository.getServices(venueId);
-        emit(
-          state.copyWith(
-            services: services,
-            isLoadingServices: false,
-          ),
-        );
+        emit(state.copyWith(services: services, isLoadingServices: false));
       } catch (e) {
         emit(state.copyWith(
           servicesLoadingError: AppError(message: e.toString()),
           isLoadingServices: false,
+        ));
+      }
+    });
+
+    on<_VenuesRequested>((event, emit) async {
+      emit(state.copyWith(isLoadingVenue: true));
+      try {
+        final venue = await venueRepository.getVenue(venueId);
+        emit(
+          state.copyWith(
+            venue: venue,
+            isLoadingVenue: false,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(
+          venueLoadingError: AppError(message: e.toString()),
+          isLoadingVenue: false,
         ));
       }
     });

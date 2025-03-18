@@ -5,5 +5,7 @@ import 'package:beauty_client/domain/models/venue.dart';
 abstract interface class VenueRepository {
   Future<List<Venue>> getVenues({Location? location, required int limit, required int offset});
 
+  Future<Venue> getVenue(String venueId);
+
   Future<List<Service>> getServices(String venueId);
 }

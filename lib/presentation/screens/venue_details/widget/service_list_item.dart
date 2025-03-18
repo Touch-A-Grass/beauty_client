@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 class ServiceListItem extends StatelessWidget {
   final Service service;
+  final VoidCallback? onTap;
 
-  const ServiceListItem({super.key, required this.service});
+  const ServiceListItem({super.key, required this.service, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class ServiceListItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -49,7 +50,7 @@ class ServiceListItem extends StatelessWidget {
                           ),
                         if (service.price != null) ...[
                           Text(service.price!.toPriceFormat(), style: Theme.of(context).textTheme.labelLarge),
-                        ]
+                        ],
                       ],
                     ),
                   ],

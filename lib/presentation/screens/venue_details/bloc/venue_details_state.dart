@@ -7,5 +7,7 @@ class VenueDetailsState with _$VenueDetailsState {
     @Default([]) List<Service> services,
     AppError? servicesLoadingError,
     @Default(false) bool isLoadingServices,
+    AppError? venueLoadingError,
+    @Default(false) bool isLoadingVenue,
   }) = _VenueDetailsState;
 }
