@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 class VenueListItem extends StatelessWidget {
   final Venue venue;
   final VoidCallback? onClick;
+  final bool showBorder;
 
-  const VenueListItem({super.key, required this.venue, this.onClick});
+  const VenueListItem({super.key, required this.venue, this.onClick, this.showBorder = true});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class VenueListItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).colorScheme.surfaceContainer,
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        border: showBorder ? Border.all(color: Theme.of(context).colorScheme.outline) : null,
       ),
       child: Material(
         color: Colors.transparent,

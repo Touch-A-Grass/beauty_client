@@ -10,6 +10,7 @@ import 'package:beauty_client/presentation/navigation/navigation_state_updater.d
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:json_theme/json_theme.dart';
 
@@ -65,7 +66,7 @@ class _AppState extends State<App> {
         theme: widget.lightTheme,
         darkTheme: widget.darkTheme,
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [S.delegate],
+        localizationsDelegates: [S.delegate, ...GlobalMaterialLocalizations.delegates],
         supportedLocales: S.delegate.supportedLocales,
         routerConfig: appRouter.config(
           reevaluateListenable: context.read<NavigationStateUpdater>(),

@@ -11,5 +11,17 @@
   "serviceTime": "~{time} мин.",
   "dashboardListButton": "Список",
   "dashboardMapButton": "Карта",
-  "noVenuesNearbyMessage": "Нет салонов в ближайшем радиусе"
+  "noVenuesNearbyMessage": "Нет салонов в ближайшем радиусе",
+  "cartTitle": "Создание заказа",
+  "cartService": "Услуга",
+  "cartServicePrice": "Цена",
+  "cartServiceTime": "Время",
+  "cartTotalPrice": "Итого",
+  "cartNextButton": "Далее",
+  "cartBackButton": "Назад",
+  "cartConfirmButton": "Подтвердить",
+  "cartMaster": "Мастер",
+  "cartSelectServiceButton": "Выбрать услугу",
+  "cartSelectTimeButton": "Выбрать время",
+  "cartSelectMasterButton": "Выбрать мастера"
 }

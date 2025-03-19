@@ -29,10 +29,34 @@ class VenueRepositoryImpl implements VenueRepository {
   Future<List<Service>> getServices(String venueId) async {
     return [
       Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
-      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
-      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
-      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
-      Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
+      Service(
+        id: 'a',
+        name: 'Ноготочки Б',
+        description: 'Дёшево, быстро',
+        price: 1000,
+        duration: Duration(minutes: 30),
+      ),
+      Service(
+        id: 'a',
+        name: 'Ноготочки С',
+        description: 'Дёшево, быстро',
+        price: 1000,
+        duration: Duration(minutes: 30),
+      ),
+      Service(
+        id: 'a',
+        name: 'Ноготочки Д',
+        description: 'Дёшево, быстро',
+        price: 1000,
+        duration: Duration(minutes: 30),
+      ),
+      Service(
+        id: 'a',
+        name: 'Ноготочки У',
+        description: 'Дёшево, быстро',
+        price: 1000,
+        duration: Duration(minutes: 30),
+      ),
       Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
       Service(id: 'a', name: 'Ноготочки', description: 'Дёшево, быстро', price: 1000, duration: Duration(minutes: 30)),
     ];

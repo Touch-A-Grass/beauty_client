@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class ServiceListItem extends StatelessWidget {
   final Service service;
   final VoidCallback? onTap;
+  final bool showBorder;
 
-  const ServiceListItem({super.key, required this.service, this.onTap});
+  const ServiceListItem({super.key, required this.service, this.onTap, this.showBorder = true});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ServiceListItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).colorScheme.surfaceContainer,
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        border: showBorder ? Border.all(color: Theme.of(context).colorScheme.outline) : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -57,6 +58,34 @@ class ServiceListItem extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ServiceListItemPlaceholder extends StatelessWidget {
+  final VoidCallback? onTap;
+
+  const ServiceListItemPlaceholder({super.key, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        border: Border.all(color: Theme.of(context).colorScheme.error),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Text(S.of(context).cartSelectServiceButton, style: Theme.of(context).textTheme.titleMedium),
           ),
         ),
       ),

@@ -57,3 +57,4 @@ flutter:
 
 flutter_intl:
   enabled: true
+  main_locale: ru
