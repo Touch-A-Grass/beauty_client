@@ -61,6 +61,16 @@ class _CartWidgetState extends State<CartWidget> {
                                         )
                                       else
                                         ServiceListItemPlaceholder(onTap: () => selectService(context)),
+                                      const SizedBox(height: 32),
+                                      TextFormField(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                          labelText: S.of(context).cartComment,
+                                        ),
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                                      ),
                                     ],
                                   ),
                                 ),

@@ -23,5 +23,6 @@
   "cartMaster": "Мастер",
   "cartSelectServiceButton": "Выбрать услугу",
   "cartSelectTimeButton": "Выбрать время",
-  "cartSelectMasterButton": "Выбрать мастера"
+  "cartSelectMasterButton": "Выбрать мастера",
+  "cartComment": "Комментарий"
 }
