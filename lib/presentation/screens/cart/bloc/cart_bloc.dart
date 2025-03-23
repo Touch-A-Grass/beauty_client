@@ -1,5 +1,8 @@
+import 'package:beauty_client/domain/models/app_error.dart';
 import 'package:beauty_client/domain/models/service.dart';
+import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/domain/repositories/order_repository.dart';
 import 'package:beauty_client/domain/repositories/venue_repository.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,24 +14,36 @@ part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final VenueRepository _venueRepository;
+  final OrderRepository _orderRepository;
 
   CartBloc(
-    this._venueRepository, {
+    this._venueRepository,
+    this._orderRepository, {
     required String venueId,
     Venue? venue,
-    List<Service> services = const [],
+    List<Service>? services,
     String? selectedServiceId,
-  }) : super(CartState(venue: venue, services: services)) {
+    String? selectedStaffId,
+    List<Staff>? staffs,
+  }) : super(CartState(venue: venue, services: services, staffs: staffs)) {
     on<_Started>((event, emit) {
       add(CartEvent.updateSelectedServiceRequested());
       add(CartEvent.venueRequested());
       add(CartEvent.servicesRequested());
+      add(CartEvent.staffsRequested());
     });
     on<_ServicesRequested>((event, emit) async {
       try {
         final services = await _venueRepository.getServices(venueId);
         emit(state.copyWith(services: services));
         add(CartEvent.updateSelectedServiceRequested());
+      } catch (_) {}
+    });
+    on<_StaffsRequested>((event, emit) async {
+      try {
+        final staffs = await _venueRepository.getStaff(venueId);
+        emit(state.copyWith(staffs: staffs));
+        add(CartEvent.updateSelectedStaffRequested());
       } catch (_) {}
     });
     on<_VenueRequested>((event, emit) async {
@@ -38,11 +53,41 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       } catch (_) {}
     });
     on<_ServiceSelected>((event, emit) {
-      emit(state.copyWith(selectedService: event.service));
+      final staff = (state.selectedStaff?.services.contains(event.service.id) ?? false) ? state.selectedStaff : null;
+      emit(state.copyWith(selectedService: event.service, selectedStaff: staff));
+    });
+    on<_StaffSelected>((event, emit) {
+      final service = event.staff.services.contains(state.selectedService?.id) ? state.selectedService : null;
+      emit(state.copyWith(selectedStaff: event.staff, selectedService: service));
+    });
+    on<_UpdateSelectedStaffRequested>((event, emit) {
+      final newStaff = state.staffs?.firstWhereOrNull((staff) => staff.id == selectedStaffId);
+      if (newStaff != null) emit(state.copyWith(selectedStaff: newStaff));
     });
     on<_UpdateSelectedServiceRequested>((event, emit) {
       final newService = state.services?.firstWhereOrNull((service) => service.id == selectedServiceId);
       if (newService != null) emit(state.copyWith(selectedService: newService));
+    });
+    on<_CommentChanged>((event, emit) {
+      emit(state.copyWith(comment: event.comment));
+    });
+    on<_DateChanged>((event, emit) {
+      emit(state.copyWith(date: event.date));
+    });
+    on<_CreateRequested>((event, emit) async {
+      emit(state.copyWith(isCreatingOrder: true));
+      try {
+        await _orderRepository.createOrder(
+          venue: state.venue!,
+          service: state.selectedService!,
+          staff: state.selectedStaff!,
+          startDate: state.date!,
+          comment: state.comment.trim(),
+        );
+        emit(state.copyWith(isCreatingOrder: false, isOrderCreated: true));
+      } catch (e) {
+        emit(state.copyWith(isCreatingOrder: false, orderCreatingError: AppError.fromObject(e)));
+      }
     });
   }
 }

@@ -12,6 +12,8 @@
   "dashboardListButton": "Список",
   "dashboardMapButton": "Карта",
   "noVenuesNearbyMessage": "Нет салонов в ближайшем радиусе",
+  "noOrders": "Пока что у вас нет заказов",
+  "orders": "Заказы",
   "cartTitle": "Создание заказа",
   "cartService": "Услуга",
   "cartServicePrice": "Цена",
@@ -24,5 +26,15 @@
   "cartSelectServiceButton": "Выбрать услугу",
   "cartSelectTimeButton": "Выбрать время",
   "cartSelectMasterButton": "Выбрать мастера",
-  "cartComment": "Комментарий"
+  "cartComment": "Комментарий",
+  "staffsWithoutService": "Не предоставляют услугу",
+  "servicesWithoutStaff": "Не предоставляются мастером",
+  "cartDatePlaceholder": "Выберите время",
+  "orderMaster": "Мастер: {master}",
+  "orderVenue": "Салон: {venue}",
+  "orderComment": "Комментарий: {venue}",
+  "orderStatusDiscarded": "Отменен",
+  "orderStatusApproved": "Подтвержден",
+  "orderStatusPending": "В ожидании",
+  "orderStatusCompleted": "Выполнен"
 }

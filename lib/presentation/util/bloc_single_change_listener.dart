@@ -7,5 +7,10 @@ class BlocSingleChangeListener<B extends StateStreamable<S>, S> extends BlocList
     required dynamic Function(S state) map,
     required super.listener,
     super.child,
-  }) : super(listenWhen: (prev, curr) => map(curr) != null && !identical(map(prev), map(curr)));
+    bool identicalCheck = true,
+  }) : super(
+         listenWhen:
+             (prev, curr) =>
+                 map(curr) != null && (identicalCheck ? !identical(map(prev), map(curr)) : map(prev) != map(curr)),
+       );
 }

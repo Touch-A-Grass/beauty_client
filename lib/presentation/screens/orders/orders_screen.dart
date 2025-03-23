@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
+import 'package:beauty_client/presentation/screens/orders/bloc/orders_bloc.dart';
+import 'package:beauty_client/presentation/screens/orders/widget/orders_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class OrdersScreen extends StatelessWidget {
@@ -8,6 +10,9 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AppOverlay(child: Scaffold(body: Center(child: Text('Orders Screen'))));
+    return BlocProvider(
+      create: (context) => OrdersBloc(context.read())..add(OrdersEvent.started()),
+      child: OrdersWidget(),
+    );
   }
 }

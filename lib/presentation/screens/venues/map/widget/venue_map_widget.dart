@@ -9,6 +9,7 @@ import 'package:beauty_client/presentation/screens/venues/map/bloc/venue_map_blo
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
 import 'package:beauty_client/presentation/util/theme_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -47,90 +48,91 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
         ),
       ],
       child: BlocBuilder<VenueMapBloc, VenueMapState>(
-        builder: (context, state) => Stack(
-          children: [
-            FlutterMap(
-              options: MapOptions(
-                initialCenter: fromLocation(context.read<LocationStorage>().value),
-                onMapReady: () {
-                  mapLoadingCompleter.complete();
-                },
-              ),
-              mapController: mapController,
+        builder:
+            (context, state) => Stack(
               children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.flutter_map_example',
-                  tileBuilder: context.isDark ? _darkModeTileBuilder : null,
+                FlutterMap(
+                  options: MapOptions(
+                    initialCenter: fromLocation(context.read<LocationStorage>().value),
+                    onMapReady: () {
+                      mapLoadingCompleter.complete();
+                    },
+                  ),
+                  mapController: mapController,
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.example.flutter_map_example',
+                      tileBuilder: context.isDark ? _darkModeTileBuilder : null,
+                    ),
+                    MarkerLayer(markers: buildMarkers(state.venues)),
+                  ],
                 ),
-                MarkerLayer(markers: buildMarkers(state.venues)),
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  left: 16,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child:
+                        selectedVenue == null
+                            ? const SizedBox.shrink()
+                            : VenueListItem(
+                              venue: selectedVenue!,
+                              onClick: () {
+                                final venue = selectedVenue!;
+                                context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
+                              },
+                            ),
+                  ),
+                ),
               ],
             ),
-            Positioned(
-              bottom: 16,
-              right: 16,
-              left: 16,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: selectedVenue == null
-                    ? const SizedBox.shrink()
-                    : VenueListItem(
-                        venue: selectedVenue!,
-                        onClick: () {
-                          final venue = selectedVenue!;
-                          context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
-                        },
-                      ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
-  List<Marker> buildMarkers(List<Venue> venues) => venues
-      .map(
-        (venue) => Marker(
-          point: fromLocation(venue.location),
-          width: 64,
-          height: 64,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: selectedVenue == venue ? venue.theme.color.invert() : null,
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                if (selectedVenue == venue) {
-                  setState(() {
-                    selectedVenue = null;
-                  });
-                  return;
-                }
-                _animatedMapMove(fromLocation(venue.location), mapController.camera.zoom);
-                setState(() {
-                  selectedVenue = venue;
-                });
-              },
-              icon: Icon(
-                Icons.house,
-                color: venue.theme.color,
-                size: 56,
+  List<Marker> buildMarkers(List<Venue> venues) =>
+      venues
+          .map(
+            (venue) => Marker(
+              point: fromLocation(venue.location),
+              width: 64,
+              height: 64,
+              rotate: false,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selectedVenue == venue ? venue.theme.color.invert() : venue.theme.color,
+                    width: 4,
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    if (selectedVenue == venue) {
+                      setState(() {
+                        selectedVenue = null;
+                      });
+                      return;
+                    }
+                    _animatedMapMove(fromLocation(venue.location), mapController.camera.zoom);
+                    setState(() {
+                      selectedVenue = venue;
+                    });
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(64),
+                    child: CachedNetworkImage(imageUrl: venue.theme.photo, fit: BoxFit.cover),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      )
-      .toList();
+          )
+          .toList();
 
-  Widget _darkModeTileBuilder(
-    BuildContext context,
-    Widget tileWidget,
-    TileImage tile,
-  ) {
+  Widget _darkModeTileBuilder(BuildContext context, Widget tileWidget, TileImage tile) {
     return ColorFiltered(
       colorFilter: const ColorFilter.matrix(<double>[
         -0.2126, -0.7152, -0.0722, 0, 255, // Red channel

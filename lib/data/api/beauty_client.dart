@@ -1,14 +1,16 @@
+import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/domain/models/auth.dart';
 import 'package:beauty_client/domain/models/service.dart';
+import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'beauty_client.g.dart';
 
-@RestApi(baseUrl: 'http://213.183.53.46:8228/')
+@RestApi()
 abstract class BeautyClient {
   factory BeautyClient(Dio dio, {String? baseUrl}) = _BeautyClient;
 
@@ -31,4 +33,13 @@ abstract class BeautyClient {
 
   @GET('/venue/{id}')
   Future<Venue> getVenue(@Path('id') String id);
+
+  @GET('/venue/{id}/staff')
+  Future<List<Staff>> getStaff(@Path('id') String id);
+
+  @GET('/venue/{id}/services')
+  Future<List<Service>> getServices(@Path('id') String id);
+
+  @POST('/record')
+  Future<void> createOrder(@Body() CreateOrderRequest request);
 }

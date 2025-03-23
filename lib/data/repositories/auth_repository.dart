@@ -14,12 +14,16 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Auth> sendCode(String phone, String code) async {
     final auth = await _api.sendCode(SendCodeRequest(phoneNumber: phone, code: code));
+    // await Future.delayed(Duration(milliseconds: 500));
+    // final auth = Auth(token: 'token', refreshToken: 'refreshToken');
     authStorage.update(auth);
     return auth;
   }
 
   @override
   Future<void> sendPhone(String phone) async {
+    // await Future.delayed(Duration(seconds: 3));
+    // return;
     return _api.sendPhone(SendPhoneRequest(phoneNumber: phone));
   }
 

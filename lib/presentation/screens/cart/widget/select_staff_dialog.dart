@@ -2,22 +2,21 @@ import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/app_draggable_modal_sheet.dart';
-import 'package:beauty_client/presentation/screens/venue_details/widget/service_list_item.dart';
+import 'package:beauty_client/presentation/screens/venue_details/widget/staff_list_item.dart';
 import 'package:flutter/material.dart';
 
-class SelectServiceDialog extends StatelessWidget {
-  final List<Service> services;
-  final Staff? selectedStaff;
+class SelectStaffDialog extends StatelessWidget {
+  final List<Staff> staff;
+  final Service? selectedService;
 
-  const SelectServiceDialog({super.key, required this.services, this.selectedStaff});
+  const SelectStaffDialog({super.key, required this.staff, this.selectedService});
 
   @override
   Widget build(BuildContext context) {
-    final servicesWithStaff =
-        services.where((service) => selectedStaff == null || selectedStaff!.services.contains(service.id)).toList();
-
-    final servicesWithoutStaff =
-        services.where((service) => selectedStaff != null && !selectedStaff!.services.contains(service.id)).toList();
+    final staffWithService =
+        staff.where((staff) => selectedService == null || staff.services.contains(selectedService?.id)).toList();
+    final staffWithoutService =
+        staff.where((staff) => selectedService != null && !staff.services.contains(selectedService?.id)).toList();
 
     return AppDraggableModalSheet(
       builder:
@@ -34,28 +33,28 @@ class SelectServiceDialog extends StatelessWidget {
                   sliver: SliverMainAxisGroup(
                     slivers: [
                       SliverToBoxAdapter(
-                        child: Text(S.of(context).cartService, style: Theme.of(context).textTheme.headlineSmall),
+                        child: Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
                       ),
                       SliverPadding(
                         padding: EdgeInsets.only(top: 16),
                         sliver: SliverList.separated(
                           separatorBuilder: (context, index) => const SizedBox(height: 16),
-                          itemCount: servicesWithStaff.length,
+                          itemCount: staffWithService.length,
                           itemBuilder:
-                              (context, index) => ServiceListItem(
-                                service: servicesWithStaff[index],
+                              (context, index) => StaffListItem(
+                                staff: staffWithService[index],
                                 onTap: () {
-                                  Navigator.of(context).pop(servicesWithStaff[index]);
+                                  Navigator.of(context).pop(staffWithService[index]);
                                 },
                               ),
                         ),
                       ),
-                      if (servicesWithoutStaff.isNotEmpty)
+                      if (staffWithoutService.isNotEmpty)
                         SliverPadding(
                           padding: EdgeInsets.only(top: 16),
                           sliver: SliverToBoxAdapter(
                             child: Text(
-                              S.of(context).servicesWithoutStaff,
+                              S.of(context).staffsWithoutService,
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
                           ),
@@ -64,14 +63,12 @@ class SelectServiceDialog extends StatelessWidget {
                         padding: EdgeInsets.only(top: 16),
                         sliver: SliverList.separated(
                           separatorBuilder: (context, index) => const SizedBox(height: 16),
-                          itemCount: servicesWithoutStaff.length,
+                          itemCount: staffWithoutService.length,
                           itemBuilder:
-                              (context, index) => ServiceListItem(
-                                service: servicesWithoutStaff[index],
+                              (context, index) => StaffListItem(
+                                staff: staffWithoutService[index],
                                 isError: true,
-                                onTap: () {
-                                  Navigator.of(context).pop(servicesWithoutStaff[index]);
-                                },
+                                onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
                               ),
                         ),
                       ),

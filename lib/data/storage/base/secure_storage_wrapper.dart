@@ -16,8 +16,12 @@ class SecureStorageWrapper<T> {
   });
 
   Future<T?> get() async {
-    final value = await storage.read(key: key);
-    return value == null ? null : fromJson(jsonDecode(value));
+    try {
+      final value = await storage.read(key: key);
+      return value == null ? null : fromJson(jsonDecode(value));
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> set(T value) async {

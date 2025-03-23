@@ -63,15 +63,19 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return LocationListener(
       child: MaterialApp.router(
-        theme: widget.lightTheme,
-        darkTheme: widget.darkTheme,
+        theme: applyTheme(widget.lightTheme),
+        darkTheme: applyTheme(widget.darkTheme),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [S.delegate, ...GlobalMaterialLocalizations.delegates],
         supportedLocales: S.delegate.supportedLocales,
-        routerConfig: appRouter.config(
-          reevaluateListenable: context.read<NavigationStateUpdater>(),
-        ),
+        routerConfig: appRouter.config(reevaluateListenable: context.read<NavigationStateUpdater>()),
       ),
+    );
+  }
+
+  ThemeData? applyTheme(ThemeData? theme) {
+    return theme?.copyWith(
+      timePickerTheme: theme.timePickerTheme.copyWith(hourMinuteTextStyle: theme.textTheme.displaySmall),
     );
   }
 }

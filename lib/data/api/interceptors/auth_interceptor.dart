@@ -21,6 +21,7 @@ class AuthInterceptor extends QueuedInterceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     _addAuthorizationHeader(options);
+    handler.next(options);
   }
 
   @override

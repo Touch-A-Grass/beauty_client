@@ -5,7 +5,7 @@ class VenueListState with _$VenueListState {
   const factory VenueListState({
     @Default(Paging()) Paging<Venue> venues,
     AppError? loadingError,
-    @Default(false) bool isLoadingVenues,
+    @Default(true) bool isLoadingVenues,
     Location? location,
   }) = _VenueListState;
 }

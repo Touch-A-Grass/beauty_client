@@ -4,6 +4,7 @@ import 'package:beauty_client/presentation/components/parallax_flow_delegate.dar
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venue_details/bloc/venue_details_bloc.dart';
 import 'package:beauty_client/presentation/screens/venue_details/widget/service_list_item.dart';
+import 'package:beauty_client/presentation/screens/venue_details/widget/staff_list_item.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> {
         BlocSingleChangeListener<VenueDetailsBloc, VenueDetailsState>(
           map: (state) => state.venueLoadingError,
           listener: (context, state) => context.showErrorSnackBar(state.venueLoadingError!),
+        ),
+        BlocSingleChangeListener<VenueDetailsBloc, VenueDetailsState>(
+          map: (state) => state.staffLoadingError,
+          listener: (context, state) => context.showErrorSnackBar(state.staffLoadingError!),
         ),
       ],
       child: BlocBuilder<VenueDetailsBloc, VenueDetailsState>(
@@ -110,6 +115,46 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> {
                                                         selectedServiceId: state.services[index].id,
                                                         services: state.services,
                                                         venue: state.venue!,
+                                                        staffs: state.staff,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                if (state.staff.isNotEmpty)
+                                  MultiSliver(
+                                    pushPinnedChildren: true,
+                                    children: [
+                                      SliverPinnedHeader(
+                                        child: DecoratedBox(
+                                          decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Text('Мастера', style: Theme.of(context).textTheme.headlineSmall),
+                                          ),
+                                        ),
+                                      ),
+                                      SliverSafeArea(
+                                        sliver: SliverPadding(
+                                          padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                                          sliver: SliverList.separated(
+                                            itemCount: state.staff.length,
+                                            separatorBuilder: (context, index) => const SizedBox(height: 16),
+                                            itemBuilder:
+                                                (context, index) => StaffListItem(
+                                                  staff: state.staff[index],
+                                                  onTap: () {
+                                                    context.pushRoute(
+                                                      CartRoute(
+                                                        venueId: state.venue!.id,
+                                                        selectedStaffId: state.staff[index].id,
+                                                        services: state.services,
+                                                        venue: state.venue!,
+                                                        staffs: state.staff,
                                                       ),
                                                     );
                                                   },

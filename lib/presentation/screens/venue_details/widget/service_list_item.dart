@@ -7,8 +7,9 @@ class ServiceListItem extends StatelessWidget {
   final Service service;
   final VoidCallback? onTap;
   final bool showBorder;
+  final bool isError;
 
-  const ServiceListItem({super.key, required this.service, this.onTap, this.showBorder = true});
+  const ServiceListItem({super.key, required this.service, this.onTap, this.showBorder = true, this.isError = false});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,12 @@ class ServiceListItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).colorScheme.surfaceContainer,
-        border: showBorder ? Border.all(color: Theme.of(context).colorScheme.outline) : null,
+        border:
+            showBorder
+                ? Border.all(
+                  color: isError ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.outline,
+                )
+                : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -46,7 +52,7 @@ class ServiceListItem extends StatelessWidget {
                       children: [
                         if (service.duration != null)
                           Text(
-                            S.current.serviceTime(service.duration!.inMinutes),
+                            S.of(context).serviceTime(service.duration!.inMinutes),
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         if (service.price != null) ...[
