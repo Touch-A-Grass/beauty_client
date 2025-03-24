@@ -21,7 +21,7 @@ class _OrderInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(order.service.name, style: Theme.of(context).textTheme.headlineSmall),
+              Expanded(child: Text(order.service.name, style: Theme.of(context).textTheme.headlineSmall)),
               Text(
                 order.status.statusName(context),
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: order.status.color()),
@@ -33,7 +33,7 @@ class _OrderInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(order.service.description),
+              Expanded(child: Text(order.service.description)),
               if (order.service.price != null)
                 Text(order.service.price!.toPriceFormat(), style: Theme.of(context).textTheme.titleMedium),
             ],
