@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/orders/bloc/orders_bloc.dart';
 import 'package:beauty_client/presentation/screens/orders/widget/order_list_item.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,13 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                   padding: const EdgeInsets.all(16),
                   itemCount: state.orders.data.length,
                   separatorBuilder: (context, index) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) => OrderListItem(order: state.orders.data[index]),
+                  itemBuilder:
+                      (context, index) => OrderListItem(
+                        order: state.orders.data[index],
+                        onTap: () {
+                          context.pushRoute(OrderDetailsRoute(orderId: state.orders.data[index].id));
+                        },
+                      ),
                 );
               },
             ),

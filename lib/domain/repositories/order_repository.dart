@@ -15,5 +15,7 @@ abstract interface class OrderRepository {
 
   Future<List<Order>> getOrders({required int limit, required int offset});
 
+  Future<Order> getOrder(String id);
+
   Stream<Order> watchCreatedOrderEvent();
 }

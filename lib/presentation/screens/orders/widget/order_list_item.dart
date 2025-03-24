@@ -7,8 +7,9 @@ import 'package:intl/intl.dart';
 
 class OrderListItem extends StatefulWidget {
   final Order order;
+  final VoidCallback? onTap;
 
-  const OrderListItem({super.key, required this.order});
+  const OrderListItem({super.key, required this.order, this.onTap});
 
   @override
   State<OrderListItem> createState() => _OrderListItemState();
@@ -28,7 +29,7 @@ class _OrderListItemState extends State<OrderListItem> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {},
+          onTap: widget.onTap,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

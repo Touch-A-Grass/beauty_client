@@ -78,126 +78,135 @@ class _CartWidgetState extends State<CartWidget> {
                 leading: BackButton(onPressed: () => context.maybePop()),
                 title: Text(S.of(context).cartTitle),
               ),
-              body:
-                  state.venue == null || state.services == null || state.staffs == null || state.isCreatingOrder
-                      ? const Center(child: CircularProgressIndicator())
-                      : CustomScrollView(
-                        slivers: [
-                          SliverPadding(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            sliver: SliverMainAxisGroup(
-                              slivers: [
-                                SliverToBoxAdapter(child: VenueListItem(venue: state.venue!, showBorder: false)),
-                                SliverPadding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  sliver: SliverToBoxAdapter(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        const SizedBox(height: 32),
-                                        Text(
-                                          S.of(context).cartService,
-                                          style: Theme.of(context).textTheme.headlineSmall,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        if (state.selectedService != null)
-                                          ServiceListItem(
-                                            service: state.selectedService!,
-                                            onTap: () => selectService(context),
-                                          )
-                                        else
-                                          ServiceListItemPlaceholder(onTap: () => selectService(context)),
-                                        const SizedBox(height: 32),
-                                        Text(
-                                          S.of(context).cartMaster,
-                                          style: Theme.of(context).textTheme.headlineSmall,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        if (state.selectedStaff != null)
-                                          StaffListItem(staff: state.selectedStaff!, onTap: () => selectStaff(context))
-                                        else
-                                          StaffListItemPlaceholder(onTap: () => selectStaff(context)),
-                                        const SizedBox(height: 32),
-                                        Text(
-                                          S.of(context).cartServiceTime,
-                                          style: Theme.of(context).textTheme.headlineSmall,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        SizedBox(
-                                          height: 48,
-                                          child: OutlinedButton(
-                                            onPressed: () async {
-                                              final date = await showDatePicker(
-                                                context: context,
-                                                firstDate: DateTime.now(),
-                                                lastDate: DateTime.now().add(const Duration(days: 365)),
-                                                initialDate: state.date,
-                                              );
-                                              if (!context.mounted || date == null) return;
-                                              final time = await showTimePicker(
-                                                context: context,
-                                                initialTime: TimeOfDay.now(),
-                                              );
-                                              if (!context.mounted || time == null) return;
-                                              final dateWithTime = date.copyWith(hour: time.hour, minute: time.minute);
-                                              context.read<CartBloc>().add(CartEvent.dateChanged(dateWithTime));
-                                            },
-                                            child: Text(
-                                              state.date != null
-                                                  ? dateFormat.format(state.date!)
-                                                  : S.of(context).cartDatePlaceholder,
+              body: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child:
+                    state.venue == null || state.services == null || state.staffs == null || state.isCreatingOrder
+                        ? const Center(child: CircularProgressIndicator())
+                        : CustomScrollView(
+                          slivers: [
+                            SliverPadding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              sliver: SliverMainAxisGroup(
+                                slivers: [
+                                  SliverToBoxAdapter(child: VenueListItem(venue: state.venue!, showBorder: false)),
+                                  SliverPadding(
+                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    sliver: SliverToBoxAdapter(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          const SizedBox(height: 32),
+                                          Text(
+                                            S.of(context).cartService,
+                                            style: Theme.of(context).textTheme.headlineSmall,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          if (state.selectedService != null)
+                                            ServiceListItem(
+                                              service: state.selectedService!,
+                                              onTap: () => selectService(context),
+                                            )
+                                          else
+                                            ServiceListItemPlaceholder(onTap: () => selectService(context)),
+                                          const SizedBox(height: 32),
+                                          Text(
+                                            S.of(context).cartMaster,
+                                            style: Theme.of(context).textTheme.headlineSmall,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          if (state.selectedStaff != null)
+                                            StaffListItem(
+                                              staff: state.selectedStaff!,
+                                              onTap: () => selectStaff(context),
+                                            )
+                                          else
+                                            StaffListItemPlaceholder(onTap: () => selectStaff(context)),
+                                          const SizedBox(height: 32),
+                                          Text(
+                                            S.of(context).cartServiceTime,
+                                            style: Theme.of(context).textTheme.headlineSmall,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          SizedBox(
+                                            height: 48,
+                                            child: OutlinedButton(
+                                              onPressed: () async {
+                                                final date = await showDatePicker(
+                                                  context: context,
+                                                  firstDate: DateTime.now(),
+                                                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                                                  initialDate: state.date,
+                                                );
+                                                if (!context.mounted || date == null) return;
+                                                final time = await showTimePicker(
+                                                  context: context,
+                                                  initialTime: TimeOfDay.now(),
+                                                );
+                                                if (!context.mounted || time == null) return;
+                                                final dateWithTime = date.copyWith(
+                                                  hour: time.hour,
+                                                  minute: time.minute,
+                                                );
+                                                context.read<CartBloc>().add(CartEvent.dateChanged(dateWithTime));
+                                              },
+                                              child: Text(
+                                                state.date != null
+                                                    ? dateFormat.format(state.date!)
+                                                    : S.of(context).cartDatePlaceholder,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 32),
-                                        TextFormField(
-                                          focusNode: commentFocus,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                                            labelText: S.of(context).cartComment,
+                                          const SizedBox(height: 32),
+                                          TextFormField(
+                                            focusNode: commentFocus,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                              labelText: S.of(context).cartComment,
+                                            ),
+                                            minLines: 1,
+                                            maxLines: 5,
+                                            onChanged: (value) {
+                                              context.read<CartBloc>().add(CartEvent.commentChanged(value));
+                                            },
+                                            onTapOutside: (_) => commentFocus.unfocus(),
                                           ),
-                                          minLines: 1,
-                                          maxLines: 5,
-                                          onChanged: (value) {
-                                            context.read<CartBloc>().add(CartEvent.commentChanged(value));
-                                          },
-                                          onTapOutside: (_) => commentFocus.unfocus(),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.all(16) +
-                                    EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  height: 48,
-                                  child: ElevatedButton(
-                                    onPressed:
-                                        state.selectedService != null &&
-                                                state.selectedStaff != null &&
-                                                state.date != null
-                                            ? () {
-                                              context.read<CartBloc>().add(const CartEvent.createRequested());
-                                            }
-                                            : null,
-                                    child: Text(S.of(context).cartConfirmButton),
+                            SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.all(16) +
+                                      EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 48,
+                                    child: ElevatedButton(
+                                      onPressed:
+                                          state.selectedService != null &&
+                                                  state.selectedStaff != null &&
+                                                  state.date != null
+                                              ? () {
+                                                context.read<CartBloc>().add(const CartEvent.createRequested());
+                                              }
+                                              : null,
+                                      child: Text(S.of(context).cartConfirmButton),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+              ),
             ),
       ),
     );

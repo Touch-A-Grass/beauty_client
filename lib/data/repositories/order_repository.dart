@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:beauty_client/data/api/beauty_client.dart';
-import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -26,7 +25,7 @@ class OrderRepositoryImpl implements OrderRepository {
     required String comment,
     DateTime? endDate,
   }) async {
-    return _client.createOrder(CreateOrderRequest(serviceId: service.id, staffId: staff.id, startTimestamp: startDate));
+    // return _client.createOrder(CreateOrderRequest(serviceId: service.id, staffId: staff.id, startTimestamp: startDate));
     await Future.delayed(Duration(milliseconds: 500));
     final order = Order(
       id: '${DateTime.now().millisecondsSinceEpoch}',
@@ -41,6 +40,7 @@ class OrderRepositoryImpl implements OrderRepository {
     _createdOrderStream.add(order);
   }
 
+  @override
   Future<Order> getOrder(String id) async {
     await Future.delayed(Duration(milliseconds: 500));
     return _orders.firstWhere((order) => order.id == id);

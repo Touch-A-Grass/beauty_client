@@ -12,6 +12,16 @@ class VenueRepositoryImpl implements VenueRepository {
 
   VenueRepositoryImpl(this._api, this.locationStorage);
 
+  Venue _mapMockedVenue(Venue e) {
+    return e.copyWith(
+      description: switch (e.id) {
+        '6b7d3992-767b-4777-9504-b0ff2c889de2' => 'Профессиональные стрижки, маникюр и укладки.',
+        'c5a08f17-d2cb-4509-b01f-8eeefe0b2af2' => 'Уход за волосами, ногтями и кожей.',
+        String() => '',
+      },
+    );
+  }
+
   @override
   Future<List<Venue>> getVenues({Location? location, required int limit, required int offset}) async {
     // await Future.delayed(Duration(milliseconds: 500));
@@ -19,12 +29,12 @@ class VenueRepositoryImpl implements VenueRepository {
 
     final userLocation = location;
 
-    return _api.venues(
+    return (await _api.venues(
       latitude: userLocation?.latitude,
       longitude: userLocation?.longitude,
       limit: limit,
       offset: offset,
-    );
+    )).map((e) => _mapMockedVenue(e)).toList();
   }
 
   @override
@@ -72,7 +82,7 @@ class VenueRepositoryImpl implements VenueRepository {
 
   @override
   Future<Venue> getVenue(String venueId) async {
-    return _api.getVenue(venueId);
+    return _mapMockedVenue(await _api.getVenue(venueId));
     return Venue(
       id: 'abcsgbzxcvbnm',
       description: 'Лучший салон в Иркутске на улице Бульвар Гагарина',

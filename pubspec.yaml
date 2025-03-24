@@ -35,6 +35,7 @@ dependencies:
   latlong2:
   json_theme: ^8.0.0+2
   collection: ^1.19.1
+  mask_text_input_formatter: ^2.9.0
 
 dev_dependencies:
   flutter_test:

@@ -36,5 +36,9 @@
   "orderStatusDiscarded": "Отменен",
   "orderStatusApproved": "Подтвержден",
   "orderStatusPending": "В ожидании",
-  "orderStatusCompleted": "Выполнен"
+  "orderStatusCompleted": "Выполнен",
+  "orderDetailsTitle": "Детали заказа",
+  "orderCancelButton": "Отменить заказ",
+  "venue": "Салон",
+  "calendarRecordText": "Запись в {venue} на {service}"
 }
