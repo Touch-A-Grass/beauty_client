@@ -1,3 +1,4 @@
+import 'package:beauty_client/core/config.dart';
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/api/dio_factory.dart';
 import 'package:beauty_client/data/repositories/auth_repository.dart';
@@ -28,7 +29,7 @@ class Di extends StatelessWidget {
         RepositoryProvider.value(value: authStorage),
         RepositoryProvider(create: (context) => LocationStorage()),
         RepositoryProvider(create: (context) => DioFactory.create(context.read())),
-        RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: 'http://213.183.53.46:8228/api')),
+        RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: Config.apiBaseUrl)),
         //   Repositories
         RepositoryProvider<AuthRepository>(create: (context) => AuthRepositoryImpl(context.read(), context.read())),
         RepositoryProvider<VenueRepository>(create: (context) => VenueRepositoryImpl(context.read(), context.read())),
