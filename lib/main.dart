@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beauty_client/data/storage/auth_storage.dart';
+import 'package:beauty_client/data/storage/user_storage.dart';
 import 'package:beauty_client/di/di.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/location_listener.dart';
@@ -23,8 +24,12 @@ void main() async {
   final authStorage = AuthStorage(secureStorage: secureStorage);
   await authStorage.init();
 
+  final userStorage = UserStorage(secureStorage: secureStorage);
+  await userStorage.init();
+
   runApp(
     Di(
+      userStorage: userStorage,
       authStorage: authStorage,
       child: App(
         lightTheme: await decodeTheme('assets/appainter_theme.json'),

@@ -6,6 +6,7 @@ import 'package:beauty_client/data/repositories/order_repository.dart';
 import 'package:beauty_client/data/repositories/venue_repository.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
+import 'package:beauty_client/data/storage/user_storage.dart';
 import 'package:beauty_client/domain/repositories/auth_repository.dart';
 import 'package:beauty_client/domain/repositories/order_repository.dart';
 import 'package:beauty_client/domain/repositories/venue_repository.dart';
@@ -17,9 +18,10 @@ import 'package:provider/provider.dart';
 
 class Di extends StatelessWidget {
   final AuthStorage authStorage;
+  final UserStorage userStorage;
   final Widget child;
 
-  const Di({super.key, required this.child, required this.authStorage});
+  const Di({super.key, required this.child, required this.authStorage, required this.userStorage});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +29,14 @@ class Di extends StatelessWidget {
       providers: [
         //   Storages
         RepositoryProvider.value(value: authStorage),
+        RepositoryProvider.value(value: userStorage),
         RepositoryProvider(create: (context) => LocationStorage()),
         RepositoryProvider(create: (context) => DioFactory.create(context.read())),
         RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: Config.apiBaseUrl)),
         //   Repositories
-        RepositoryProvider<AuthRepository>(create: (context) => AuthRepositoryImpl(context.read(), context.read())),
+        RepositoryProvider<AuthRepository>(
+          create: (context) => AuthRepositoryImpl(context.read(), context.read(), context.read()),
+        ),
         RepositoryProvider<VenueRepository>(create: (context) => VenueRepositoryImpl(context.read(), context.read())),
         RepositoryProvider<OrderRepository>(create: (context) => OrderRepositoryImpl(context.read())),
         //   Logic

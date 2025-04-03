@@ -1,9 +1,11 @@
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
+import 'package:beauty_client/data/models/requests/update_user_request.dart';
 import 'package:beauty_client/domain/models/auth.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
+import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -19,6 +21,12 @@ abstract class BeautyClient {
 
   @POST('/user/auth')
   Future<Auth> sendCode(@Body() SendCodeRequest request);
+
+  @GET('/user')
+  Future<User> getUser();
+
+  @PATCH('/user')
+  Future<void> updateUser(@Body() UpdateUserRequest user);
 
   @GET('/venue')
   Future<List<Venue>> venues({
