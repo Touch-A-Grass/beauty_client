@@ -12,7 +12,7 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(page: AuthRoute.page),
+    AutoRoute(page: AuthRoute.page, path: '/auth'),
     AutoRoute(
       page: mainShellRoute,
       initial: true,
@@ -22,14 +22,14 @@ class AppRouter extends RootStackRouter {
           page: HomeRoute.page,
           initial: true,
           children: [
-            AutoRoute(page: VenuesRoute.page, initial: true),
-            AutoRoute(page: OrdersRoute.page),
-            AutoRoute(page: ProfileRoute.page),
+            AutoRoute(page: VenuesRoute.page, initial: true, path: 'venues'),
+            AutoRoute(page: OrdersRoute.page, path: 'orders'),
+            AutoRoute(page: ProfileRoute.page, path: 'profile'),
           ],
         ),
-        AutoRoute(page: CartRoute.page),
-        AutoRoute(page: VenueDetailsRoute.page),
-        AutoRoute(page: OrderDetailsRoute.page),
+        AutoRoute(page: CartRoute.page, path: 'cart/:venueId'),
+        AutoRoute(page: VenueDetailsRoute.page, usesPathAsKey: true, path: 'venues/:venueId'),
+        AutoRoute(page: OrderDetailsRoute.page, usesPathAsKey: true, path: 'orders/:orderId'),
       ],
     ),
   ];

@@ -12,6 +12,8 @@ class CartEvent with _$CartEvent {
 
   const factory CartEvent.updateSelectedServiceRequested() = _UpdateSelectedServiceRequested;
 
+  const factory CartEvent.staffTimeSlotsRequested() = _StaffTimeSlotsRequested;
+
   const factory CartEvent.updateSelectedStaffRequested() = _UpdateSelectedStaffRequested;
 
   const factory CartEvent.serviceSelected(Service service) = _ServiceSelected;

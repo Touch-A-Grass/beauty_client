@@ -1,8 +1,10 @@
+import 'package:beauty_client/data/models/dto/staff_time_slot_dto.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
 import 'package:beauty_client/domain/models/auth.dart';
+import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/user.dart';
@@ -50,4 +52,16 @@ abstract class BeautyClient {
 
   @POST('/record')
   Future<void> createOrder(@Body() CreateOrderRequest request);
+
+  @GET('/staff/{id}/schedule')
+  Future<List<StaffTimeSlotDto>> getVenueStaffTimeSlots({
+    @Path('id') required String staffId,
+    @Query('venueId') required String venueId,
+  });
+
+  @GET('/record/{id}')
+  Future<Order> getOrder(@Path('id') String id);
+
+  @GET('/user/records')
+  Future<List<Order>> getOrders({@Query('limit') required int limit, @Query('offset') required int offset});
 }

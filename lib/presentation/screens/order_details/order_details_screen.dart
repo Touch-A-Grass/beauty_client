@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OrderDetailsScreen extends StatelessWidget {
   final String orderId;
 
-  const OrderDetailsScreen({super.key, required this.orderId});
+  const OrderDetailsScreen({super.key, @PathParam('orderId') required this.orderId});
 
   @override
   Widget build(BuildContext context) {

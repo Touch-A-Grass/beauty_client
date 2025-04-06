@@ -48,7 +48,7 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> {
                   SliverAnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
                     child:
-                        (state.isLoadingServices || state.isLoadingVenue && state.venue == null)
+                        (state.isLoadingServices || state.isLoadingVenue || state.venue == null)
                             ? const SliverFillRemaining(child: Center(child: CircularProgressIndicator()))
                             : MultiSliver(
                               children: [

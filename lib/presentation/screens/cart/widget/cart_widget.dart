@@ -5,6 +5,7 @@ import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/cart/bloc/cart_bloc.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_service_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_staff_dialog.dart';
+import 'package:beauty_client/presentation/screens/cart/widget/select_timeslot_sheet.dart';
 import 'package:beauty_client/presentation/screens/venue_details/widget/service_list_item.dart';
 import 'package:beauty_client/presentation/screens/venue_details/widget/staff_list_item.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
@@ -131,30 +132,44 @@ class _CartWidgetState extends State<CartWidget> {
                                           SizedBox(
                                             height: 48,
                                             child: OutlinedButton(
-                                              onPressed: () async {
-                                                final date = await showDatePicker(
-                                                  context: context,
-                                                  firstDate: DateTime.now(),
-                                                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                                                  initialDate: state.date,
-                                                );
-                                                if (!context.mounted || date == null) return;
-                                                final time = await showTimePicker(
-                                                  context: context,
-                                                  initialTime: TimeOfDay.now(),
-                                                );
-                                                if (!context.mounted || time == null) return;
-                                                final dateWithTime = date.copyWith(
-                                                  hour: time.hour,
-                                                  minute: time.minute,
-                                                );
-                                                context.read<CartBloc>().add(CartEvent.dateChanged(dateWithTime));
+                                              onPressed: switch (state.timeSlotsState) {
+                                                CartTimeSlotsStateEmpty() ||
+                                                CartTimeSlotsStateLoading() ||
+                                                CartTimeSlotsStateError() => null,
+                                                CartTimeSlotsStateLoaded s => () async {
+                                                  final date = await showModalBottomSheet(
+                                                    context: context,
+                                                    backgroundColor: Colors.transparent,
+                                                    builder:
+                                                        (context) => SelectTimeslotSheet(
+                                                          timeSlots: s.timeSlots,
+                                                          service: state.selectedService!,
+                                                        ),
+                                                  );
+
+                                                  if (context.mounted && date != null) {
+                                                    context.read<CartBloc>().add(CartEvent.dateChanged(date));
+                                                  }
+                                                },
                                               },
-                                              child: Text(
-                                                state.date != null
-                                                    ? dateFormat.format(state.date!)
-                                                    : S.of(context).cartDatePlaceholder,
-                                              ),
+                                              child: switch (state.timeSlotsState) {
+                                                CartTimeSlotsStateEmpty() =>
+                                                  state.selectedService == null
+                                                      ? Text(S.of(context).cartDateServiceRequired)
+                                                      : Text(S.of(context).cartDateMasterRequired),
+                                                CartTimeSlotsStateLoading() => Center(
+                                                  child: SizedBox.square(
+                                                    dimension: 24,
+                                                    child: CircularProgressIndicator(),
+                                                  ),
+                                                ),
+                                                CartTimeSlotsStateLoaded() => Text(
+                                                  state.date != null
+                                                      ? dateFormat.format(state.date!)
+                                                      : S.of(context).cartDatePlaceholder,
+                                                ),
+                                                CartTimeSlotsStateError() => Text(S.of(context).cartDatePlaceholder),
+                                              },
                                             ),
                                           ),
                                           const SizedBox(height: 32),

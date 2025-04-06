@@ -22,4 +22,14 @@ class Order with _$Order {
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 }
 
-enum OrderStatus { discarded, pending, approved, completed }
+@JsonEnum()
+enum OrderStatus {
+  @JsonValue('Discarded')
+  discarded,
+  @JsonValue('Pending')
+  pending,
+  @JsonValue('Approved')
+  approved,
+  @JsonValue('Completed')
+  completed,
+}
