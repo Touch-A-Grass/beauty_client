@@ -43,5 +43,9 @@
   "orderDetailsTitle": "Детали заказа",
   "orderCancelButton": "Отменить заказ",
   "venue": "Салон",
-  "calendarRecordText": "Запись в {venue} на {service}"
+  "calendarRecordText": "Запись в {venue} на {service}",
+  "orderCancelAlertTitle": "Отмена заказа",
+  "orderCancelAlertMessage": "Вы действительно хотите отменить заказ?",
+  "orderCancelAlertCancel": "Нет",
+  "orderCancelAlertConfirm": "Да"
 }

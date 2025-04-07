@@ -72,18 +72,21 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                   bottom: 16,
                   right: 16,
                   left: 16,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child:
-                        selectedVenue == null
-                            ? const SizedBox.shrink()
-                            : VenueListItem(
-                              venue: selectedVenue!,
-                              onClick: () {
-                                final venue = selectedVenue!;
-                                context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
-                              },
-                            ),
+                  child: Padding(
+                    padding: MediaQuery.of(context).padding,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child:
+                          selectedVenue == null
+                              ? const SizedBox.shrink()
+                              : VenueListItem(
+                                venue: selectedVenue!,
+                                onClick: () {
+                                  final venue = selectedVenue!;
+                                  context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
+                                },
+                              ),
+                    ),
                   ),
                 ),
               ],

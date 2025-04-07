@@ -35,7 +35,7 @@ class _OrderTimeInfoState extends State<_OrderTimeInfo> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${dateFormatter.format(widget.order.startTimestamp)} - ${endTimeFormatter.format(widget.order.endTimestamp)}',
+                '${dateFormatter.format(widget.order.startTimestamp.toLocal())} - ${endTimeFormatter.format(widget.order.endTimestamp.toLocal())}',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               IconButton(

@@ -31,16 +31,17 @@ class VenueListWidget extends StatelessWidget {
             );
           }
           return ListView.separated(
-            itemBuilder: (context, index) => VenueListItem(
-              venue: state.venues.data[index],
-              onClick: () {
-                final venue = state.venues.data[index];
-                context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
-              },
-            ),
+            itemBuilder:
+                (context, index) => VenueListItem(
+                  venue: state.venues.data[index],
+                  onClick: () {
+                    final venue = state.venues.data[index];
+                    context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
+                  },
+                ),
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemCount: state.venues.data.length,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           );
         },
       ),

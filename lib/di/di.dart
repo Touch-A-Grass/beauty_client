@@ -1,6 +1,9 @@
 import 'package:beauty_client/core/config.dart';
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/api/dio_factory.dart';
+import 'package:beauty_client/data/api/interceptors/base_headers_interceptor.dart';
+import 'package:beauty_client/data/event/order_changed_event_bus.dart';
+import 'package:beauty_client/data/event/order_created_event_bus.dart';
 import 'package:beauty_client/data/repositories/auth_repository.dart';
 import 'package:beauty_client/data/repositories/order_repository.dart';
 import 'package:beauty_client/data/repositories/venue_repository.dart';
@@ -31,14 +34,19 @@ class Di extends StatelessWidget {
         RepositoryProvider.value(value: authStorage),
         RepositoryProvider.value(value: userStorage),
         RepositoryProvider(create: (context) => LocationStorage()),
-        RepositoryProvider(create: (context) => DioFactory.create(context.read())),
+        RepositoryProvider(create: (context) => BaseHeadersInterceptor()),
+        RepositoryProvider(create: (context) => DioFactory.create(context.read(), context.read())),
         RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: Config.apiBaseUrl)),
+        RepositoryProvider(create: (context) => OrderCreatedEventBus()),
+        RepositoryProvider(create: (context) => OrderChangedEventBus()),
         //   Repositories
         RepositoryProvider<AuthRepository>(
           create: (context) => AuthRepositoryImpl(context.read(), context.read(), context.read()),
         ),
         RepositoryProvider<VenueRepository>(create: (context) => VenueRepositoryImpl(context.read(), context.read())),
-        RepositoryProvider<OrderRepository>(create: (context) => OrderRepositoryImpl(context.read())),
+        RepositoryProvider<OrderRepository>(
+          create: (context) => OrderRepositoryImpl(context.read(), context.read(), context.read()),
+        ),
         //   Logic
         RepositoryProvider(create: (context) => LogoutUseCase(context.read())),
         ChangeNotifierProvider(create: (context) => NavigationStateUpdater(context.read())),

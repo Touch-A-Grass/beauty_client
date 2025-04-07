@@ -7,9 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'orders_bloc.freezed.dart';
-
 part 'orders_event.dart';
-
 part 'orders_state.dart';
 
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> with SubscriptionBloc {
@@ -27,8 +25,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> with SubscriptionBloc {
         emit(state.copyWith(loadingError: AppError.fromObject(e), isLoading: false));
       }
     });
-    subscribe(_orderRepository.watchCreatedOrderEvent(), (_) {
+    on<_OrderChanged>((event, emit) async {
+      emit(state.copyWith(orders: state.orders.replaceWith(event.order, (order) => order.id)));
+    });
+    subscribe(_orderRepository.watchOrderCreated(), (_) {
       add(OrdersEvent.ordersRequested(refresh: true));
+    });
+    subscribe(_orderRepository.watchOrderChanged(), (order) {
+      add(OrdersEvent.orderChanged(order));
     });
   }
 }

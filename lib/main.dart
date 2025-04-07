@@ -81,6 +81,13 @@ class _AppState extends State<App> {
   ThemeData? applyTheme(ThemeData? theme) {
     return theme?.copyWith(
       timePickerTheme: theme.timePickerTheme.copyWith(hourMinuteTextStyle: theme.textTheme.displaySmall),
+      appBarTheme: AppBarTheme(
+        centerTitle: true,
+        titleTextStyle: theme.textTheme.titleMedium,
+        backgroundColor: theme.colorScheme.surfaceContainer,
+        scrolledUnderElevation: 1,
+        elevation: 1,
+      ),
     );
   }
 }

@@ -86,71 +86,77 @@ class _TimeSlotSliverState extends State<_TimeSlotSliver> {
     }
 
     return SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Theme.of(context).colorScheme.surfaceContainer,
-        ),
-        child: AnimatedSize(
-          alignment: Alignment.topCenter,
-          duration: const Duration(milliseconds: 250),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 16,
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => setState(() => expanded = !expanded),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        dateFormat.format(widget.staffTimeSlot.date),
-                        style: Theme.of(context).textTheme.titleLarge,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: AnimatedSize(
+            alignment: Alignment.topCenter,
+            duration: const Duration(milliseconds: 250),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 16,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => setState(() => expanded = !expanded),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          dateFormat.format(widget.staffTimeSlot.date),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
-                      onPressed: () => setState(() => expanded = !expanded),
-                    ),
-                  ],
+                      IconButton(
+                        icon: Icon(expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+                        onPressed: () => setState(() => expanded = !expanded),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              if (expanded)
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 24,
-                  runSpacing: 24,
-                  children:
-                      slots
-                          .map(
-                            (e) => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Theme.of(context).colorScheme.surfaceContainer,
-                                border: Border.all(color: Theme.of(context).colorScheme.outline),
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(8),
-                                  onTap: () => Navigator.pop(context, e),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    child: Text(
-                                      timeFormat.format(e),
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context).textTheme.titleMedium,
+                if (expanded)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      spacing: 24,
+                      runSpacing: 24,
+                      children:
+                          slots
+                              .map(
+                                (e) => Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Theme.of(context).colorScheme.primaryContainer,
+                                    border: Border.all(color: Theme.of(context).colorScheme.outline),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onTap: () => Navigator.pop(context, e),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        child: Text(
+                                          timeFormat.format(e),
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context).textTheme.titleMedium,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                ),
-            ],
+                              )
+                              .toList(),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

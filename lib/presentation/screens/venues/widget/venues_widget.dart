@@ -11,25 +11,11 @@ class VenuesWidget extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              TabBar(
-                tabs: [
-                  Tab(text: S.of(context).dashboardListButton),
-                  Tab(text: S.of(context).dashboardMapButton),
-                ],
-              ),
-              const Expanded(
-                child: TabBarView(
-                  children: [
-                    VenueList(),
-                    VenueMap(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        body: Column(
+          children: [
+            TabBar(tabs: [Tab(text: S.of(context).dashboardListButton), Tab(text: S.of(context).dashboardMapButton)]),
+            const Expanded(child: TabBarView(children: [VenueList(), VenueMap()])),
+          ],
         ),
       ),
     );

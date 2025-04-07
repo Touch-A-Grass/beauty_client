@@ -17,5 +17,9 @@ abstract interface class OrderRepository {
 
   Future<Order> getOrder(String id);
 
-  Stream<Order> watchCreatedOrderEvent();
+  Future<void> discardOrder(String id);
+
+  Stream<void> watchOrderCreated();
+
+  Stream<Order> watchOrderChanged();
 }

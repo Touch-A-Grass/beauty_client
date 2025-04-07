@@ -2,15 +2,25 @@
 
 Beauty Client for Beauty Service
 
-## Getting Started
+## Building Production
 
-This project is a starting point for a Flutter application.
+Android Store
+```flutter build aab --release --dart-define-from-file=configs/production.json --no-tree-shake-icons```
 
-A few resources to get you started if this is your first Flutter project:
+Android Internal
+```flutter build apk --release --dart-define-from-file=configs/production.json --no-tree-shake-icons```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Web
+```flutter build web --release --dart-define-from-file=configs/production.json --no-tree-shake-icons```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Building Develop
+
+Android Store
+```flutter build aab --release --dart-define-from-file=configs/develop.json --no-tree-shake-icons```
+
+Android Internal
+```flutter build apk --release --dart-define-from-file=configs/develop.json --no-tree-shake-icons```
+
+Web
+```flutter build web --release --dart-define-from-file=configs/develop.json --no-tree-shake-icons```

@@ -29,7 +29,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                   return Center(child: Text(S.of(context).noOrders, style: Theme.of(context).textTheme.titleMedium));
                 }
                 return ListView.separated(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
                   itemCount: state.orders.data.length,
                   separatorBuilder: (context, index) => const SizedBox(height: 16),
                   itemBuilder:

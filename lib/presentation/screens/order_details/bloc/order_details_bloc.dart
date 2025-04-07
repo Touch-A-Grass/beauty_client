@@ -11,7 +11,7 @@ part 'order_details_state.dart';
 class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
   final OrderRepository _orderRepository;
 
-  OrderDetailsBloc(this._orderRepository, {required String orderId}) : super(const OrderDetailsState.initial()) {
+  OrderDetailsBloc(this._orderRepository, {required String orderId}) : super(const OrderDetailsState()) {
     on<_Started>((event, emit) {
       add(OrderDetailsEvent.orderRequested());
     });
@@ -22,6 +22,15 @@ class OrderDetailsBloc extends Bloc<OrderDetailsEvent, OrderDetailsState> {
         emit(state.copyWith(isLoadingOrder: false, order: order));
       } catch (e) {
         emit(state.copyWith(isLoadingOrder: false, loadingOrderError: AppError.fromObject(e)));
+      }
+    });
+    on<_DiscardRequested>((event, emit) async {
+      emit(state.copyWith(discardingState: const OrderDiscardingState.loading()));
+      try {
+        await _orderRepository.discardOrder(orderId);
+        add(OrderDetailsEvent.orderRequested());
+      } catch (e) {
+        emit(state.copyWith(discardingState: OrderDiscardingState.error(AppError.fromObject(e))));
       }
     });
   }

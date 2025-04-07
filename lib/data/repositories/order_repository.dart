@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:beauty_client/data/api/beauty_client.dart';
+import 'package:beauty_client/data/event/order_changed_event_bus.dart';
+import 'package:beauty_client/data/event/order_created_event_bus.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
+import 'package:beauty_client/data/models/requests/update_record_request.dart';
+import 'package:beauty_client/data/util/string_util.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -10,10 +14,11 @@ import 'package:beauty_client/domain/repositories/order_repository.dart';
 
 class OrderRepositoryImpl implements OrderRepository {
   final BeautyClient _client;
+  final OrderChangedEventBus _orderChangedEventBus;
+  final OrderCreatedEventBus _orderCreatedEventBus;
 
-  OrderRepositoryImpl(this._client);
-
-  final _createdOrderStream = StreamController<Order>.broadcast();
+  @override
+  OrderRepositoryImpl(this._client, this._orderChangedEventBus, this._orderCreatedEventBus);
 
   @override
   Future<void> createOrder({
@@ -24,12 +29,22 @@ class OrderRepositoryImpl implements OrderRepository {
     required String comment,
     DateTime? endDate,
   }) async {
-    return _client.createOrder(CreateOrderRequest(serviceId: service.id, staffId: staff.id, startTimestamp: startDate));
+    await _client.createOrder(
+      CreateOrderRequest(
+        serviceId: service.id,
+        staffId: staff.id,
+        startTimestamp: startDate,
+        comment: comment.trimOrNull,
+      ),
+    );
+    _orderCreatedEventBus.emit(null);
   }
 
   @override
   Future<Order> getOrder(String id) async {
-    return _client.getOrder(id);
+    final order = await _client.getOrder(id);
+    _orderChangedEventBus.emit(order);
+    return order;
   }
 
   @override
@@ -38,5 +53,13 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Stream<Order> watchCreatedOrderEvent() => _createdOrderStream.stream;
+  Future<void> discardOrder(String id) async {
+    await _client.updateOrder(UpdateRecordRequest(recordId: id, status: OrderStatus.discarded));
+  }
+
+  @override
+  Stream<Order> watchOrderChanged() => _orderChangedEventBus.stream;
+
+  @override
+  Stream<void> watchOrderCreated() => _orderCreatedEventBus.stream;
 }

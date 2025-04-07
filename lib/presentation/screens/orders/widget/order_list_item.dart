@@ -76,7 +76,7 @@ class _OrderListItemState extends State<OrderListItem> {
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(color: widget.order.status.color()),
                     ),
                     Text(
-                      dateFormatter.format(widget.order.startTimestamp),
+                      dateFormatter.format(widget.order.startTimestamp.toLocal()),
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ],

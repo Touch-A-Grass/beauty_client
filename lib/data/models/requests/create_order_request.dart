@@ -9,6 +9,7 @@ class CreateOrderRequest with _$CreateOrderRequest {
     required String serviceId,
     required String staffId,
     required DateTime startTimestamp,
+    String? comment,
   }) = _CreateOrderRequest;
 
   factory CreateOrderRequest.fromJson(Map<String, dynamic> json) => _$CreateOrderRequestFromJson(json);

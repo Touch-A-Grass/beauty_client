@@ -2,6 +2,7 @@ import 'package:beauty_client/data/models/dto/staff_time_slot_dto.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
+import 'package:beauty_client/data/models/requests/update_record_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
 import 'package:beauty_client/domain/models/auth.dart';
 import 'package:beauty_client/domain/models/order.dart';
@@ -64,4 +65,7 @@ abstract class BeautyClient {
 
   @GET('/user/records')
   Future<List<Order>> getOrders({@Query('limit') required int limit, @Query('offset') required int offset});
+
+  @PATCH('/user/record')
+  Future<void> updateOrder(@Body() UpdateRecordRequest request);
 }
