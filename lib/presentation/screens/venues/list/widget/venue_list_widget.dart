@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/app_refresh_indicator.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/list/bloc/venue_list_bloc.dart';
@@ -30,18 +31,29 @@ class VenueListWidget extends StatelessWidget {
               ],
             );
           }
-          return ListView.separated(
-            itemBuilder:
-                (context, index) => VenueListItem(
-                  venue: state.venues.data[index],
-                  onClick: () {
-                    final venue = state.venues.data[index];
-                    context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
-                  },
+          return AppRefreshIndicator(
+            isRefreshing: state.isLoadingVenues,
+            onRefresh: () => context.read<VenueListBloc>().add(const VenueListEvent.requested(refresh: true)),
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                  sliver: SliverList.separated(
+                    itemBuilder:
+                        (context, index) => VenueListItem(
+                          venue: state.venues.data[index],
+                          shrinkDescription: true,
+                          onClick: () {
+                            final venue = state.venues.data[index];
+                            context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
+                          },
+                        ),
+                    separatorBuilder: (context, index) => const Divider(height: 32),
+                    itemCount: state.venues.data.length,
+                  ),
                 ),
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemCount: state.venues.data.length,
-            padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+              ],
+            ),
           );
         },
       ),

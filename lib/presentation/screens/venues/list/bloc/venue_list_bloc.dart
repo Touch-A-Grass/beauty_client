@@ -29,14 +29,9 @@ class VenueListBloc extends Bloc<VenueListEvent, VenueListState> with Subscripti
           offset: state.venues.offset(event.refresh),
           limit: 10,
         );
-        emit(
-          state.copyWith(venues: state.venues.next(venues, refresh: event.refresh), isLoadingVenues: false),
-        );
+        emit(state.copyWith(venues: state.venues.next(venues, refresh: event.refresh), isLoadingVenues: false));
       } catch (e) {
-        emit(state.copyWith(
-          loadingError: AppError.fromObject(e),
-          isLoadingVenues: false,
-        ));
+        emit(state.copyWith(loadingError: AppError.fromObject(e), isLoadingVenues: false));
       }
     });
 

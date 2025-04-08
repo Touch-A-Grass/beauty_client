@@ -23,7 +23,6 @@ class _OrderListItemState extends State<OrderListItem> {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.surfaceContainer,
         border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
       child: Material(

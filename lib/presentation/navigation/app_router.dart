@@ -12,24 +12,31 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(page: AuthRoute.page, path: '/auth'),
     AutoRoute(
-      page: mainShellRoute,
+      page: RootRoute.page,
       initial: true,
-      guards: [authGuard],
       children: [
+        AutoRoute(page: AuthRoute.page, path: 'auth'),
+        AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(
-          page: HomeRoute.page,
+          page: mainShellRoute,
           initial: true,
+          guards: [authGuard],
           children: [
-            AutoRoute(page: VenuesRoute.page, initial: true, path: 'venues'),
-            AutoRoute(page: OrdersRoute.page, path: 'orders'),
-            AutoRoute(page: ProfileRoute.page, path: 'profile'),
+            AutoRoute(
+              page: HomeRoute.page,
+              initial: true,
+              children: [
+                AutoRoute(page: DashboardRoute.page, initial: true, path: 'dashboard'),
+                AutoRoute(page: VenuesRoute.page, path: 'venues'),
+                AutoRoute(page: OrdersRoute.page, path: 'orders'),
+              ],
+            ),
+            AutoRoute(page: CartRoute.page, path: 'cart/:venueId'),
+            AutoRoute(page: VenueDetailsRoute.page, usesPathAsKey: true, path: 'venues/:venueId'),
+            AutoRoute(page: OrderDetailsRoute.page, usesPathAsKey: true, path: 'orders/:orderId'),
           ],
         ),
-        AutoRoute(page: CartRoute.page, path: 'cart/:venueId'),
-        AutoRoute(page: VenueDetailsRoute.page, usesPathAsKey: true, path: 'venues/:venueId'),
-        AutoRoute(page: OrderDetailsRoute.page, usesPathAsKey: true, path: 'orders/:orderId'),
       ],
     ),
   ];

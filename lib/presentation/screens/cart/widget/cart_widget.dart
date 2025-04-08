@@ -90,7 +90,7 @@ class _CartWidgetState extends State<CartWidget> {
                               padding: EdgeInsets.symmetric(vertical: 16),
                               sliver: SliverMainAxisGroup(
                                 slivers: [
-                                  SliverToBoxAdapter(child: VenueListItem(venue: state.venue!, showBorder: false)),
+                                  SliverToBoxAdapter(child: VenueListItem(venue: state.venue!)),
                                   SliverPadding(
                                     padding: EdgeInsets.symmetric(horizontal: 16),
                                     sliver: SliverToBoxAdapter(

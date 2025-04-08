@@ -4,6 +4,7 @@
   "telegramRedirectButton": "Перейти в бота",
   "telegramConfirmDescription": "1. Нажмите \"Перейти в бота\"\n2. Подтвердите аккаунт в боте\n3. Подтвердите авторизацию",
   "changePhoneButton": "Изменить номер",
+  "welcomeMessage": "Здравствуйте, {name}",
   "telegramResendInMessage": "Отправить повторно через {time}",
   "telegramResendButton": "Отправить повторно",
   "profile": "Профиль",
@@ -47,5 +48,6 @@
   "orderCancelAlertTitle": "Отмена заказа",
   "orderCancelAlertMessage": "Вы действительно хотите отменить заказ?",
   "orderCancelAlertCancel": "Нет",
-  "orderCancelAlertConfirm": "Да"
+  "orderCancelAlertConfirm": "Да",
+  "nearestVenuesTitle": "Ближайшие салоны"
 }

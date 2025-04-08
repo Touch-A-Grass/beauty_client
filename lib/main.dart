@@ -84,9 +84,11 @@ class _AppState extends State<App> {
       appBarTheme: AppBarTheme(
         centerTitle: true,
         titleTextStyle: theme.textTheme.titleMedium,
-        backgroundColor: theme.colorScheme.surfaceContainer,
+        backgroundColor: theme.colorScheme.surface,
+        shadowColor: theme.colorScheme.shadow,
         scrolledUnderElevation: 1,
-        elevation: 1,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
       ),
     );
   }

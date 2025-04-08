@@ -40,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           }),
                       child: HomeNavigationBar(
                         items: [
-                          HomeNavigationBarItem(icon: Icons.house, label: 'Салоны'),
-                          HomeNavigationBarItem(icon: Icons.receipt, label: 'Заказы'),
-                          HomeNavigationBarItem(icon: Icons.person, label: 'Профиль'),
+                          HomeNavigationBarItem(icon: Icons.home),
+                          HomeNavigationBarItem(icon: Icons.search),
+                          HomeNavigationBarItem(icon: Icons.receipt),
                         ],
                         currentIndex: context.tabsRouter.activeIndex,
                         onItemTapped: (index) => context.tabsRouter.setActiveIndex(index),

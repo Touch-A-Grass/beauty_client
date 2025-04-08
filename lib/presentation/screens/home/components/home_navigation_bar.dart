@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class HomeNavigationBarItem {
   final IconData icon;
-  final String label;
+  final String? label;
 
-  HomeNavigationBarItem({required this.icon, required this.label});
+  HomeNavigationBarItem({required this.icon, this.label});
 }
 
 class HomeNavigationBar extends StatefulWidget {
@@ -121,9 +121,11 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> with TickerProvid
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(item.icon, color: color),
-                    const SizedBox.square(dimension: 4),
-                    Text(item.label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color)),
+                    Icon(item.icon, color: color, size: 32),
+                    if (item.label != null) ...[
+                      const SizedBox.square(dimension: 4),
+                      Text(item.label!, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color)),
+                    ],
                   ],
                 );
               },
