@@ -62,23 +62,21 @@ class _AuthWidgetState extends State<AuthWidget> {
         ),
       ],
       child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) => AppOverlay(
-          child: Scaffold(
-            body: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: [
-                PhoneScreen(
-                  onPhoneEntered: (phone) => context.read<AuthBloc>().add(AuthEvent.phoneEntered(phone)),
-                ),
-                const TelegramScreen(),
-                CodeScreen(
-                  onCodeEntered: (code) => context.read<AuthBloc>().add(AuthEvent.codeEntered(code)),
-                  backToPhonePressed: () => context.read<AuthBloc>().add(const AuthEvent.changePhoneRequested()),
-                  isLoading: state is AuthCodeState && state.isLoading,
-                ),
-              ],
-            ),
+        builder: (context, state) => Scaffold(
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            children: [
+              PhoneScreen(
+                onPhoneEntered: (phone) => context.read<AuthBloc>().add(AuthEvent.phoneEntered(phone)),
+              ),
+              const TelegramScreen(),
+              CodeScreen(
+                onCodeEntered: (code) => context.read<AuthBloc>().add(AuthEvent.codeEntered(code)),
+                backToPhonePressed: () => context.read<AuthBloc>().add(const AuthEvent.changePhoneRequested()),
+                isLoading: state is AuthCodeState && state.isLoading,
+              ),
+            ],
           ),
         ),
       ),

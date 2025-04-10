@@ -1,6 +1,5 @@
 import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/generated/l10n.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
 import 'package:beauty_client/presentation/screens/profile/bloc/profile_bloc.dart';
 import 'package:beauty_client/presentation/util/phone_formatter.dart';
 import 'package:flutter/material.dart';
@@ -20,46 +19,44 @@ class _ProfileWidgetState extends State<ProfileWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder:
-          (context, state) => AppOverlay(
-            child: Scaffold(
-              appBar: AppBar(title: Text(S.of(context).profile)),
-              body: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child:
-                    state.user == null
-                        ? const Center(child: CircularProgressIndicator())
-                        : Stack(
-                          children: [
-                            CustomScrollView(
-                              slivers: [
-                                SliverPadding(
-                                  padding: EdgeInsets.only(top: 32, right: 16, left: 16),
-                                  sliver: SliverToBoxAdapter(child: _ProfileBadge(state.user!)),
-                                ),
-                                SliverPadding(
-                                  padding: EdgeInsets.only(top: 64, right: 16, left: 16),
-                                  sliver: SliverToBoxAdapter(child: _Settings()),
-                                ),
-                                SliverFillRemaining(
-                                  hasScrollBody: false,
-                                  child: SafeArea(
-                                    top: false,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
-                                      child: _Footer(
-                                        onLogoutPressed: () {
-                                          context.read<ProfileBloc>().add(const ProfileEvent.logoutRequested());
-                                        },
-                                      ),
+          (context, state) => Scaffold(
+            appBar: AppBar(title: Text(S.of(context).profile)),
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child:
+                  state.user == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : Stack(
+                        children: [
+                          CustomScrollView(
+                            slivers: [
+                              SliverPadding(
+                                padding: EdgeInsets.only(top: 32, right: 16, left: 16),
+                                sliver: SliverToBoxAdapter(child: _ProfileBadge(state.user!)),
+                              ),
+                              SliverPadding(
+                                padding: EdgeInsets.only(top: 64, right: 16, left: 16),
+                                sliver: SliverToBoxAdapter(child: _Settings()),
+                              ),
+                              SliverFillRemaining(
+                                hasScrollBody: false,
+                                child: SafeArea(
+                                  top: false,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
+                                    child: _Footer(
+                                      onLogoutPressed: () {
+                                        context.read<ProfileBloc>().add(const ProfileEvent.logoutRequested());
+                                      },
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            if (state.isUpdatingUser) const Center(child: CircularProgressIndicator()),
-                          ],
-                        ),
-              ),
+                              ),
+                            ],
+                          ),
+                          if (state.isUpdatingUser) const Center(child: CircularProgressIndicator()),
+                        ],
+                      ),
             ),
           ),
     );

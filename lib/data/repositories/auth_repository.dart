@@ -1,5 +1,6 @@
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
+import 'package:beauty_client/data/models/requests/send_firebase_token_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
@@ -53,4 +54,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<User?> watchUser() => _userStorage.stream;
+
+  @override
+  Future<void> sendFirebaseToken(String token) => _api.sendFirebaseToken(SendFirebaseTokenRequest(token: token));
 }

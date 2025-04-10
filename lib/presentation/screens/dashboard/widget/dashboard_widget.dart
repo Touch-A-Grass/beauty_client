@@ -4,6 +4,7 @@ import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/asset_icon.dart';
+import 'package:beauty_client/presentation/components/shimmer_box.dart';
 import 'package:beauty_client/presentation/models/loading_state.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/dashboard/bloc/dashboard_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+part 'loading_widget.dart';
 part 'order_widget.dart';
 part 'profile_widget.dart';
 
@@ -29,6 +31,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     builder: (context, state) {
       final orderState = state.ordersState;
       final venuesState = state.venuesState;
+      final userState = state.userState;
 
       return Scaffold(
         appBar: AppBar(
@@ -43,52 +46,69 @@ class _DashboardWidgetState extends State<DashboardWidget> {
             ),
           ],
         ),
-        body: switch (state.userState) {
-          ProgressLoadingState<User>() => Center(child: CircularProgressIndicator()),
-          SuccessLoadingState<User> user => CustomScrollView(
-            slivers: [
-              SliverSafeArea(
-                top: false,
-                sliver: SliverPadding(
-                  padding: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
-                  sliver: SliverMainAxisGroup(
-                    slivers: [
-                      SliverToBoxAdapter(child: _ProfileWidget(user: user.data)),
-                      if (orderState is SuccessLoadingState<Order?> && orderState.data != null) ...[
-                        SliverPadding(
-                          padding: const EdgeInsets.only(top: 32),
-                          sliver: SliverToBoxAdapter(child: _OrderWidget(orderState.data!)),
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child:
+              orderState is ProgressLoadingState ||
+                      venuesState is ProgressLoadingState ||
+                      userState is ProgressLoadingState
+                  ? _UserLoadingSkeleton()
+                  : switch (state.userState) {
+                    ProgressLoadingState<User>() => _UserLoadingSkeleton(),
+                    SuccessLoadingState<User> user => CustomScrollView(
+                      slivers: [
+                        SliverSafeArea(
+                          top: false,
+                          sliver: SliverPadding(
+                            padding: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
+                            sliver: SliverMainAxisGroup(
+                              slivers: [
+                                SliverToBoxAdapter(child: _ProfileWidget(user: user.data)),
+                                if (orderState is SuccessLoadingState<Order?> && orderState.data != null) ...[
+                                  SliverPadding(
+                                    padding: const EdgeInsets.only(top: 32),
+                                    sliver: SliverToBoxAdapter(child: _OrderWidget(orderState.data!)),
+                                  ),
+                                  if (venuesState is SuccessLoadingState<List<Venue>>) ...[
+                                    SliverPadding(
+                                      padding: const EdgeInsets.only(top: 32),
+                                      sliver: SliverToBoxAdapter(
+                                        child: Text(
+                                          S.of(context).nearestVenuesTitle,
+                                          style: Theme.of(context).textTheme.headlineSmall,
+                                        ),
+                                      ),
+                                    ),
+                                    SliverPadding(
+                                      padding: const EdgeInsets.only(top: 16),
+                                      sliver: SliverList.separated(
+                                        itemBuilder:
+                                            (context, index) => VenueListItem(
+                                              venue: venuesState.data[index],
+                                              shrinkDescription: true,
+                                              onClick:
+                                                  () => context.pushRoute(
+                                                    VenueDetailsRoute(
+                                                      venueId: venuesState.data[index].id,
+                                                      venue: venuesState.data[index],
+                                                    ),
+                                                  ),
+                                            ),
+                                        separatorBuilder: (context, index) => const SizedBox(height: 16),
+                                        itemCount: venuesState.data.length,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
-                        if (venuesState is SuccessLoadingState<List<Venue>>) ...[
-                          SliverPadding(
-                            padding: const EdgeInsets.only(top: 32),
-                            sliver: SliverToBoxAdapter(
-                              child: Text(
-                                S.of(context).nearestVenuesTitle,
-                                style: Theme.of(context).textTheme.headlineSmall,
-                              ),
-                            ),
-                          ),
-                          SliverPadding(
-                            padding: const EdgeInsets.only(top: 16),
-                            sliver: SliverList.separated(
-                              itemBuilder:
-                                  (context, index) =>
-                                      VenueListItem(venue: venuesState.data[index], shrinkDescription: true),
-                              separatorBuilder: (context, index) => const SizedBox(height: 16),
-                              itemCount: venuesState.data.length,
-                            ),
-                          ),
-                        ],
                       ],
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          ErrorLoadingState<User> user => Center(child: Text(user.error.message)),
-        },
+                    ),
+                    ErrorLoadingState<User> user => Center(child: Text(user.error.message)),
+                  },
+        ),
       );
     },
   );

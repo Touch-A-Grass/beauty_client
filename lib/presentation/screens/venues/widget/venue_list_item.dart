@@ -18,11 +18,7 @@ class VenueListItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap:
-              onClick ??
-              () {
-                context.pushRoute(VenueDetailsRoute(venueId: venue.id));
-              },
+          onTap: onClick,
           borderRadius: BorderRadius.circular(16),
           child: SizedBox(
             height: shrinkDescription ? 128 : null,
@@ -52,9 +48,9 @@ class VenueListItem extends StatelessWidget {
                                 venue.description,
                                 maxLines: shrinkDescription ? 3 : null,
                                 overflow: shrinkDescription ? TextOverflow.ellipsis : null,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
+                                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.onInverseSurface,
+                                ),
                               ),
                             ],
                           ],

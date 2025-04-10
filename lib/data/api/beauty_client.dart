@@ -1,6 +1,7 @@
 import 'package:beauty_client/data/models/dto/staff_time_slot_dto.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
+import 'package:beauty_client/data/models/requests/send_firebase_token_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/data/models/requests/update_record_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
@@ -24,6 +25,9 @@ abstract class BeautyClient {
 
   @POST('/user/auth')
   Future<Auth> sendCode(@Body() SendCodeRequest request);
+
+  @POST('/user/firebase_token')
+  Future<Auth> sendFirebaseToken(@Body() SendFirebaseTokenRequest request);
 
   @GET('/user')
   Future<User> getUser();

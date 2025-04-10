@@ -17,42 +17,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppOverlay(
-      child: AutoTabsRouter(
-        builder:
-            (context, child) => Scaffold(
-              body: Stack(
-                children: [
-                  MediaQuery(
-                    data: MediaQuery.of(
-                      context,
-                    ).copyWith(padding: MediaQuery.of(context).padding + EdgeInsets.only(bottom: 16 + bottomHeight)),
-                    child: child,
-                  ),
-                  Positioned(
-                    left: 16,
-                    bottom: 16 + MediaQuery.of(context).padding.bottom,
-                    right: 16,
-                    child: MeasureSize(
-                      onChange:
-                          (size) => setState(() {
-                            bottomHeight = size.height;
-                          }),
-                      child: HomeNavigationBar(
-                        items: [
-                          HomeNavigationBarItem(icon: Icons.home),
-                          HomeNavigationBarItem(icon: Icons.search),
-                          HomeNavigationBarItem(icon: Icons.receipt),
-                        ],
-                        currentIndex: context.tabsRouter.activeIndex,
-                        onItemTapped: (index) => context.tabsRouter.setActiveIndex(index),
-                      ),
+    return AutoTabsRouter(
+      builder:
+          (context, child) => Scaffold(
+            body: Stack(
+              children: [
+                MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(padding: MediaQuery.of(context).padding + EdgeInsets.only(bottom: 16 + bottomHeight)),
+                  child: child,
+                ),
+                Positioned(
+                  left: 16,
+                  bottom: 16 + MediaQuery.of(context).padding.bottom,
+                  right: 16,
+                  child: MeasureSize(
+                    onChange:
+                        (size) => setState(() {
+                          bottomHeight = size.height;
+                        }),
+                    child: HomeNavigationBar(
+                      items: [
+                        HomeNavigationBarItem(icon: Icons.home),
+                        HomeNavigationBarItem(icon: Icons.search),
+                        HomeNavigationBarItem(icon: Icons.receipt),
+                      ],
+                      currentIndex: context.tabsRouter.activeIndex,
+                      onItemTapped: (index) => context.tabsRouter.setActiveIndex(index),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-      ),
+          ),
     );
   }
 }

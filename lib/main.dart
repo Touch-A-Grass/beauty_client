@@ -8,6 +8,9 @@ import 'package:beauty_client/presentation/components/location_listener.dart';
 import 'package:beauty_client/presentation/navigation/app_router.dart';
 import 'package:beauty_client/presentation/navigation/guards/auth_guard.dart';
 import 'package:beauty_client/presentation/navigation/navigation_state_updater.dart';
+import 'package:beauty_client/presentation/screens/root/root_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +18,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:json_theme/json_theme.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   const androidOptions = AndroidOptions(encryptedSharedPreferences: true);
   const secureStorage = FlutterSecureStorage(aOptions: androidOptions);
@@ -69,11 +76,12 @@ class _AppState extends State<App> {
     return LocationListener(
       child: MaterialApp.router(
         theme: applyTheme(widget.lightTheme),
-        darkTheme: applyTheme(widget.darkTheme),
+        // darkTheme: applyTheme(widget.darkTheme),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [S.delegate, ...GlobalMaterialLocalizations.delegates],
         supportedLocales: S.delegate.supportedLocales,
         routerConfig: appRouter.config(reevaluateListenable: context.read<NavigationStateUpdater>()),
+        builder: (context, child) => RootScreen(child: child ?? SizedBox.shrink()),
       ),
     );
   }

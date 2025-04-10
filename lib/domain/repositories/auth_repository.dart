@@ -17,4 +17,6 @@ abstract interface class AuthRepository {
   Future<void> updateUser({required String name});
 
   Stream<User?> watchUser();
+
+  Future<void> sendFirebaseToken(String token);
 }

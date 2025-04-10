@@ -19,73 +19,71 @@ class _PhoneScreenState extends State<PhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppOverlay(
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverSafeArea(
-              bottom: false,
-              sliver: SliverToBoxAdapter(
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverSafeArea(
+            bottom: false,
+            sliver: SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 64),
+                    AssetIcon(
+                      'assets/icons/beauty_service.svg',
+                      size: 164,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(height: 64),
+                    IntlPhoneField(
+                      autofocus: true,
+                      showCountryFlag: false,
+                      initialCountryCode: 'RU',
+                      onChanged: (phoneNumber) {
+                        phone.value = phoneNumber;
+                      },
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SafeArea(
+                top: false,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 64),
-                      AssetIcon(
-                        'assets/icons/beauty_service.svg',
-                        size: 164,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(height: 64),
-                      IntlPhoneField(
-                        autofocus: true,
-                        showCountryFlag: false,
-                        initialCountryCode: 'RU',
-                        onChanged: (phoneNumber) {
-                          phone.value = phoneNumber;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.only(
+                    bottom: 64,
+                    left: 32,
+                    right: 32,
+                    top: 16,
                   ),
-                ),
-              ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 64,
-                      left: 32,
-                      right: 32,
-                      top: 16,
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: AnimatedBuilder(
-                        animation: phone,
-                        builder: (context, _) => ElevatedButton(
-                          onPressed: isPhoneValid()
-                              ? () => widget
-                                  .onPhoneEntered(phone.value!.completeNumber)
-                              : null,
-                          child: Text(S.of(context).phoneNextButton),
-                        ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: AnimatedBuilder(
+                      animation: phone,
+                      builder: (context, _) => ElevatedButton(
+                        onPressed: isPhoneValid()
+                            ? () => widget
+                                .onPhoneEntered(phone.value!.completeNumber)
+                            : null,
+                        child: Text(S.of(context).phoneNextButton),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
