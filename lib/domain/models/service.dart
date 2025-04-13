@@ -12,6 +12,7 @@ class Service with _$Service {
     @Default('') String description,
     @ServiceDurationConverter() Duration? duration,
     double? price,
+    String? photo,
   }) = _Service;
 
   factory Service.fromJson(Map<String, dynamic> json) => _$ServiceFromJson(json);

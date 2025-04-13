@@ -108,7 +108,7 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: selectedVenue == venue ? venue.theme.color.invert() : venue.theme.color,
+                    color: selectedVenue == venue ? venue.theme.color.toMaterial().shade300 : venue.theme.color,
                     width: 4,
                   ),
                 ),

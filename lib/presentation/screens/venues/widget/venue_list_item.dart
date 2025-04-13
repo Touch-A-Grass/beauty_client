@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
+import 'package:beauty_client/presentation/util/hex_color.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,8 @@ class VenueListItem extends StatelessWidget {
         child: InkWell(
           onTap: onClick,
           borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            height: shrinkDescription ? 128 : null,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: shrinkDescription ? 128 : 0),
             child: Stack(
               children: [
                 Positioned.fill(
@@ -92,7 +93,7 @@ class VenuePhotoFade extends StatelessWidget {
                 (rect) => LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [Theme.of(context).colorScheme.inverseSurface, Colors.transparent],
+                  colors: [venue.theme.color.toMaterial().shade800, Colors.transparent],
                   stops: [0.5, 1],
                 ).createShader(rect),
             child: DecoratedBox(decoration: BoxDecoration(color: Colors.black)),

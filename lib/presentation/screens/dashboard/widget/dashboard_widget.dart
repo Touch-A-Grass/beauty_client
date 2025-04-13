@@ -42,7 +42,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
               onPressed: () {
                 context.pushRoute(ProfileRoute());
               },
-              icon: Icon(Icons.settings),
+              icon: Icon(Icons.settings_rounded),
             ),
           ],
         ),

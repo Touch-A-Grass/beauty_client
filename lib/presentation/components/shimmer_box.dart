@@ -96,26 +96,28 @@ class SliverShimmerSwitcher extends StatelessWidget {
 class ShimmerLoading extends StatelessWidget {
   final double? width;
   final double? height;
+  final BorderRadius? borderRadius;
 
-  const ShimmerLoading({super.key, this.width, this.height});
+  const ShimmerLoading({super.key, this.width, this.height, this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
-    return ShimmerLoadingPainter(child: ShimmerContentBox(width: width, height: height));
+    return ShimmerLoadingPainter(child: ShimmerContentBox(width: width, height: height, borderRadius: borderRadius));
   }
 }
 
 class ShimmerContentBox extends StatelessWidget {
   final double? width;
   final double? height;
+  final BorderRadius? borderRadius;
 
-  const ShimmerContentBox({super.key, this.width, this.height});
+  const ShimmerContentBox({super.key, this.width, this.height, this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: borderRadius ?? BorderRadius.circular(24),
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
       width: width,

@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 
 class DioFactory {
   static Dio create(AuthStorage authStorage, BaseHeadersInterceptor baseHeadersInterceptor) {
-    final dio = Dio();
+    final dio = Dio(
+      BaseOptions(connectTimeout: const Duration(seconds: 30), receiveTimeout: const Duration(minutes: 5)),
+    );
     final retryDio = Dio();
 
     dio.interceptors.addAll([

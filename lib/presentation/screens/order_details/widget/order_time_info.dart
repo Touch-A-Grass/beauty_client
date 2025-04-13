@@ -42,7 +42,7 @@ class _OrderTimeInfoState extends State<_OrderTimeInfo> {
                 onPressed: () {
                   launchUrl(Uri.parse(generateLink()));
                 },
-                icon: Icon(Icons.date_range),
+                icon: Icon(Icons.date_range_rounded),
               ),
             ],
           ),

@@ -103,19 +103,19 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> with TickerProvid
                 if (index == widget.currentIndex) {
                   color =
                       Color.lerp(
-                        Theme.of(context).colorScheme.onSurfaceVariant,
                         Theme.of(context).colorScheme.onSurface,
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                         animation.value,
                       )!;
                 } else if (index == prevIndex) {
                   color =
                       Color.lerp(
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                         Theme.of(context).colorScheme.onSurface,
-                        Theme.of(context).colorScheme.onSurfaceVariant,
                         animation.value,
                       )!;
                 } else {
-                  color = Theme.of(context).colorScheme.onSurfaceVariant;
+                  color = Theme.of(context).colorScheme.onSurface;
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,

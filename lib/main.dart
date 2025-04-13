@@ -9,8 +9,9 @@ import 'package:beauty_client/presentation/navigation/app_router.dart';
 import 'package:beauty_client/presentation/navigation/guards/auth_guard.dart';
 import 'package:beauty_client/presentation/navigation/navigation_state_updater.dart';
 import 'package:beauty_client/presentation/screens/root/root_screen.dart';
+import 'package:beauty_client/presentation/theme/colors.dart';
+import 'package:beauty_client/presentation/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,16 +35,7 @@ void main() async {
   final userStorage = UserStorage(secureStorage: secureStorage);
   await userStorage.init();
 
-  runApp(
-    Di(
-      userStorage: userStorage,
-      authStorage: authStorage,
-      child: App(
-        lightTheme: await decodeTheme('assets/appainter_theme.json'),
-        darkTheme: await decodeTheme('assets/appainter_theme_dark.json'),
-      ),
-    ),
-  );
+  runApp(Di(userStorage: userStorage, authStorage: authStorage, child: const App()));
 }
 
 Future<ThemeData?> decodeTheme(String assetPath) async {
@@ -53,10 +45,7 @@ Future<ThemeData?> decodeTheme(String assetPath) async {
 }
 
 class App extends StatefulWidget {
-  final ThemeData? lightTheme;
-  final ThemeData? darkTheme;
-
-  const App({super.key, required this.lightTheme, required this.darkTheme});
+  const App({super.key});
 
   @override
   State<App> createState() => _AppState();
@@ -75,28 +64,13 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return LocationListener(
       child: MaterialApp.router(
-        theme: applyTheme(widget.lightTheme),
+        theme: AppTheme.theme(AppColorScheme.light()),
         // darkTheme: applyTheme(widget.darkTheme),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [S.delegate, ...GlobalMaterialLocalizations.delegates],
         supportedLocales: S.delegate.supportedLocales,
         routerConfig: appRouter.config(reevaluateListenable: context.read<NavigationStateUpdater>()),
         builder: (context, child) => RootScreen(child: child ?? SizedBox.shrink()),
-      ),
-    );
-  }
-
-  ThemeData? applyTheme(ThemeData? theme) {
-    return theme?.copyWith(
-      timePickerTheme: theme.timePickerTheme.copyWith(hourMinuteTextStyle: theme.textTheme.displaySmall),
-      appBarTheme: AppBarTheme(
-        centerTitle: true,
-        titleTextStyle: theme.textTheme.titleMedium,
-        backgroundColor: theme.colorScheme.surface,
-        shadowColor: theme.colorScheme.shadow,
-        scrolledUnderElevation: 1,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
       ),
     );
   }

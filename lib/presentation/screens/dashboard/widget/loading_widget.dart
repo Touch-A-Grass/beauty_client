@@ -15,9 +15,7 @@ class _UserLoadingSkeleton extends StatelessWidget {
             SliverPadding(padding: EdgeInsets.only(top: 32), sliver: _OrderLoadingSliver()),
             SliverPadding(
               padding: const EdgeInsets.only(top: 32),
-              sliver: SliverToBoxAdapter(
-                child: Text(S.of(context).nearestVenuesTitle, style: Theme.of(context).textTheme.headlineSmall),
-              ),
+              sliver: SliverToBoxAdapter(child: ShimmerLoading(width: 128, height: 32)),
             ),
             SliverPadding(padding: const EdgeInsets.only(top: 16), sliver: _VenueLoadingSliver()),
           ],

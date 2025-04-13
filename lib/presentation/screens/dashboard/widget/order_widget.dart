@@ -14,13 +14,13 @@ class _OrderWidgetState extends State<_OrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.onSecondaryContainer;
+    final color = Theme.of(context).colorScheme.onPrimaryContainer;
 
     return Stack(
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(24),
           ),
           child: Material(
@@ -71,15 +71,15 @@ class _OrderWidgetState extends State<_OrderWidget> {
           ),
         ),
         Positioned(
-          right: 4,
-          bottom: 4,
+          right: 8,
+          bottom: 8,
           child: SizedBox(
             width: 32,
             height: 32,
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               alignment: Alignment.center,
               child: IconButton(
@@ -89,7 +89,7 @@ class _OrderWidgetState extends State<_OrderWidget> {
                 icon: const Icon(Icons.menu_open),
                 iconSize: 24,
                 padding: EdgeInsets.all(4),
-                color: Theme.of(context).colorScheme.secondaryContainer,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
           ),

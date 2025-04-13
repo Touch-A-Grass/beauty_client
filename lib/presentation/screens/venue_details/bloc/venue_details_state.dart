@@ -2,6 +2,8 @@ part of 'venue_details_bloc.dart';
 
 @freezed
 class VenueDetailsState with _$VenueDetailsState {
+  const VenueDetailsState._();
+
   const factory VenueDetailsState({
     Venue? venue,
     @Default([]) List<Service> services,
@@ -13,4 +15,6 @@ class VenueDetailsState with _$VenueDetailsState {
     AppError? staffLoadingError,
     @Default(false) bool isLoadingStaff,
   }) = _VenueDetailsState;
+
+  List<String> get allPhotos => [venue?.theme.photo, ...(venue?.photos ?? <String>[])].nonNulls.toList();
 }

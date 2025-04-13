@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
 import 'package:beauty_client/presentation/components/measure_size.dart';
 import 'package:beauty_client/presentation/screens/home/components/home_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                     child: HomeNavigationBar(
                       items: [
-                        HomeNavigationBarItem(icon: Icons.home),
-                        HomeNavigationBarItem(icon: Icons.search),
-                        HomeNavigationBarItem(icon: Icons.receipt),
+                        HomeNavigationBarItem(icon: Icons.home_rounded),
+                        HomeNavigationBarItem(icon: Icons.search_rounded),
+                        HomeNavigationBarItem(icon: Icons.history_rounded),
                       ],
                       currentIndex: context.tabsRouter.activeIndex,
                       onItemTapped: (index) => context.tabsRouter.setActiveIndex(index),

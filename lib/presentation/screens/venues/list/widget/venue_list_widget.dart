@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/app_refresh_indicator.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
+import 'package:beauty_client/presentation/components/shimmer_box.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/list/bloc/venue_list_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
@@ -20,6 +21,9 @@ class VenueListWidget extends StatelessWidget {
       },
       child: BlocBuilder<VenueListBloc, VenueListState>(
         builder: (context, state) {
+          if (state.isLoadingVenues && state.venues.data.isEmpty) {
+            return _LoadingSkeleton();
+          }
           if (!state.isLoadingVenues && state.venues.data.isEmpty) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,7 +52,7 @@ class VenueListWidget extends StatelessWidget {
                             context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
                           },
                         ),
-                    separatorBuilder: (context, index) => const Divider(height: 32),
+                    separatorBuilder: (context, index) => const Divider(height: 24),
                     itemCount: state.venues.data.length,
                   ),
                 ),
@@ -57,6 +61,27 @@ class VenueListWidget extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _LoadingSkeleton extends StatelessWidget {
+  const _LoadingSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+          sliver: SliverList.separated(
+            itemBuilder: (context, index) => ShimmerLoading(height: 130, width: double.infinity),
+            separatorBuilder: (context, index) => const Divider(height: 24),
+            itemCount: 5,
+          ),
+        ),
+      ],
     );
   }
 }
