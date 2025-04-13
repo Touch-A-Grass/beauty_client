@@ -70,7 +70,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                     width: double.infinity,
                     child: AnimatedBuilder(
                       animation: phone,
-                      builder: (context, _) => ElevatedButton(
+                      builder: (context, _) => FilledButton(
                         onPressed: isPhoneValid()
                             ? () => widget
                                 .onPhoneEntered(phone.value!.completeNumber)

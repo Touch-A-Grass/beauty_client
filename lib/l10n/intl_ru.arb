@@ -49,5 +49,6 @@
   "orderCancelAlertMessage": "Вы действительно хотите отменить заказ?",
   "orderCancelAlertCancel": "Нет",
   "orderCancelAlertConfirm": "Да",
-  "nearestVenuesTitle": "Ближайшие салоны"
+  "nearestVenuesTitle": "Ближайшие салоны",
+  "cartTimeDialogIntervalTitle": "Время"
 }

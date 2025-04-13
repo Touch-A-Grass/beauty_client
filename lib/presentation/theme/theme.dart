@@ -9,6 +9,13 @@ class AppTheme {
     appBarTheme: _appBarTheme(colorScheme),
     dividerTheme: DividerThemeData(color: colorScheme.shadow, indent: 32, endIndent: 32),
     tabBarTheme: TabBarThemeData(dividerColor: Colors.transparent),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(16),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+      ),
+    ),
   );
 
   static _appBarTheme(ColorScheme colorScheme) => AppBarTheme(

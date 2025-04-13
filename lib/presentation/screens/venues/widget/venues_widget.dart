@@ -10,12 +10,15 @@ class VenuesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        body: Column(
-          children: [
-            TabBar(tabs: [Tab(text: S.of(context).dashboardListButton), Tab(text: S.of(context).dashboardMapButton)]),
-            const Expanded(child: TabBarView(children: [VenueList(), VenueMap()])),
-          ],
+      child: SafeArea(
+        bottom: false,
+        child: Scaffold(
+          body: Column(
+            children: [
+              TabBar(tabs: [Tab(text: S.of(context).dashboardListButton), Tab(text: S.of(context).dashboardMapButton)]),
+              const Expanded(child: TabBarView(children: [VenueList(), VenueMap()])),
+            ],
+          ),
         ),
       ),
     );

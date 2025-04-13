@@ -213,7 +213,7 @@ class _ChangeProfileDialogState extends State<_ChangeProfileDialog> {
                   children: [
                     Expanded(child: OutlinedButton(onPressed: () => Navigator.pop(context), child: Text('Отменить'))),
                     Expanded(
-                      child: ElevatedButton(
+                      child: FilledButton(
                         onPressed:
                             nameController.text.isEmpty || nameController.text.trim() == widget.user.name.trim()
                                 ? null

@@ -90,7 +90,10 @@ class _CartWidgetState extends State<CartWidget> {
                               padding: EdgeInsets.symmetric(vertical: 16),
                               sliver: SliverMainAxisGroup(
                                 slivers: [
-                                  SliverToBoxAdapter(child: VenueListItem(venue: state.venue!)),
+                                  SliverPadding(
+                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    sliver: SliverToBoxAdapter(child: VenueListItem(venue: state.venue!)),
+                                  ),
                                   SliverPadding(
                                     padding: EdgeInsets.symmetric(horizontal: 16),
                                     sliver: SliverToBoxAdapter(
@@ -140,6 +143,7 @@ class _CartWidgetState extends State<CartWidget> {
                                                   final date = await showModalBottomSheet(
                                                     context: context,
                                                     backgroundColor: Colors.transparent,
+                                                    isScrollControlled: true,
                                                     builder:
                                                         (context) => SelectTimeslotSheet(
                                                           timeSlots: s.timeSlots,
@@ -204,7 +208,7 @@ class _CartWidgetState extends State<CartWidget> {
                                   child: SizedBox(
                                     width: double.infinity,
                                     height: 48,
-                                    child: ElevatedButton(
+                                    child: FilledButton(
                                       onPressed:
                                           state.selectedService != null &&
                                                   state.selectedStaff != null &&
