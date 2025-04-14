@@ -2,7 +2,7 @@ import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/app_draggable_modal_sheet.dart';
-import 'package:beauty_client/presentation/screens/venue_details/widget/staff_list_item.dart';
+import 'package:beauty_client/presentation/components/staff_grid_item.dart';
 import 'package:flutter/material.dart';
 
 class SelectStaffDialog extends StatelessWidget {
@@ -20,62 +20,84 @@ class SelectStaffDialog extends StatelessWidget {
 
     return AppDraggableModalSheet(
       builder:
-          (context, scrollController) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-              color: Theme.of(context).colorScheme.surfaceContainer,
-            ),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverPadding(
-                  padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                  sliver: SliverMainAxisGroup(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(top: 16),
-                        sliver: SliverList.separated(
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
-                          itemCount: staffWithService.length,
-                          itemBuilder:
-                              (context, index) => StaffListItem(
-                                staff: staffWithService[index],
-                                onTap: () {
-                                  Navigator.of(context).pop(staffWithService[index]);
-                                },
-                              ),
+          (context, scrollController) => Padding(
+            padding: EdgeInsets.only(top: 16 + MediaQuery.of(context).padding.top),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverPadding(
+                    padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                    sliver: SliverMainAxisGroup(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
                         ),
-                      ),
-                      if (staffWithoutService.isNotEmpty)
                         SliverPadding(
                           padding: EdgeInsets.only(top: 16),
-                          sliver: SliverToBoxAdapter(
-                            child: Text(
-                              S.of(context).staffsWithoutService,
-                              style: Theme.of(context).textTheme.bodyLarge,
+                          sliver: SliverGrid.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
                             ),
+                            itemCount: staffWithService.length,
+                            itemBuilder:
+                                (context, index) => StaffGridItem(
+                                  staff: staffWithService[index],
+                                  onTap: () {
+                                    Navigator.of(context).pop(staffWithService[index]);
+                                  },
+                                ),
                           ),
                         ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(top: 16),
-                        sliver: SliverList.separated(
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
-                          itemCount: staffWithoutService.length,
-                          itemBuilder:
-                              (context, index) => StaffListItem(
-                                staff: staffWithoutService[index],
-                                isError: true,
-                                onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
+                        if (staffWithoutService.isNotEmpty)
+                          SliverPadding(
+                            padding: EdgeInsets.only(top: 16),
+                            sliver: SliverToBoxAdapter(
+                              child: Opacity(
+                                opacity: 0.5,
+                                child: Text(
+                                  S.of(context).staffsWithoutService,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
                               ),
+                            ),
+                          ),
+                        SliverPadding(
+                          padding: EdgeInsets.only(top: 16),
+                          sliver: SliverGrid.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
+                            ),
+                            itemCount: staffWithoutService.length,
+                            itemBuilder:
+                                (context, index) => Container(
+                                  foregroundDecoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    backgroundBlendMode: BlendMode.saturation,
+                                  ),
+                                  child: Opacity(
+                                    opacity: 0.5,
+                                    child: StaffGridItem(
+                                      staff: staffWithoutService[index],
+                                      onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
+                                    ),
+                                  ),
+                                ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
     );

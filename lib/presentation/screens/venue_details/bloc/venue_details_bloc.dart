@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:beauty_client/domain/models/app_error.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';

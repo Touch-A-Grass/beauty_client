@@ -1,34 +1,45 @@
 import 'package:flutter/material.dart';
 
-class Avatar extends StatelessWidget {
+class RoundedAvatar extends StatelessWidget {
   final ImageProvider? image;
 
-  const Avatar({super.key, this.image});
+  const RoundedAvatar({super.key, this.image});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
-      dimension: 80,
-      child: CircleAvatar(
+      dimension: 96,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
         child:
             image != null
-                ? Image(
-                  image: image!,
-                  loadingBuilder:
-                      (context, child, loadingProgress) =>
-                          loadingProgress == null ? child : const CircularProgressIndicator(),
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                    if (frame == null) {
-                      return const CircularProgressIndicator();
-                    }
-                    return child;
-                  },
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
+                ? ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image(
+                    image: image!,
+                    loadingBuilder:
+                        (context, child, loadingProgress) =>
+                            loadingProgress == null
+                                ? child
+                                : Center(
+                                  child: SizedBox(width: 32, height: 32, child: const CircularProgressIndicator()),
+                                ),
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      if (frame == null) {
+                        return Center(child: SizedBox(width: 32, height: 32, child: const CircularProgressIndicator()));
+                      }
+                      return child;
+                    },
+                    fit: BoxFit.cover,
+                    width: 80,
+                    height: 80,
+                  ),
                 )
-                : Icon(Icons.person),
+                : Icon(Icons.image_rounded, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

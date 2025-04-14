@@ -26,7 +26,7 @@ class StaffTab extends StatelessWidget {
                   ),
                   itemCount: state.staff.length,
                   itemBuilder:
-                      (context, index) => StaffGirdItem(
+                      (context, index) => StaffGridItem(
                         staff: state.staff[index],
                         onTap: () {
                           context.pushRoute(

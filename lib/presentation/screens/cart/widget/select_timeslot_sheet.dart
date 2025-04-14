@@ -31,9 +31,25 @@ class _SelectTimeslotSheetState extends State<SelectTimeslotSheet> {
             .where(
               (timeSlot) => timeSlot.intervals.any((interval) => interval.end.difference(interval.start) >= duration),
             )
+            .sortedBy((e) => e.date)
             .toList();
 
-    final groupedTimeSlots = modifiedTimeSlots.groupListsBy((e) => (e.date.year, e.date.month));
+    final Map<(int, int, int), StaffTimeSlot> timeSlotsMap = {};
+    for (final timeSlot in modifiedTimeSlots) {
+      timeSlotsMap[(timeSlot.date.year, timeSlot.date.month, timeSlot.date.day)] = timeSlot;
+    }
+
+    final dateTime = modifiedTimeSlots.firstOrNull?.date.copyWith(day: 1) ?? DateTime.now();
+
+    for (int i = 0; i < 365; i++) {
+      final t = dateTime.add(Duration(days: i));
+      timeSlotsMap[(t.year, t.month, t.day)] =
+          timeSlotsMap[(t.year, t.month, t.day)] ?? StaffTimeSlot(date: t, id: '$i', intervals: []);
+    }
+
+    final groupedTimeSlots = timeSlotsMap.values
+        .sortedBy((e) => e.date)
+        .groupListsBy((e) => (e.date.year, e.date.month));
 
     return AppDraggableModalSheet(
       builder:
@@ -203,7 +219,9 @@ class _TimeSlotDateState extends State<_TimeSlotDate> {
     return AnimatedDefaultTextStyle(
       duration: Duration(milliseconds: 250),
       style:
-          widget.isSelected
+          widget.timeSlot.intervals.isEmpty
+              ? Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.shadow)
+              : widget.isSelected
               ? Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onPrimary)
               : Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.onSurface),
       child: AnimatedContainer(
@@ -213,13 +231,15 @@ class _TimeSlotDateState extends State<_TimeSlotDate> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color:
-              widget.isSelected
+              widget.timeSlot.intervals.isEmpty
+                  ? Theme.of(context).colorScheme.surfaceContainerLow
+                  : widget.isSelected
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.surfaceContainer,
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: widget.onTap,
+          onTap: widget.timeSlot.intervals.isNotEmpty ? widget.onTap : null,
           child: Padding(
             padding: const EdgeInsets.all(4),
             child: Column(

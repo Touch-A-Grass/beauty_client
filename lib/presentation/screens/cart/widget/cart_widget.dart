@@ -1,18 +1,25 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:beauty_client/domain/models/service.dart';
+import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/avatar.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/cart/bloc/cart_bloc.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_service_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_staff_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_timeslot_sheet.dart';
-import 'package:beauty_client/presentation/screens/venue_details/widget/service_list_item.dart';
-import 'package:beauty_client/presentation/screens/venue_details/widget/staff_list_item.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
+import 'package:beauty_client/presentation/util/image_util.dart';
+import 'package:beauty_client/presentation/util/price_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+part 'service_info.dart';
+part 'staff_info.dart';
 
 class CartWidget extends StatefulWidget {
   const CartWidget({super.key});
@@ -28,6 +35,7 @@ class _CartWidgetState extends State<CartWidget> {
     final service = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder:
           (childContext) => SelectServiceDialog(
             services: context.read<CartBloc>().state.services ?? [],
@@ -43,6 +51,7 @@ class _CartWidgetState extends State<CartWidget> {
     final staff = await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder:
           (childContext) => SelectStaffDialog(
             staff: context.read<CartBloc>().state.staffs ?? [],
@@ -107,12 +116,12 @@ class _CartWidgetState extends State<CartWidget> {
                                           ),
                                           const SizedBox(height: 16),
                                           if (state.selectedService != null)
-                                            ServiceListItem(
+                                            _ServiceInfo(
                                               service: state.selectedService!,
                                               onTap: () => selectService(context),
                                             )
                                           else
-                                            ServiceListItemPlaceholder(onTap: () => selectService(context)),
+                                            _ServiceInfoPlaceHolder(onTap: () => selectService(context)),
                                           const SizedBox(height: 32),
                                           Text(
                                             S.of(context).cartMaster,
@@ -120,12 +129,9 @@ class _CartWidgetState extends State<CartWidget> {
                                           ),
                                           const SizedBox(height: 16),
                                           if (state.selectedStaff != null)
-                                            StaffListItem(
-                                              staff: state.selectedStaff!,
-                                              onTap: () => selectStaff(context),
-                                            )
+                                            _StaffInfo(staff: state.selectedStaff!, onTap: () => selectStaff(context))
                                           else
-                                            StaffListItemPlaceholder(onTap: () => selectStaff(context)),
+                                            _StaffInfoPlaceHolder(onTap: () => selectStaff(context)),
                                           const SizedBox(height: 32),
                                           Text(
                                             S.of(context).cartServiceTime,
@@ -157,10 +163,7 @@ class _CartWidgetState extends State<CartWidget> {
                                                 },
                                               },
                                               child: switch (state.timeSlotsState) {
-                                                CartTimeSlotsStateEmpty() =>
-                                                  state.selectedService == null
-                                                      ? Text(S.of(context).cartDateServiceRequired)
-                                                      : Text(S.of(context).cartDateMasterRequired),
+                                                CartTimeSlotsStateEmpty() => Text(S.of(context).cartDatePlaceholder),
                                                 CartTimeSlotsStateLoading() => Center(
                                                   child: SizedBox.square(
                                                     dimension: 24,

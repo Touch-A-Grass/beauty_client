@@ -5,6 +5,8 @@ part 'staff.g.dart';
 
 @freezed
 class Staff with _$Staff {
+  const Staff._();
+
   const factory Staff({
     required String id,
     required String name,
@@ -14,4 +16,9 @@ class Staff with _$Staff {
   }) = _Staff;
 
   factory Staff.fromJson(Map<String, dynamic> json) => _$StaffFromJson(json);
+
+  String get initials {
+    final names = name.split(' ');
+    return names.map((e) => e.substring(0, 1)).join('');
+  }
 }

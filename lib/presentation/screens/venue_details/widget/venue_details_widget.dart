@@ -7,7 +7,7 @@ import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/components/parallax_flow_delegate.dart';
 import 'package:beauty_client/presentation/components/service_grid_item.dart';
 import 'package:beauty_client/presentation/components/shimmer_box.dart';
-import 'package:beauty_client/presentation/components/staff_gird_item.dart';
+import 'package:beauty_client/presentation/components/staff_grid_item.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venue_details/bloc/venue_details_bloc.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
@@ -147,6 +147,37 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                             padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                             sliver: SliverToBoxAdapter(
                               child: Text(state.venue!.name, style: Theme.of(context).textTheme.headlineSmall),
+                            ),
+                          ),
+                        if (state.maxPrice != null && state.minPrice != null ||
+                            state.minDuration != null && state.maxDuration != null)
+                          SliverPadding(
+                            padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+                            sliver: SliverToBoxAdapter(
+                              child: Opacity(
+                                opacity: 0.5,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (state.maxPrice != null && state.minPrice != null)
+                                      Text(
+                                        '${state.minPrice} – ${state.maxPrice} ₽',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.end,
+                                      )
+                                    else
+                                      SizedBox.shrink(),
+                                    if (state.minDuration != null && state.maxDuration != null)
+                                      Text(
+                                        '${state.minDuration!.inMinutes} ~ ${state.maxDuration!.inMinutes} мин.',
+                                        style: Theme.of(context).textTheme.labelLarge,
+                                        textAlign: TextAlign.end,
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         if (state.venue?.description.isNotEmpty ?? false)

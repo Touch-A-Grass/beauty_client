@@ -5,11 +5,14 @@ part 'user.g.dart';
 
 @freezed
 class User with _$User {
-  const factory User({
-    required String id,
-    required String name,
-    required String phoneNumber,
-  }) = _User;
+  const User._();
+
+  const factory User({required String id, required String name, required String phoneNumber}) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  String get initials {
+    final names = name.split(' ');
+    return names.map((e) => e.substring(0, 1)).join('');
+  }
 }

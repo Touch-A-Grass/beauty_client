@@ -17,4 +17,16 @@ class VenueDetailsState with _$VenueDetailsState {
   }) = _VenueDetailsState;
 
   List<String> get allPhotos => [venue?.theme.photo, ...(venue?.photos ?? <String>[])].nonNulls.toList();
+
+  int? get minPrice =>
+      services.map((e) => e.price).nonNulls.fold<double?>(null, (a, b) => a == null ? b : min(a, b))?.toInt();
+
+  int? get maxPrice =>
+      services.map((e) => e.price).nonNulls.fold<double?>(null, (a, b) => a == null ? b : max(a, b))?.toInt();
+
+  Duration? get minDuration =>
+      services.map((e) => e.duration).nonNulls.fold<Duration?>(null, (a, b) => a == null || a > b ? b : a);
+
+  Duration? get maxDuration =>
+      services.map((e) => e.duration).nonNulls.fold<Duration?>(null, (a, b) => a == null || a < b ? b : a);
 }

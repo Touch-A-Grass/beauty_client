@@ -1,14 +1,13 @@
 import 'package:beauty_client/domain/models/staff.dart';
-import 'package:beauty_client/presentation/components/image_placeholder.dart';
 import 'package:beauty_client/presentation/util/image_util.dart';
-import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImage;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class StaffGirdItem extends StatelessWidget {
+class StaffGridItem extends StatelessWidget {
   final Staff staff;
   final VoidCallback? onTap;
 
-  const StaffGirdItem({super.key, required this.staff, this.onTap});
+  const StaffGridItem({super.key, required this.staff, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +28,15 @@ class StaffGirdItem extends StatelessWidget {
               child: Center(
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: ClipOval(
-                    child:
-                        staff.photo != null
-                            ? CachedNetworkImage(imageUrl: ImageUtil.parse256(staff.photo!), fit: BoxFit.cover)
-                            : ImagePlaceholder(),
+                  child: CircleAvatar(
+                    foregroundImage:
+                        staff.photo != null ? CachedNetworkImageProvider(ImageUtil.parse256(staff.photo!)) : null,
+                    child: Text(
+                      staff.initials,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                    ),
                   ),
                 ),
               ),
