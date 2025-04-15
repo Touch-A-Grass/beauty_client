@@ -9,9 +9,7 @@ part 'venue_theme_config.g.dart';
 class VenueThemeConfig with _$VenueThemeConfig {
   const factory VenueThemeConfig({
     @ColorConverter() @Default(Colors.black) Color color,
-    @Default(
-        'https://parlour.amsterdam/wp-content/uploads/2023/10/Parlour-Amsterdam-Nieuwe-Salon-5-e1726688295357.jpeg')
-    String photo,
+    @Default('https://i.imgur.com/RB2AK8H.jpeg') String photo,
   }) = _VenueThemeConfig;
 
   factory VenueThemeConfig.fromJson(Map<String, dynamic> json) => _$VenueThemeConfigFromJson(json);

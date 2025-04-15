@@ -26,12 +26,15 @@ class _ServiceInfo extends StatelessWidget {
                 const Spacer(),
                 Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        service.price!.toPriceFormat(),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    if (service.price != null)
+                      Expanded(
+                        child: Text(
+                          service.price!.toPriceFormat(),
+                          style: Theme.of(context).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    else
+                      Expanded(child: SizedBox()),
                     if (service.duration != null)
                       Text('~${service.duration?.inMinutes} мин.', style: Theme.of(context).textTheme.labelLarge),
                   ],

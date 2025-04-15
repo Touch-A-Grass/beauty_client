@@ -39,7 +39,9 @@ class _SelectTimeslotSheetState extends State<SelectTimeslotSheet> {
       timeSlotsMap[(timeSlot.date.year, timeSlot.date.month, timeSlot.date.day)] = timeSlot;
     }
 
-    final dateTime = modifiedTimeSlots.firstOrNull?.date.copyWith(day: 1) ?? DateTime.now();
+    var dateTime = modifiedTimeSlots.firstOrNull?.date ?? DateTime.now();
+
+    if (dateTime.month != DateTime.now().month) dateTime = dateTime.copyWith(day: 1);
 
     for (int i = 0; i < 365; i++) {
       final t = dateTime.add(Duration(days: i));

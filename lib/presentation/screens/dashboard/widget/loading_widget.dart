@@ -5,22 +5,26 @@ class _UserLoadingSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
-        child: CustomScrollView(
-          slivers: [
-            _UserLoadingSliver(),
-            SliverPadding(padding: EdgeInsets.only(top: 32), sliver: _OrderLoadingSliver()),
-            SliverPadding(
-              padding: const EdgeInsets.only(top: 32),
-              sliver: SliverToBoxAdapter(child: ShimmerLoading(width: 128, height: 32)),
+    return CustomScrollView(
+      slivers: [
+        SliverSafeArea(
+          top: false,
+          sliver: SliverPadding(
+            padding: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
+            sliver: SliverMainAxisGroup(
+              slivers: [
+                _UserLoadingSliver(),
+                SliverPadding(padding: EdgeInsets.only(top: 32), sliver: _OrderLoadingSliver()),
+                SliverPadding(
+                  padding: const EdgeInsets.only(top: 32),
+                  sliver: SliverToBoxAdapter(child: ShimmerLoading(width: 128, height: 32)),
+                ),
+                SliverPadding(padding: const EdgeInsets.only(top: 16), sliver: _VenueLoadingSliver()),
+              ],
             ),
-            SliverPadding(padding: const EdgeInsets.only(top: 16), sliver: _VenueLoadingSliver()),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
