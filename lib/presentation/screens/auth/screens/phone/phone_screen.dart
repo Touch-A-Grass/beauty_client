@@ -1,5 +1,4 @@
 import 'package:beauty_client/generated/l10n.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
 import 'package:beauty_client/presentation/components/asset_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -44,9 +43,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                       onChanged: (phoneNumber) {
                         phone.value = phoneNumber;
                       },
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
                     ),
                   ],
                 ),
@@ -60,23 +57,16 @@ class _PhoneScreenState extends State<PhoneScreen> {
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 64,
-                    left: 32,
-                    right: 32,
-                    top: 16,
-                  ),
+                  padding: const EdgeInsets.only(bottom: 64, left: 32, right: 32, top: 16),
                   child: SizedBox(
                     width: double.infinity,
                     child: AnimatedBuilder(
                       animation: phone,
-                      builder: (context, _) => FilledButton(
-                        onPressed: isPhoneValid()
-                            ? () => widget
-                                .onPhoneEntered(phone.value!.completeNumber)
-                            : null,
-                        child: Text(S.of(context).phoneNextButton),
-                      ),
+                      builder:
+                          (context, _) => FilledButton(
+                            onPressed: isPhoneValid() ? () => widget.onPhoneEntered(phone.value!.completeNumber) : null,
+                            child: Text(S.of(context).phoneNextButton),
+                          ),
                     ),
                   ),
                 ),

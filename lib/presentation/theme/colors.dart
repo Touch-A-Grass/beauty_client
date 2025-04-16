@@ -13,6 +13,7 @@ class AppColorScheme {
     surfaceContainerHigh: Color(0xFFF2F2F2),
     surfaceContainerHighest: Color(0xFFE5E5E5),
     shadow: const Color(0xFFC3C3C3),
+    tertiary: Colors.grey.shade700,
   );
 }
 

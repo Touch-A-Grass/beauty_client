@@ -11,6 +11,7 @@ import 'package:beauty_client/presentation/components/staff_grid_item.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venue_details/bloc/venue_details_bloc.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
+import 'package:beauty_client/presentation/util/navigator_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,8 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
 
   @override
   Widget build(BuildContext context) {
+    final buttonStyle = ButtonStyle(backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.surface));
+
     return MultiBlocListener(
       listeners: [
         BlocSingleChangeListener<VenueDetailsBloc, VenueDetailsState>(
@@ -71,10 +74,21 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                               scrolledUnderElevation: 0,
                               floating: false,
                               pinned: false,
-                              primary: false,
                               automaticallyImplyLeading: false,
                               expandedHeight: MediaQuery.of(context).size.width,
                               backgroundColor: Colors.transparent,
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  BackButton(style: buttonStyle),
+                                  if (state.venue != null)
+                                    IconButton(
+                                      style: buttonStyle,
+                                      onPressed: () => NavigatorUtil.navigateToLocation(state.venue!.location),
+                                      icon: const Icon(Icons.location_pin),
+                                    ),
+                                ],
+                              ),
                               flexibleSpace: Stack(
                                 children: [
                                   if (state.venue?.theme.photo.isNotEmpty ?? false) ...[
@@ -123,20 +137,6 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                     ),
                                   ] else
                                     ShimmerLoading(borderRadius: BorderRadius.zero),
-                                  Positioned(
-                                    left: 16,
-                                    top: 16 + MediaQuery.of(context).padding.top,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(bottom: 32),
-                                      child: BackButton(
-                                        style: ButtonStyle(
-                                          backgroundColor: WidgetStatePropertyAll(
-                                            Theme.of(context).colorScheme.surface,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

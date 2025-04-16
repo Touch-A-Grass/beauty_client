@@ -56,142 +56,138 @@ class _SelectTimeslotSheetState extends State<SelectTimeslotSheet> {
     return AppDraggableModalSheet(
       builder:
           (context, scrollController) => Padding(
-            padding: EdgeInsets.only(top: 16 + MediaQuery.of(context).padding.top),
+            padding: const EdgeInsets.only(top: 16),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                 color: Theme.of(context).colorScheme.surface,
               ),
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverMainAxisGroup(
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    controller: scrollController,
                     slivers: [
-                      SliverPadding(
-                        padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                        sliver: SliverToBoxAdapter(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 16,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  S.of(context).cartDateTitle,
-                                  style: Theme.of(context).textTheme.headlineSmall,
-                                ),
+                      SliverMainAxisGroup(
+                        slivers: [
+                          SliverPadding(
+                            padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                            sliver: SliverToBoxAdapter(
+                              child: Text(
+                                S.of(context).cartDateTitle,
+                                style: Theme.of(context).textTheme.headlineSmall,
                               ),
-                              CloseButton(),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.only(top: 16),
-                        sliver: SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 116,
-                            child: CustomScrollView(
-                              primary: false,
-                              scrollDirection: Axis.horizontal,
-                              slivers: [
-                                for (final groupedTimeSlot in groupedTimeSlots.entries)
-                                  SliverMainAxisGroup(
-                                    slivers: [
-                                      SliverPinnedHeaderNoSpace(
-                                        child: IgnorePointer(
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: SizedBox(
-                                              height: 48,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(left: 16),
-                                                child: Center(
-                                                  child: Text(
-                                                    DateFormat('MMMM')
-                                                        .format(
-                                                          DateTime(groupedTimeSlot.key.$1, groupedTimeSlot.key.$2),
-                                                        )
-                                                        .capitalize(),
-                                                    style: Theme.of(context).textTheme.titleMedium,
-                                                    textAlign: TextAlign.end,
+                          SliverPadding(
+                            padding: const EdgeInsets.only(top: 16),
+                            sliver: SliverToBoxAdapter(
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 116,
+                                child: CustomScrollView(
+                                  primary: false,
+                                  scrollDirection: Axis.horizontal,
+                                  slivers: [
+                                    for (final groupedTimeSlot in groupedTimeSlots.entries)
+                                      SliverMainAxisGroup(
+                                        slivers: [
+                                          SliverPinnedHeaderNoSpace(
+                                            child: IgnorePointer(
+                                              child: Align(
+                                                alignment: Alignment.topLeft,
+                                                child: SizedBox(
+                                                  height: 48,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(left: 16),
+                                                    child: Center(
+                                                      child: Text(
+                                                        DateFormat('MMMM')
+                                                            .format(
+                                                              DateTime(groupedTimeSlot.key.$1, groupedTimeSlot.key.$2),
+                                                            )
+                                                            .capitalize(),
+                                                        style: Theme.of(context).textTheme.titleMedium,
+                                                        textAlign: TextAlign.end,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                          SliverList.builder(
+                                            itemCount: groupedTimeSlot.value.length,
+                                            itemBuilder:
+                                                (context, index) => Padding(
+                                                  padding: EdgeInsets.only(top: 48, left: 16),
+                                                  child: _TimeSlotDate(
+                                                    groupedTimeSlot.value[index],
+                                                    selectedTimeSlot?.id == groupedTimeSlot.value[index].id,
+                                                    () => setState(() {
+                                                      selectedTimeSlot = groupedTimeSlot.value[index];
+                                                      selectedDate =
+                                                          groupedTimeSlot.value[index].intervals.firstOrNull?.start;
+                                                    }),
+                                                  ),
+                                                ),
+                                          ),
+                                        ],
                                       ),
-                                      SliverList.builder(
-                                        itemCount: groupedTimeSlot.value.length,
-                                        itemBuilder:
-                                            (context, index) => Padding(
-                                              padding: EdgeInsets.only(top: 48, left: 16),
-                                              child: _TimeSlotDate(
-                                                groupedTimeSlot.value[index],
-                                                selectedTimeSlot?.id == groupedTimeSlot.value[index].id,
-                                                () => setState(() {
-                                                  selectedTimeSlot = groupedTimeSlot.value[index];
-                                                  selectedDate =
-                                                      groupedTimeSlot.value[index].intervals.firstOrNull?.start;
-                                                }),
-                                              ),
-                                            ),
-                                      ),
-                                    ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (selectedTimeSlot != null)
+                            SliverPadding(
+                              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                              sliver: SliverMainAxisGroup(
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: Text(
+                                      S.of(context).cartTimeDialogIntervalTitle,
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                    ),
                                   ),
-                              ],
+                                  SliverPadding(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    sliver: _TimeSlotSliver(
+                                      selectedTimeSlot!,
+                                      duration,
+                                      (date) => setState(() => selectedDate = date),
+                                      selectedDate,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      if (selectedTimeSlot != null)
-                        SliverPadding(
-                          padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                          sliver: SliverMainAxisGroup(
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: Text(
-                                  S.of(context).cartTimeDialogIntervalTitle,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  bottom: 16 + MediaQuery.of(context).padding.bottom,
+                                  top: 32,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: FilledButton(
+                                    onPressed: selectedDate != null ? () => context.maybePop(selectedDate) : null,
+                                    child: Text(S.of(context).cartConfirmButton),
+                                  ),
                                 ),
                               ),
-                              SliverPadding(
-                                padding: const EdgeInsets.only(top: 16),
-                                sliver: _TimeSlotSliver(
-                                  selectedTimeSlot!,
-                                  duration,
-                                  (date) => setState(() => selectedDate = date),
-                                  selectedDate,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 16,
-                              right: 16,
-                              bottom: 16 + MediaQuery.of(context).padding.bottom,
-                              top: 32,
-                            ),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 48,
-                              child: FilledButton(
-                                onPressed: selectedDate != null ? () => context.maybePop(selectedDate) : null,
-                                child: Text(S.of(context).cartConfirmButton),
-                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
+                  Positioned(top: 8, right: 8, child: CloseButton()),
                 ],
               ),
             ),

@@ -20,31 +20,15 @@ class _OrderTimeInfoState extends State<_OrderTimeInfo> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(S.of(context).cartServiceTime, style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 16),
-        Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Theme.of(context).colorScheme.surfaceContainer,
-            border: Border.all(color: Theme.of(context).colorScheme.outline),
-          ),
-          alignment: Alignment.center,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${dateFormatter.format(widget.order.startTimestamp.toLocal())} - ${endTimeFormatter.format(widget.order.endTimestamp.toLocal())}',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              IconButton(
-                onPressed: () {
-                  launchUrl(Uri.parse(generateLink()));
-                },
-                icon: Icon(Icons.date_range_rounded),
-              ),
-            ],
+        _OrderInfoItem(
+          Text(S.of(context).orderDate),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => launchUrl(Uri.parse(generateLink())),
+            child: Text(
+              dateFormatter.format(widget.order.startTimestamp.toLocal()),
+              style: TextStyle(decoration: TextDecoration.underline),
+            ),
           ),
         ),
       ],

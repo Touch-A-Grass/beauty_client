@@ -50,5 +50,9 @@
   "orderCancelAlertCancel": "Нет",
   "orderCancelAlertConfirm": "Да",
   "nearestVenuesTitle": "Ближайшие салоны",
-  "cartTimeDialogIntervalTitle": "Время"
+  "cartTimeDialogIntervalTitle": "Время",
+  "serviceDuration": "Длительность",
+  "orderDate": "Дата",
+  "orderPrice": "Стоимость",
+  "orderStatus": "Статус"
 }

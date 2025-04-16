@@ -11,9 +11,9 @@ extension OrderStatusUi on OrderStatus {
   };
 
   Color color() => switch (this) {
-    OrderStatus.discarded => Colors.red,
-    OrderStatus.pending => Colors.orange,
-    OrderStatus.approved => Colors.green,
-    OrderStatus.completed => Colors.blue,
+    OrderStatus.discarded => Colors.red.withValues(alpha: 0.7),
+    OrderStatus.pending => Colors.orange.withValues(alpha: 0.7),
+    OrderStatus.approved => Colors.green.withValues(alpha: 0.7),
+    OrderStatus.completed => Colors.blue.withValues(alpha: 0.7),
   };
 }

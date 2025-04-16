@@ -13,61 +13,66 @@ class ServiceGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          color: Theme.of(context).colorScheme.surfaceContainer,
-        ),
-        padding: EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child:
-                    service.photo != null
-                        ? CachedNetworkImage(imageUrl: service.photo!, fit: BoxFit.cover)
-                        : ImagePlaceholder(),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 4,
-                children: [
-                  Text(
-                    service.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          onTap: onTap,
+          child: Padding(
+            padding: EdgeInsets.all(4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child:
+                        service.photo != null
+                            ? CachedNetworkImage(imageUrl: service.photo!, fit: BoxFit.cover)
+                            : ImagePlaceholder(),
                   ),
-                  Text(service.description),
-                  Row(
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 4,
                     children: [
-                      if (service.price != null)
-                        Expanded(
-                          child: Text(
-                            service.price!.toPriceFormat(),
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      else
-                        Expanded(child: SizedBox()),
-                      if (service.duration != null)
-                        Text(
-                          S.of(context).serviceTime(service.duration!.inMinutes),
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
+                      Text(
+                        service.name,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Text(service.description),
+                      Row(
+                        spacing: 4,
+                        children: [
+                          if (service.price != null)
+                            Expanded(
+                              child: Text(
+                                service.price!.toPriceFormat(),
+                                style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          else
+                            Expanded(child: SizedBox()),
+                          if (service.duration != null)
+                            Text(
+                              S.of(context).serviceTime(service.duration!.inMinutes),
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

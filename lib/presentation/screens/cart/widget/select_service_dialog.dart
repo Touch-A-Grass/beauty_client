@@ -22,83 +22,88 @@ class SelectServiceDialog extends StatelessWidget {
     return AppDraggableModalSheet(
       builder:
           (context, scrollController) => Padding(
-            padding: EdgeInsets.only(top: 16 + MediaQuery.of(context).padding.top),
+            padding: const EdgeInsets.only(top: 16),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                 color: Theme.of(context).colorScheme.surface,
               ),
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                    sliver: SliverMainAxisGroup(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: Text(S.of(context).cartService, style: Theme.of(context).textTheme.headlineSmall),
-                        ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(top: 16),
-                          sliver: SliverGrid.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                        sliver: SliverMainAxisGroup(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: Text(S.of(context).cartService, style: Theme.of(context).textTheme.headlineSmall),
                             ),
-                            itemCount: servicesWithStaff.length,
-                            itemBuilder:
-                                (context, index) => ServiceGridItem(
-                                  service: servicesWithStaff[index],
-                                  onTap: () {
-                                    Navigator.of(context).pop(servicesWithStaff[index]);
-                                  },
+                            SliverPadding(
+                              padding: EdgeInsets.only(top: 16),
+                              sliver: SliverGrid.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
                                 ),
-                          ),
-                        ),
-                        if (servicesWithoutStaff.isNotEmpty)
-                          SliverPadding(
-                            padding: EdgeInsets.only(top: 16),
-                            sliver: SliverToBoxAdapter(
-                              child: Opacity(
-                                opacity: 0.5,
-                                child: Text(
-                                  S.of(context).servicesWithoutStaff,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
+                                itemCount: servicesWithStaff.length,
+                                itemBuilder:
+                                    (context, index) => ServiceGridItem(
+                                      service: servicesWithStaff[index],
+                                      onTap: () {
+                                        Navigator.of(context).pop(servicesWithStaff[index]);
+                                      },
+                                    ),
                               ),
                             ),
-                          ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(top: 16),
-                          sliver: SliverGrid.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
-                            ),
-                            itemCount: servicesWithoutStaff.length,
-                            itemBuilder:
-                                (context, index) => Container(
-                                  foregroundDecoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    backgroundBlendMode: BlendMode.saturation,
-                                  ),
+                            if (servicesWithoutStaff.isNotEmpty)
+                              SliverPadding(
+                                padding: EdgeInsets.only(top: 16),
+                                sliver: SliverToBoxAdapter(
                                   child: Opacity(
                                     opacity: 0.5,
-                                    child: ServiceGridItem(
-                                      service: servicesWithoutStaff[index],
-                                      onTap: () {
-                                        Navigator.of(context).pop(servicesWithoutStaff[index]);
-                                      },
+                                    child: Text(
+                                      S.of(context).servicesWithoutStaff,
+                                      style: Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   ),
                                 ),
-                          ),
+                              ),
+                            SliverPadding(
+                              padding: EdgeInsets.only(top: 16),
+                              sliver: SliverGrid.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
+                                ),
+                                itemCount: servicesWithoutStaff.length,
+                                itemBuilder:
+                                    (context, index) => Container(
+                                      foregroundDecoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        backgroundBlendMode: BlendMode.saturation,
+                                      ),
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: ServiceGridItem(
+                                          service: servicesWithoutStaff[index],
+                                          onTap: () {
+                                            Navigator.of(context).pop(servicesWithoutStaff[index]);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  Positioned(top: 8, right: 8, child: CloseButton()),
                 ],
               ),
             ),

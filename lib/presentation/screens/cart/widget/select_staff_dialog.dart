@@ -21,81 +21,86 @@ class SelectStaffDialog extends StatelessWidget {
     return AppDraggableModalSheet(
       builder:
           (context, scrollController) => Padding(
-            padding: EdgeInsets.only(top: 16 + MediaQuery.of(context).padding.top),
+            padding: const EdgeInsets.only(top: 16),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
                 color: Theme.of(context).colorScheme.surface,
               ),
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                    sliver: SliverMainAxisGroup(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
-                        ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(top: 16),
-                          sliver: SliverGrid.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                        sliver: SliverMainAxisGroup(
+                          slivers: [
+                            SliverToBoxAdapter(
+                              child: Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
                             ),
-                            itemCount: staffWithService.length,
-                            itemBuilder:
-                                (context, index) => StaffGridItem(
-                                  staff: staffWithService[index],
-                                  onTap: () {
-                                    Navigator.of(context).pop(staffWithService[index]);
-                                  },
+                            SliverPadding(
+                              padding: EdgeInsets.only(top: 16),
+                              sliver: SliverGrid.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
                                 ),
-                          ),
-                        ),
-                        if (staffWithoutService.isNotEmpty)
-                          SliverPadding(
-                            padding: EdgeInsets.only(top: 16),
-                            sliver: SliverToBoxAdapter(
-                              child: Opacity(
-                                opacity: 0.5,
-                                child: Text(
-                                  S.of(context).staffsWithoutService,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
+                                itemCount: staffWithService.length,
+                                itemBuilder:
+                                    (context, index) => StaffGridItem(
+                                      staff: staffWithService[index],
+                                      onTap: () {
+                                        Navigator.of(context).pop(staffWithService[index]);
+                                      },
+                                    ),
                               ),
                             ),
-                          ),
-                        SliverPadding(
-                          padding: EdgeInsets.only(top: 16),
-                          sliver: SliverGrid.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8,
-                            ),
-                            itemCount: staffWithoutService.length,
-                            itemBuilder:
-                                (context, index) => Container(
-                                  foregroundDecoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    backgroundBlendMode: BlendMode.saturation,
-                                  ),
+                            if (staffWithoutService.isNotEmpty)
+                              SliverPadding(
+                                padding: EdgeInsets.only(top: 16),
+                                sliver: SliverToBoxAdapter(
                                   child: Opacity(
                                     opacity: 0.5,
-                                    child: StaffGridItem(
-                                      staff: staffWithoutService[index],
-                                      onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
+                                    child: Text(
+                                      S.of(context).staffsWithoutService,
+                                      style: Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   ),
                                 ),
-                          ),
+                              ),
+                            SliverPadding(
+                              padding: EdgeInsets.only(top: 16),
+                              sliver: SliverGrid.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
+                                ),
+                                itemCount: staffWithoutService.length,
+                                itemBuilder:
+                                    (context, index) => Container(
+                                      foregroundDecoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        backgroundBlendMode: BlendMode.saturation,
+                                      ),
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: StaffGridItem(
+                                          staff: staffWithoutService[index],
+                                          onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
+                                        ),
+                                      ),
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  Positioned(top: 8, right: 8, child: CloseButton()),
                 ],
               ),
             ),

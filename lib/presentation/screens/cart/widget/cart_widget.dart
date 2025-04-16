@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:beauty_client/domain/models/service.dart';
-import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/avatar.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
+import 'package:beauty_client/presentation/components/service_info_widget.dart';
+import 'package:beauty_client/presentation/components/staff_info_widget.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/cart/bloc/cart_bloc.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_service_dialog.dart';
@@ -11,9 +11,6 @@ import 'package:beauty_client/presentation/screens/cart/widget/select_staff_dial
 import 'package:beauty_client/presentation/screens/cart/widget/select_timeslot_sheet.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
-import 'package:beauty_client/presentation/util/image_util.dart';
-import 'package:beauty_client/presentation/util/price_utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +33,7 @@ class _CartWidgetState extends State<CartWidget> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      useSafeArea: true,
       builder:
           (childContext) => SelectServiceDialog(
             services: context.read<CartBloc>().state.services ?? [],
@@ -52,6 +50,7 @@ class _CartWidgetState extends State<CartWidget> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
+      useSafeArea: true,
       builder:
           (childContext) => SelectStaffDialog(
             staff: context.read<CartBloc>().state.staffs ?? [],
@@ -116,7 +115,7 @@ class _CartWidgetState extends State<CartWidget> {
                                           ),
                                           const SizedBox(height: 16),
                                           if (state.selectedService != null)
-                                            _ServiceInfo(
+                                            ServiceInfoWidget(
                                               service: state.selectedService!,
                                               onTap: () => selectService(context),
                                             )
@@ -129,7 +128,10 @@ class _CartWidgetState extends State<CartWidget> {
                                           ),
                                           const SizedBox(height: 16),
                                           if (state.selectedStaff != null)
-                                            _StaffInfo(staff: state.selectedStaff!, onTap: () => selectStaff(context))
+                                            StaffInfoWidget(
+                                              staff: state.selectedStaff!,
+                                              onTap: () => selectStaff(context),
+                                            )
                                           else
                                             _StaffInfoPlaceHolder(onTap: () => selectStaff(context)),
                                           const SizedBox(height: 32),
@@ -149,9 +151,10 @@ class _CartWidgetState extends State<CartWidget> {
                                                   final date = await showModalBottomSheet(
                                                     context: context,
                                                     backgroundColor: Colors.transparent,
+                                                    useSafeArea: true,
                                                     isScrollControlled: true,
                                                     builder:
-                                                        (context) => SelectTimeslotSheet(
+                                                        (childContext) => SelectTimeslotSheet(
                                                           timeSlots: s.timeSlots,
                                                           service: state.selectedService!,
                                                         ),

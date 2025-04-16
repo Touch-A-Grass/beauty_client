@@ -52,7 +52,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> with TickerProvid
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(16),
       ),
       child: LayoutBuilder(
@@ -70,7 +70,7 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> with TickerProvid
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).colorScheme.primaryContainer,
+                    color: Theme.of(context).colorScheme.surface,
                   ),
                 ),
               ),
@@ -103,19 +103,19 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> with TickerProvid
                 if (index == widget.currentIndex) {
                   color =
                       Color.lerp(
-                        Theme.of(context).colorScheme.onSurface,
                         Theme.of(context).colorScheme.onPrimaryContainer,
+                        Theme.of(context).colorScheme.onSurface,
                         animation.value,
                       )!;
                 } else if (index == prevIndex) {
                   color =
                       Color.lerp(
-                        Theme.of(context).colorScheme.onPrimaryContainer,
                         Theme.of(context).colorScheme.onSurface,
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                         animation.value,
                       )!;
                 } else {
-                  color = Theme.of(context).colorScheme.onSurface;
+                  color = Theme.of(context).colorScheme.onPrimaryContainer;
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,

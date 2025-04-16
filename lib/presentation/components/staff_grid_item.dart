@@ -11,38 +11,43 @@ class StaffGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Theme.of(context).colorScheme.surfaceContainer,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(16),
-          color: Theme.of(context).colorScheme.surfaceContainer,
-        ),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          spacing: 16,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Center(
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CircleAvatar(
-                    foregroundImage:
-                        staff.photo != null ? CachedNetworkImageProvider(ImageUtil.parse256(staff.photo!)) : null,
-                    child: Text(
-                      staff.initials,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              spacing: 16,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: CircleAvatar(
+                        foregroundImage:
+                            staff.photo != null ? CachedNetworkImageProvider(ImageUtil.parse256(staff.photo!)) : null,
+                        child: Text(
+                          staff.initials,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Text(staff.name, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+              ],
             ),
-            Text(staff.name, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
-          ],
+          ),
         ),
       ),
     );

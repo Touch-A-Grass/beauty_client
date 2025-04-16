@@ -19,6 +19,14 @@ class _OrderMasterInfoState extends State<_OrderMasterInfo> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
+        StaffInfoWidget(staff: widget.order.staff),
+      ],
+    );
+    return Column(
+      spacing: 16,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(S.of(context).cartMaster, style: Theme.of(context).textTheme.headlineSmall),
         IntrinsicHeight(
           child: Container(
             padding: EdgeInsets.all(16),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
+import 'package:beauty_client/presentation/util/navigator_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +10,15 @@ class VenueListItem extends StatelessWidget {
   final Venue venue;
   final VoidCallback? onClick;
   final bool shrinkDescription;
+  final bool showLocationButton;
 
-  const VenueListItem({super.key, required this.venue, this.onClick, this.shrinkDescription = false});
+  const VenueListItem({
+    super.key,
+    required this.venue,
+    this.onClick,
+    this.shrinkDescription = false,
+    this.showLocationButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +69,21 @@ class VenueListItem extends StatelessWidget {
                     Expanded(child: SizedBox()),
                   ],
                 ),
+                if (showLocationButton)
+                  Positioned(
+                    right: 8,
+                    bottom: 8,
+                    child: IconButton(
+                      onPressed: () => NavigatorUtil.navigateToLocation(venue.location),
+                      icon: const Icon(Icons.location_pin),
+                      iconSize: 24,
+                      padding: EdgeInsets.all(4),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.onSurface),
+                      ),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
               ],
             ),
           ),

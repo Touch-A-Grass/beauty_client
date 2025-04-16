@@ -1,18 +1,24 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/generated/l10n.dart';
-import 'package:beauty_client/presentation/components/app_overlay.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
+import 'package:beauty_client/presentation/components/service_info_widget.dart';
+import 'package:beauty_client/presentation/components/staff_info_widget.dart';
 import 'package:beauty_client/presentation/models/order_status.dart';
+import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/order_details/bloc/order_details_bloc.dart';
+import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
 import 'package:beauty_client/presentation/util/phone_formatter.dart';
 import 'package:beauty_client/presentation/util/price_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'order_info.dart';
+part 'order_info_item.dart';
 part 'order_master_info.dart';
 part 'order_time_info.dart';
 part 'order_venue_info.dart';
@@ -50,15 +56,112 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                       padding: EdgeInsets.all(16),
                                       sliver: SliverMainAxisGroup(
                                         slivers: [
-                                          SliverToBoxAdapter(
-                                            child: Column(
-                                              spacing: 32,
-                                              children: [
-                                                _OrderInfo(order: order),
-                                                _OrderMasterInfo(order: order),
-                                                _OrderTimeInfo(order: order),
-                                                _OrderVenueInfo(order: order),
-                                              ],
+                                          SliverToBoxAdapter(child: _OrderVenueInfo(order: order)),
+                                          SliverPadding(
+                                            padding: const EdgeInsets.only(top: 32),
+                                            sliver: SliverToBoxAdapter(
+                                              child: Container(
+                                                padding: EdgeInsets.all(16),
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context).colorScheme.surfaceContainer,
+                                                  borderRadius: BorderRadius.circular(16),
+                                                ),
+                                                child: DividerTheme(
+                                                  data: Theme.of(
+                                                    context,
+                                                  ).dividerTheme.copyWith(endIndent: 0, indent: 0, space: 32),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                    children: [
+                                                      _OrderInfoItem(
+                                                        Text(S.of(context).cartService),
+                                                        Text(order.service.name),
+                                                      ),
+                                                      Divider(),
+                                                      _OrderInfoItem(
+                                                        Text(S.of(context).cartMaster),
+                                                        Text(order.staff.name),
+                                                      ),
+                                                      Divider(),
+                                                      _OrderTimeInfo(order: order),
+                                                      if (order.service.duration != null) ...[
+                                                        Divider(),
+                                                        _OrderInfoItem(
+                                                          Text(S.of(context).serviceDuration),
+                                                          Text('~ ${order.service.duration!.inMinutes} мин.'),
+                                                        ),
+                                                      ],
+                                                      if (order.service.price != null) ...[
+                                                        Divider(),
+                                                        _OrderInfoItem(
+                                                          Text(
+                                                            S.of(context).orderPrice,
+                                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                                          ),
+                                                          Text(
+                                                            order.service.price!.toPriceFormat(),
+                                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                      Divider(),
+                                                      _OrderInfoItem(
+                                                        Text(
+                                                          S.of(context).orderStatus,
+                                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                                        ),
+                                                        Text(
+                                                          order.status.statusName(context),
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            color: order.status.color(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      // _OrderVenueInfo(order: order),
+                                                      // _OrderInfo(order: order),
+                                                      // _OrderMasterInfo(order: order),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SliverPadding(
+                                            padding: const EdgeInsets.only(top: 32, left: 48, right: 48),
+                                            sliver: SliverToBoxAdapter(
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: IconButton(
+                                                  iconSize: 32,
+                                                  style: ButtonStyle(
+                                                    shape: WidgetStatePropertyAll(
+                                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                    ),
+                                                    backgroundColor: WidgetStatePropertyAll(
+                                                      Theme.of(context).colorScheme.surfaceContainer,
+                                                    ),
+                                                  ),
+                                                  onPressed:
+                                                      () => showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (context) => Dialog(
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: Theme.of(context).colorScheme.surfaceContainer,
+                                                                  borderRadius: BorderRadius.circular(16),
+                                                                ),
+                                                                padding: EdgeInsets.all(24),
+                                                                child: QrImageView(
+                                                                  data: 'tagbeautymaster://orders/${order.id}',
+                                                                ),
+                                                              ),
+                                                            ),
+                                                      ),
+                                                  icon: Icon(Icons.qr_code_rounded),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -91,8 +194,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                                                     actionsAlignment: MainAxisAlignment.spaceBetween,
                                                                     actions: [
                                                                       TextButton(
-                                                                        onPressed:
-                                                                            () => Navigator.pop(context, false),
+                                                                        onPressed: () => Navigator.pop(context, false),
                                                                         child: Text(
                                                                           S.of(context).orderCancelAlertCancel,
                                                                         ),
@@ -102,8 +204,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                                                         child: Text(
                                                                           S.of(context).orderCancelAlertConfirm,
                                                                           style: TextStyle(
-                                                                            color:
-                                                                                Theme.of(context).colorScheme.error,
+                                                                            color: Theme.of(context).colorScheme.error,
                                                                           ),
                                                                         ),
                                                                       ),
