@@ -194,18 +194,18 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                                                     actionsAlignment: MainAxisAlignment.spaceBetween,
                                                                     actions: [
                                                                       TextButton(
-                                                                        onPressed: () => Navigator.pop(context, false),
-                                                                        child: Text(
-                                                                          S.of(context).orderCancelAlertCancel,
-                                                                        ),
-                                                                      ),
-                                                                      TextButton(
                                                                         onPressed: () => Navigator.pop(context, true),
                                                                         child: Text(
                                                                           S.of(context).orderCancelAlertConfirm,
                                                                           style: TextStyle(
                                                                             color: Theme.of(context).colorScheme.error,
                                                                           ),
+                                                                        ),
+                                                                      ),
+                                                                      TextButton(
+                                                                        onPressed: () => Navigator.pop(context, false),
+                                                                        child: Text(
+                                                                          S.of(context).orderCancelAlertCancel,
                                                                         ),
                                                                       ),
                                                                     ],
