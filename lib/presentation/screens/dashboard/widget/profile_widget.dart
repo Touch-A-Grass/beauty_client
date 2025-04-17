@@ -18,7 +18,13 @@ class _ProfileWidgetState extends State<_ProfileWidget> {
       spacing: 16,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox.square(dimension: 80, child: CircleAvatar(child: Text(widget.user.initials))),
+        SizedBox.square(
+          dimension: 80,
+          child: CircleAvatar(
+            foregroundImage: widget.user.photo != null ? CachedNetworkImageProvider(widget.user.photo!) : null,
+            child: Text(widget.user.initials),
+          ),
+        ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

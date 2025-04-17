@@ -6,7 +6,15 @@ class ProfileEvent with _$ProfileEvent {
 
   const factory ProfileEvent.userRequested() = _UserRequested;
 
-  const factory ProfileEvent.updateUserRequested({required String name}) = _UpdateUserRequested;
+  const factory ProfileEvent.updateUserRequested(String name) = _UpdateUserRequested;
+
+  const factory ProfileEvent.updatePhotoRequested(Uint8List photo) = _UpdatePhotoRequested;
+
+  const factory ProfileEvent.updateOrderNotificationsRequested(bool value) = _UpdateOrderNotificationsRequested;
+
+  const factory ProfileEvent.updatePromoNotificationsRequested(bool value) = _UpdatePromoNotificationsRequested;
+
+  const factory ProfileEvent.updateUserSettingsRequested(UserSettings settings) = _UpdateUserSettingsRequested;
 
   const factory ProfileEvent.logoutRequested() = _LogoutRequested;
 

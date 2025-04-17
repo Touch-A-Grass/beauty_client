@@ -7,7 +7,13 @@ part 'user.g.dart';
 class User with _$User {
   const User._();
 
-  const factory User({required String id, required String name, required String phoneNumber}) = _User;
+  const factory User({
+    required String id,
+    required String name,
+    required String phoneNumber,
+    String? photo,
+    UserSettings? settings,
+  }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
@@ -15,4 +21,14 @@ class User with _$User {
     final names = name.split(' ');
     return names.map((e) => e.substring(0, 1)).join('');
   }
+}
+
+@freezed
+class UserSettings with _$UserSettings {
+  const factory UserSettings({
+    @Default(false) bool receiveOrderNotifications,
+    @Default(false) bool receivePromoNotifications,
+  }) = _UserSettings;
+
+  factory UserSettings.fromJson(Map<String, dynamic> json) => _$UserSettingsFromJson(json);
 }

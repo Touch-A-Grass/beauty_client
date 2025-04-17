@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_firebase_token_request.dart';
@@ -8,6 +11,7 @@ import 'package:beauty_client/data/storage/user_storage.dart';
 import 'package:beauty_client/domain/models/auth.dart';
 import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/domain/repositories/auth_repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final BeautyClient _api;
@@ -57,4 +61,28 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> sendFirebaseToken(String token) => _api.sendFirebaseToken(SendFirebaseTokenRequest(token: token));
+
+  @override
+  Future<void> updatePhoto(Uint8List photo) async {
+    final base64 = base64Encode(photo);
+    await _api.updateUser(UpdateUserRequest(photo: base64));
+    try {
+      final oldPhoto = _userStorage.value?.photo;
+      if (oldPhoto != null) {
+        await CachedNetworkImage.evictFromCache(oldPhoto);
+      }
+    } catch (_) {}
+    getUser();
+  }
+
+  @override
+  Future<void> updateSettings(UserSettings settings) async {
+    await _api.updateUser(
+      UpdateUserRequest(
+        receiveOrderNotifications: settings.receiveOrderNotifications,
+        receivePromoNotifications: settings.receivePromoNotifications,
+      ),
+    );
+    getUser();
+  }
 }

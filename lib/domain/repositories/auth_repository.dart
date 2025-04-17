@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:beauty_client/domain/models/auth.dart';
 import 'package:beauty_client/domain/models/user.dart';
 
@@ -19,4 +21,8 @@ abstract interface class AuthRepository {
   Stream<User?> watchUser();
 
   Future<void> sendFirebaseToken(String token);
+
+  Future<void> updateSettings(UserSettings settings);
+
+  Future<void> updatePhoto(Uint8List photo);
 }

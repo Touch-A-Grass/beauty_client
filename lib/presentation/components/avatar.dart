@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class RoundedAvatar extends StatelessWidget {
   final ImageProvider? image;
+  final double size;
 
-  const RoundedAvatar({super.key, this.image});
+  const RoundedAvatar({super.key, this.image, this.size = 96});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
-      dimension: 96,
+      dimension: size,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

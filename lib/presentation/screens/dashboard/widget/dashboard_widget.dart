@@ -10,6 +10,7 @@ import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/phone_formatter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';

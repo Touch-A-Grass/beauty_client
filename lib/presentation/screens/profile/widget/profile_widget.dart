@@ -1,7 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/app_image_picker.dart';
+import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/profile/bloc/profile_bloc.dart';
 import 'package:beauty_client/presentation/util/phone_formatter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,7 +87,36 @@ class _ProfileBadgeState extends State<_ProfileBadge> {
       spacing: 16,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox.square(dimension: 80, child: CircleAvatar(child: Text(widget.user.initials))),
+        GestureDetector(
+          onTap: () async {
+            Uint8List? image = await AppImagePicker.pickImage(context);
+            if (!context.mounted || image == null) return;
+            image = await context.pushRoute<Uint8List?>(ImageCropRoute(image: image));
+            if (!context.mounted || image == null) return;
+            context.read<ProfileBloc>().add(ProfileEvent.updatePhotoRequested(image));
+          },
+          child: Stack(
+            children: [
+              SizedBox.square(
+                dimension: 80,
+                child: CircleAvatar(
+                  foregroundImage: widget.user.photo != null ? CachedNetworkImageProvider(widget.user.photo!) : null,
+                  child: Text(widget.user.initials),
+                ),
+              ),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.camera_alt_rounded, size: 32, color: Theme.of(context).colorScheme.surface),
+                ),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +134,7 @@ class _ProfileBadgeState extends State<_ProfileBadge> {
               context: context,
               builder:
                   (dialogContext) => _ChangeProfileDialog(widget.user, (name) {
-                    context.read<ProfileBloc>().add(ProfileEvent.updateUserRequested(name: name));
+                    context.read<ProfileBloc>().add(ProfileEvent.updateUserRequested(name));
                   }),
             );
           },
@@ -143,14 +178,30 @@ class _Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 16,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Push-уведомления', style: Theme.of(context).textTheme.headlineSmall),
-        _PushSettingsItem(title: 'Информация о заказах', enabled: true),
-        _PushSettingsItem(title: 'Скидки и предложения', enabled: true),
-      ],
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (state, previous) => state.user?.settings != previous.user?.settings,
+      builder:
+          (context, state) => Column(
+            spacing: 16,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('Push-уведомления', style: Theme.of(context).textTheme.headlineSmall),
+              _PushSettingsItem(
+                title: 'Информация о заказах',
+                enabled: state.user?.settings?.receiveOrderNotifications ?? false,
+                onChanged: (value) {
+                  context.read<ProfileBloc>().add(ProfileEvent.updateOrderNotificationsRequested(value));
+                },
+              ),
+              _PushSettingsItem(
+                title: 'Скидки и предложения',
+                enabled: state.user?.settings?.receivePromoNotifications ?? false,
+                onChanged: (value) {
+                  context.read<ProfileBloc>().add(ProfileEvent.updatePromoNotificationsRequested(value));
+                },
+              ),
+            ],
+          ),
     );
   }
 }
@@ -158,8 +209,9 @@ class _Settings extends StatelessWidget {
 class _PushSettingsItem extends StatelessWidget {
   final String title;
   final bool enabled;
+  final ValueChanged<bool> onChanged;
 
-  const _PushSettingsItem({required this.title, required this.enabled});
+  const _PushSettingsItem({required this.title, required this.enabled, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +219,7 @@ class _PushSettingsItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       spacing: 16,
-      children: [Text(title), Switch(value: enabled, onChanged: (_) {})],
+      children: [Text(title), Switch(value: enabled, onChanged: onChanged)],
     );
   }
 }
