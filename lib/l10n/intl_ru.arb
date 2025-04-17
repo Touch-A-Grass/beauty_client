@@ -55,5 +55,7 @@
   "orderDate": "Дата",
   "orderPrice": "Стоимость",
   "orderStatus": "Статус",
-  "showAllButton": "Показать все"
+  "showAllButton": "Показать все",
+  "camera": "Камера",
+  "gallery": "Галерея"
 }

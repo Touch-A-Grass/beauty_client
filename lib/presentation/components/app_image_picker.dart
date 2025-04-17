@@ -1,3 +1,4 @@
+import 'package:beauty_client/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,12 +66,12 @@ class _AppImagePickerState extends State<AppImagePicker> with TickerProviderStat
                       children: [
                         ListTile(
                           leading: const Icon(Icons.camera_alt_rounded),
-                          title: const Text('Камера'),
+                          title: Text(S.of(context).camera),
                           onTap: () => pickImage(context, ImageSource.camera),
                         ),
                         ListTile(
                           leading: const Icon(Icons.photo_library_rounded),
-                          title: const Text('Галлерея'),
+                          title: Text(S.of(context).gallery),
                           onTap: () => pickImage(context, ImageSource.gallery),
                         ),
                       ],
