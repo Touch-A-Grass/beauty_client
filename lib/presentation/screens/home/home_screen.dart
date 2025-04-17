@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter(
+      homeIndex: 0,
       builder:
           (context, child) => Scaffold(
             body: Stack(

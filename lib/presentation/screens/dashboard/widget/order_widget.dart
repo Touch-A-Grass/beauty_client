@@ -77,10 +77,7 @@ class _OrderWidgetState extends State<_OrderWidget> {
             width: 32,
             height: 32,
             child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).colorScheme.onSurface),
               alignment: Alignment.center,
               child: IconButton(
                 onPressed: () {
