@@ -36,6 +36,6 @@ class _OrderTimeInfoState extends State<_OrderTimeInfo> {
   }
 
   String generateLink() {
-    return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=${S.of(context).calendarRecordText(widget.order.venue.name, widget.order.service.name).replaceAll(' ', '+')}&dates=${calendarFormatter.format(widget.order.startTimestamp)}/${calendarFormatter.format(widget.order.endTimestamp)}';
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=${S.of(context).calendarRecordText(widget.order.venue.name, widget.order.service.name).replaceAll(' ', '+')}&dates=${calendarFormatter.format(widget.order.startTimestamp.toLocal())}/${calendarFormatter.format(widget.order.endTimestamp.toLocal())}';
   }
 }
