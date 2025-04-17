@@ -54,5 +54,6 @@
   "serviceDuration": "Длительность",
   "orderDate": "Дата",
   "orderPrice": "Стоимость",
-  "orderStatus": "Статус"
+  "orderStatus": "Статус",
+  "showAllButton": "Показать все"
 }

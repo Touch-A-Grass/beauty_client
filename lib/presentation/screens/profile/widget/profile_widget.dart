@@ -31,7 +31,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           CustomScrollView(
                             slivers: [
                               SliverPadding(
-                                padding: EdgeInsets.only(top: 32, right: 16, left: 16),
+                                padding: EdgeInsets.only(top: 16, right: 16, left: 16),
                                 sliver: SliverToBoxAdapter(child: _ProfileBadge(state.user!)),
                               ),
                               SliverPadding(

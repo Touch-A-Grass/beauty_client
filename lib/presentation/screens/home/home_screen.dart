@@ -16,10 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AutoTabsRouter(
+    return AutoTabsRouter.pageView(
+      physics: NeverScrollableScrollPhysics(),
       homeIndex: 0,
       builder:
-          (context, child) => Scaffold(
+          (context, child, pageController) => Scaffold(
             body: Stack(
               children: [
                 MediaQuery(

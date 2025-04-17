@@ -35,7 +35,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
       return Scaffold(
         appBar: AppBar(
-          elevation: 1,
           title: AssetIcon('assets/icons/beauty_service.svg', color: Theme.of(context).colorScheme.primary, size: 64),
           actions: [
             IconButton(
@@ -60,7 +59,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                         SliverSafeArea(
                           top: false,
                           sliver: SliverPadding(
-                            padding: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 16),
+                            padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
                             sliver: SliverMainAxisGroup(
                               slivers: [
                                 SliverToBoxAdapter(child: _ProfileWidget(user: user.data)),
@@ -73,9 +72,21 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                     SliverPadding(
                                       padding: const EdgeInsets.only(top: 32),
                                       sliver: SliverToBoxAdapter(
-                                        child: Text(
-                                          S.of(context).nearestVenuesTitle,
-                                          style: Theme.of(context).textTheme.headlineSmall,
+                                        child: Row(
+                                          spacing: 16,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                S.of(context).nearestVenuesTitle,
+                                                style: Theme.of(context).textTheme.titleLarge,
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => context.navigateTo(VenuesRoute()),
+                                              child: Text(S.of(context).showAllButton),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
