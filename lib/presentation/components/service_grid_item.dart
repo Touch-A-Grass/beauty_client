@@ -54,7 +54,7 @@ class ServiceGridItem extends StatelessWidget {
                         service.name,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(service.description),
+                      Text(service.description, maxLines: 2, overflow: TextOverflow.ellipsis),
                       Row(
                         spacing: 4,
                         children: [

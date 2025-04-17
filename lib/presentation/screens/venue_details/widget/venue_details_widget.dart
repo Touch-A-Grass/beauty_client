@@ -9,6 +9,7 @@ import 'package:beauty_client/presentation/components/service_grid_item.dart';
 import 'package:beauty_client/presentation/components/shimmer_box.dart';
 import 'package:beauty_client/presentation/components/staff_grid_item.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
+import 'package:beauty_client/presentation/screens/service_details/service_details_bottom_sheet.dart';
 import 'package:beauty_client/presentation/screens/venue_details/bloc/venue_details_bloc.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
 import 'package:beauty_client/presentation/util/navigator_util.dart';
@@ -106,6 +107,7 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                                   CachedNetworkImage(imageUrl: state.allPhotos[0], fit: BoxFit.cover)
                                                 else
                                                   AppCarousel(
+                                                    enableScroll: ModalRoute.of(context)?.isCurrent ?? true,
                                                     controller: carouselController,
                                                     itemBuilder:
                                                         (context, index) => CachedNetworkImage(

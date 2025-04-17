@@ -6,8 +6,9 @@ class AppDraggableModalSheet extends StatefulWidget {
 
   final ScrollableWidgetBuilder builder;
   final DraggableScrollableController? controller;
+  final double size;
 
-  const AppDraggableModalSheet({super.key, required this.builder, this.controller});
+  const AppDraggableModalSheet({super.key, required this.builder, this.controller, this.size = 1});
 
   @override
   State<AppDraggableModalSheet> createState() => _AppDraggableModalSheetState();
@@ -29,11 +30,11 @@ class _AppDraggableModalSheetState extends State<AppDraggableModalSheet> {
       child: DraggableScrollableSheet(
         controller: widget.controller,
         snap: true,
-        initialChildSize: 1,
+        initialChildSize: widget.size,
         minChildSize: 0,
         shouldCloseOnMinExtent: false,
-        maxChildSize: 1,
-        snapSizes: const [1],
+        maxChildSize: widget.size,
+        snapSizes: [widget.size],
         builder: widget.builder,
       ),
     );

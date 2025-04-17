@@ -29,14 +29,26 @@ class ServicesTab extends StatelessWidget {
                       (context, index) => ServiceGridItem(
                         service: state.services[index],
                         onTap: () {
-                          context.pushRoute(
-                            CartRoute(
-                              venueId: state.venue!.id,
-                              selectedServiceId: state.services[index].id,
-                              services: state.services,
-                              venue: state.venue!,
-                              staffs: state.staff,
-                            ),
+                          showModalBottomSheet(
+                            context: context,
+                            useSafeArea: true,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            builder:
+                                (childContext) => ServiceDetailsBottomSheet(
+                                  service: state.services[index],
+                                  onCreateOrderPressed: () {
+                                    context.pushRoute(
+                                      CartRoute(
+                                        venueId: state.venue!.id,
+                                        selectedServiceId: state.services[index].id,
+                                        services: state.services,
+                                        venue: state.venue!,
+                                        staffs: state.staff,
+                                      ),
+                                    );
+                                  },
+                                ),
                           );
                         },
                       ),
