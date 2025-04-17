@@ -81,19 +81,14 @@ class SelectServiceDialog extends StatelessWidget {
                                 ),
                                 itemCount: servicesWithoutStaff.length,
                                 itemBuilder:
-                                    (context, index) => Container(
-                                      foregroundDecoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        backgroundBlendMode: BlendMode.saturation,
-                                      ),
-                                      child: Opacity(
-                                        opacity: 0.5,
-                                        child: ServiceGridItem(
-                                          service: servicesWithoutStaff[index],
-                                          onTap: () {
-                                            Navigator.of(context).pop(servicesWithoutStaff[index]);
-                                          },
-                                        ),
+                                    (context, index) => Opacity(
+                                      opacity: 0.5,
+                                      child: ServiceGridItem(
+                                        grayScaleImage: true,
+                                        service: servicesWithoutStaff[index],
+                                        onTap: () {
+                                          Navigator.of(context).pop(servicesWithoutStaff[index]);
+                                        },
                                       ),
                                     ),
                               ),

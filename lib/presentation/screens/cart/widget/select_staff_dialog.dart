@@ -80,17 +80,12 @@ class SelectStaffDialog extends StatelessWidget {
                                 ),
                                 itemCount: staffWithoutService.length,
                                 itemBuilder:
-                                    (context, index) => Container(
-                                      foregroundDecoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        backgroundBlendMode: BlendMode.saturation,
-                                      ),
-                                      child: Opacity(
-                                        opacity: 0.5,
-                                        child: StaffGridItem(
-                                          staff: staffWithoutService[index],
-                                          onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
-                                        ),
+                                    (context, index) => Opacity(
+                                      opacity: 0.5,
+                                      child: StaffGridItem(
+                                        grayScaleImage: true,
+                                        staff: staffWithoutService[index],
+                                        onTap: () => Navigator.of(context).pop(staffWithoutService[index]),
                                       ),
                                     ),
                               ),

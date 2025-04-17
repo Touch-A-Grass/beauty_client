@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 class ServiceGridItem extends StatelessWidget {
   final Service service;
   final VoidCallback? onTap;
+  final bool grayScaleImage;
 
-  const ServiceGridItem({super.key, required this.service, this.onTap});
+  const ServiceGridItem({super.key, required this.service, this.onTap, this.grayScaleImage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +30,18 @@ class ServiceGridItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child:
-                        service.photo != null
-                            ? CachedNetworkImage(imageUrl: service.photo!, fit: BoxFit.cover)
-                            : ImagePlaceholder(),
+                  child: Container(
+                    foregroundDecoration:
+                        grayScaleImage
+                            ? BoxDecoration(color: Colors.grey, backgroundBlendMode: BlendMode.saturation)
+                            : null,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child:
+                          service.photo != null
+                              ? CachedNetworkImage(imageUrl: service.photo!, fit: BoxFit.cover)
+                              : ImagePlaceholder(),
+                    ),
                   ),
                 ),
                 Padding(

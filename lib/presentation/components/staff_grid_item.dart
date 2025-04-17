@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class StaffGridItem extends StatelessWidget {
   final Staff staff;
   final VoidCallback? onTap;
+  final bool grayScaleImage;
 
-  const StaffGridItem({super.key, required this.staff, this.onTap});
+  const StaffGridItem({super.key, required this.staff, this.onTap, this.grayScaleImage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +32,20 @@ class StaffGridItem extends StatelessWidget {
                   child: Center(
                     child: AspectRatio(
                       aspectRatio: 1,
-                      child: CircleAvatar(
-                        foregroundImage:
-                            staff.photo != null ? CachedNetworkImageProvider(ImageUtil.parse256(staff.photo!)) : null,
-                        child: Text(
-                          staff.initials,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                      child: Container(
+                        foregroundDecoration:
+                            grayScaleImage
+                                ? BoxDecoration(color: Colors.grey, backgroundBlendMode: BlendMode.saturation)
+                                : null,
+                        child: CircleAvatar(
+                          foregroundImage:
+                              staff.photo != null ? CachedNetworkImageProvider(ImageUtil.parse256(staff.photo!)) : null,
+                          child: Text(
+                            staff.initials,
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineSmall!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                          ),
                         ),
                       ),
                     ),
