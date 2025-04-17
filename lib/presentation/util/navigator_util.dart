@@ -9,16 +9,11 @@ class NavigatorUtil {
     final yandexUri = Uri.parse(
       'yandexnavi://build_route_on_map?lat_to=${location.latitude}&lon_to=${location.longitude}',
     );
-    final googleUri = Uri.parse('google.navigation:q=${location.latitude},${location.longitude}');
+    final yandexMapsUri = Uri.parse('https://yandex.ru/maps/?pt=${location.longitude},${location.latitude}');
     if (!kIsWeb && await canLaunchUrl(yandexUri)) {
       launchUrl(yandexUri);
-    } else if (!kIsWeb && await canLaunchUrl(googleUri)) {
-      launchUrl(googleUri);
     } else {
-      print('pizda');
-      print(location);
-      print('https://2gis.ru/directions/points/|${location.latitude},${location.longitude}');
-      launchUrl(Uri.parse('https://2gis.ru/directions/points/|${location.longitude},${location.latitude}'));
+      launchUrl(yandexMapsUri);
     }
   }
 }
