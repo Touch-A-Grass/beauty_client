@@ -13,6 +13,7 @@ class AppCarouselController extends ChangeNotifier {
   set length(int value) {
     if (value == _length) return;
     _length = value;
+    page = 0;
     notifyListeners();
   }
 

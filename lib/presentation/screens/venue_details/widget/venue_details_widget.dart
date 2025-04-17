@@ -102,14 +102,17 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                                 itemContext: context,
                                               ),
                                               children: [
-                                                AppCarousel(
-                                                  controller: carouselController,
-                                                  itemBuilder:
-                                                      (context, index) => CachedNetworkImage(
-                                                        imageUrl: state.allPhotos[index],
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                ),
+                                                if (state.allPhotos.length == 1)
+                                                  CachedNetworkImage(imageUrl: state.allPhotos[0], fit: BoxFit.cover)
+                                                else
+                                                  AppCarousel(
+                                                    controller: carouselController,
+                                                    itemBuilder:
+                                                        (context, index) => CachedNetworkImage(
+                                                          imageUrl: state.allPhotos[index],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                  ),
                                               ],
                                             ),
                                       ),
