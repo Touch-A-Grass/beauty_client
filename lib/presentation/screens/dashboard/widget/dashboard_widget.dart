@@ -64,53 +64,52 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                             sliver: SliverMainAxisGroup(
                               slivers: [
                                 SliverToBoxAdapter(child: _ProfileWidget(user: user.data)),
-                                if (orderState is SuccessLoadingState<Order?> && orderState.data != null) ...[
+                                if (orderState is SuccessLoadingState<Order?> && orderState.data != null)
                                   SliverPadding(
                                     padding: const EdgeInsets.only(top: 32),
                                     sliver: SliverToBoxAdapter(child: _OrderWidget(orderState.data!)),
                                   ),
-                                  if (venuesState is SuccessLoadingState<List<Venue>>) ...[
-                                    SliverPadding(
-                                      padding: const EdgeInsets.only(top: 32),
-                                      sliver: SliverToBoxAdapter(
-                                        child: Row(
-                                          spacing: 16,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                S.of(context).nearestVenuesTitle,
-                                                style: Theme.of(context).textTheme.titleLarge,
-                                              ),
+                                if (venuesState is SuccessLoadingState<List<Venue>>) ...[
+                                  SliverPadding(
+                                    padding: const EdgeInsets.only(top: 32),
+                                    sliver: SliverToBoxAdapter(
+                                      child: Row(
+                                        spacing: 16,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              S.of(context).nearestVenuesTitle,
+                                              style: Theme.of(context).textTheme.titleLarge,
                                             ),
-                                            TextButton(
-                                              onPressed: () => context.navigateTo(VenuesRoute()),
-                                              child: Text(S.of(context).showAllButton),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => context.navigateTo(VenuesRoute()),
+                                            child: Text(S.of(context).showAllButton),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SliverPadding(
-                                      padding: const EdgeInsets.only(top: 16),
-                                      sliver: SliverList.separated(
-                                        itemBuilder:
-                                            (context, index) => VenueListItem(
-                                              venue: venuesState.data[index],
-                                              shrinkDescription: true,
-                                              onClick:
-                                                  () => context.pushRoute(
-                                                    VenueDetailsRoute(
-                                                      venueId: venuesState.data[index].id,
-                                                      venue: venuesState.data[index],
-                                                    ),
+                                  ),
+                                  SliverPadding(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    sliver: SliverList.separated(
+                                      itemBuilder:
+                                          (context, index) => VenueListItem(
+                                            venue: venuesState.data[index],
+                                            shrinkDescription: true,
+                                            onClick:
+                                                () => context.pushRoute(
+                                                  VenueDetailsRoute(
+                                                    venueId: venuesState.data[index].id,
+                                                    venue: venuesState.data[index],
                                                   ),
-                                            ),
-                                        separatorBuilder: (context, index) => const SizedBox(height: 16),
-                                        itemCount: venuesState.data.length,
-                                      ),
+                                                ),
+                                          ),
+                                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                                      itemCount: venuesState.data.length,
                                     ),
-                                  ],
+                                  ),
                                 ],
                               ],
                             ),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/data/storage/user_storage.dart';
 import 'package:beauty_client/di/di.dart';
@@ -13,11 +11,9 @@ import 'package:beauty_client/presentation/theme/colors.dart';
 import 'package:beauty_client/presentation/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:json_theme/json_theme.dart';
 
 import 'firebase_options.dart';
 
@@ -36,12 +32,6 @@ void main() async {
   await userStorage.init();
 
   runApp(Di(userStorage: userStorage, authStorage: authStorage, child: const App()));
-}
-
-Future<ThemeData?> decodeTheme(String assetPath) async {
-  final themeStr = await rootBundle.loadString(assetPath);
-  final themeJson = jsonDecode(themeStr);
-  return ThemeDecoder.decodeThemeData(themeJson);
 }
 
 class App extends StatefulWidget {
@@ -65,7 +55,6 @@ class _AppState extends State<App> {
     return LocationListener(
       child: MaterialApp.router(
         theme: AppTheme.theme(AppColorScheme.light()),
-        // darkTheme: applyTheme(widget.darkTheme),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [S.delegate, ...GlobalMaterialLocalizations.delegates],
         supportedLocales: S.delegate.supportedLocales,

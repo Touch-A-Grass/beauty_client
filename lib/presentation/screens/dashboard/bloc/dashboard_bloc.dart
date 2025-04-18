@@ -72,6 +72,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> with Subscripti
       }
     });
 
+    subscribe(_orderRepository.watchOrderCreated(), (order) {
+      add(DashboardEvent.ordersRequested());
+    });
+
+    subscribe(_orderRepository.watchOrderChanged(), (order) {
+      add(DashboardEvent.ordersRequested());
+    });
+
     subscribe(_locationStorage.stream, (data) {
       add(DashboardEvent.locationChanged(location: data));
     });

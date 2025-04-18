@@ -33,7 +33,6 @@ dependencies:
   cached_network_image: ^3.4.1
   geolocator: ^13.0.2
   latlong2:
-  json_theme: ^8.0.0+2
   collection: ^1.19.1
   mask_text_input_formatter: ^2.9.0
   flutter_timezone: ^4.1.0
