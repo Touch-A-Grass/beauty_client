@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/app_refresh_indicator.dart';
+import 'package:beauty_client/presentation/components/paging_listener.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/orders/bloc/orders_bloc.dart';
 import 'package:beauty_client/presentation/screens/orders/widget/order_list_item.dart';
@@ -31,20 +32,28 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                 }
                 return AppRefreshIndicator(
                   isRefreshing: state.isLoading,
-                  onRefresh: ()  {
+                  onRefresh: () {
                     context.read<OrdersBloc>().add(OrdersEvent.ordersRequested(refresh: true));
                   },
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                    itemCount: state.orders.data.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 16),
-                    itemBuilder:
-                        (context, index) => OrderListItem(
-                          order: state.orders.data[index],
-                          onTap: () {
-                            context.pushRoute(OrderDetailsRoute(orderId: state.orders.data[index].id));
-                          },
-                        ),
+                  child: PagingListener(
+                    onPageEnd: () {
+                      if (state.orders.hasNext && !state.isLoading) {
+                        context.read<OrdersBloc>().add(OrdersEvent.ordersRequested());
+                      }
+                    },
+                    child: ListView.separated(
+                      padding:
+                          const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                      itemCount: state.orders.data.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      itemBuilder:
+                          (context, index) => OrderListItem(
+                            order: state.orders.data[index],
+                            onTap: () {
+                              context.pushRoute(OrderDetailsRoute(orderId: state.orders.data[index].id));
+                            },
+                          ),
+                    ),
                   ),
                 );
               },

@@ -18,8 +18,8 @@ class User with _$User {
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   String get initials {
-    final names = name.split(' ');
-    return names.map((e) => e.substring(0, 1)).join('');
+    final names = name.trim().split(' ');
+    return names.where((e) => e.isNotEmpty).map((e) => e.substring(0, 1)).join('');
   }
 }
 
