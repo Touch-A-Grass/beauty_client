@@ -83,6 +83,16 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                                         Text(order.staff.name),
                                                       ),
                                                       Divider(),
+                                                      if (order.status == OrderStatus.discarded &&
+                                                          order.comment.isNotEmpty) ...[
+                                                        _OrderInfoItem(
+                                                          Text(S.of(context).orderCancelReasonTitle),
+                                                          Expanded(
+                                                            child: Text(order.comment, textAlign: TextAlign.end),
+                                                          ),
+                                                        ),
+                                                        Divider(),
+                                                      ],
                                                       _OrderTimeInfo(order: order),
                                                       if (order.service.duration != null) ...[
                                                         Divider(),

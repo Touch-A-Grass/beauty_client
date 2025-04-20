@@ -1,5 +1,4 @@
 import 'package:beauty_client/domain/models/order.dart';
-import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/models/order_status.dart';
 import 'package:beauty_client/presentation/util/price_utils.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +85,6 @@ class _OrderListItemState extends State<OrderListItem> {
                             ),
                           ],
                         ),
-                        if (widget.order.comment.isNotEmpty) Text(S.of(context).orderComment(widget.order.comment)),
                         Row(
                           spacing: 4,
                           children: [
