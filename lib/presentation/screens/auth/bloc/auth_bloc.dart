@@ -39,12 +39,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthState.code(codeState.phone, isLoading: true, codeRetrievedTime: codeState.codeRetrievedTime));
       try {
         await _authRepository.sendCode(codeState.phone, event.code);
-        emit(AuthState.code(
-          codeState.phone,
-          isLoading: false,
-          codeRetrievedTime: codeState.codeRetrievedTime,
-          isLoggedIn: true,
-        ));
+        emit(
+          AuthState.code(
+            codeState.phone,
+            isLoading: false,
+            codeRetrievedTime: codeState.codeRetrievedTime,
+            isLoggedIn: true,
+          ),
+        );
       } catch (e) {
         emit(
           AuthState.code(
