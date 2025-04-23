@@ -37,6 +37,8 @@
   "orderMaster": "Мастер: {master}",
   "orderVenue": "Салон: {venue}",
   "orderComment": "Комментарий: {venue}",
+  "orderCancelReasonTitle": "Причина отмены",
+  "orderCancelReason": "Причина отмены: {venue}",
   "orderStatusDiscarded": "Отменен",
   "orderStatusApproved": "Подтвержден",
   "orderStatusPending": "В ожидании",
