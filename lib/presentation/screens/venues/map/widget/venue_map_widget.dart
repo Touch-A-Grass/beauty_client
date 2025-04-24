@@ -14,6 +14,7 @@ import 'package:beauty_client/presentation/util/theme_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -33,12 +34,32 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
   late final AnimationController mapAnimationController;
   late final Animation<double> mapAnimation;
 
+  late final Ticker ticker;
+
+  final ValueNotifier<LatLng?> userLocation = ValueNotifier(null);
+
   Venue? selectedVenue;
 
   @override
   void initState() {
     mapAnimationController = AnimationController(duration: const Duration(milliseconds: 250), vsync: this);
     mapAnimation = CurvedAnimation(parent: mapAnimationController, curve: Curves.decelerate);
+    final bloc = context.read<VenueMapBloc>();
+    double prevTick = 0;
+    ticker = Ticker((elapsed) {
+      if (bloc.state.location == null) return;
+      final t = ((elapsed.inMilliseconds.toDouble() - prevTick) / 250.0).clamp(0.0, 1.0);
+      prevTick = elapsed.inMilliseconds.toDouble();
+      if (userLocation.value == null) {
+        userLocation.value = fromLocation(bloc.state.location!);
+      } else {
+        userLocation.value = LatLng(
+          lerpDouble(userLocation.value!.latitude, bloc.state.location!.latitude, t)!,
+          lerpDouble(userLocation.value!.longitude, bloc.state.location!.longitude, t)!,
+        );
+      }
+    });
+    ticker.start();
 
     mapController.mapEventStream.listen((data) {
       final context = this.context;
@@ -56,6 +77,12 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
       }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    ticker.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,7 +108,7 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
             (context, state) => Stack(
               children: [
                 AnimatedBuilder(
-                  animation: mapAnimation,
+                  animation: Listenable.merge([userLocation, mapAnimation]),
                   builder:
                       (context, _) => FlutterMap(
                         options: MapOptions(
@@ -100,6 +127,16 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                             userAgentPackageName: 'com.example.flutter_map_example',
                             tileBuilder: context.isDark ? _darkModeTileBuilder : null,
                           ),
+                          if (userLocation.value != null)
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  rotate: true,
+                                  point: userLocation.value!,
+                                  child: const Icon(Icons.location_history, color: Colors.red, size: 48),
+                                ),
+                              ],
+                            ),
                           MarkerLayer(markers: buildClusterMarkers(state.cluster)),
                           MarkerLayer(
                             markers: buildMarkers(state.venues, {
@@ -110,6 +147,19 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                         ],
                       ),
                 ),
+                if (state.location != null)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      onPressed: () => _animatedMapMove(fromLocation(state.location!), 14),
+                      icon: const Icon(Icons.my_location, size: 28),
+                    ),
+                  ),
                 Positioned(
                   bottom: 16,
                   right: 16,

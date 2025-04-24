@@ -9,6 +9,8 @@ class Location with _$Location {
     required double latitude,
     required double longitude,
     @Default(true) bool isReal,
+    double? altitude,
+    double? heading,
   }) = _Location;
 
   factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);

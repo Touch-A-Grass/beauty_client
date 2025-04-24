@@ -29,7 +29,14 @@ class _LocationListenerState extends State<LocationListener> {
     if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
       subscription = Geolocator.getPositionStream().listen((position) {
         if (context.mounted) {
-          context.read<LocationStorage>().update(Location(latitude: position.latitude, longitude: position.longitude));
+          context.read<LocationStorage>().update(
+            Location(
+              latitude: position.latitude,
+              longitude: position.longitude,
+              altitude: position.altitude,
+              heading: position.heading,
+            ),
+          );
         }
       });
     }
