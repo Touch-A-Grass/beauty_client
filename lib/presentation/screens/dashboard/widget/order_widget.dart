@@ -50,7 +50,7 @@ class _OrderWidgetState extends State<_OrderWidget> {
                             ),
                           ),
                           Text(
-                            dateFormat.format(widget.order.startTimestamp),
+                            dateFormat.format(widget.order.startTimestamp.toLocal()),
                             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: color,
                               leadingDistribution: TextLeadingDistribution.even,
