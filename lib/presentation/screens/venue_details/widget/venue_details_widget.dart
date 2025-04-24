@@ -159,10 +159,23 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                     child: Text(state.venue!.name, style: Theme.of(context).textTheme.headlineSmall),
                                   ),
                                 ),
+                              if (state.venue?.address.isNotEmpty ?? false)
+                                SliverPadding(
+                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                                  sliver: SliverToBoxAdapter(
+                                    child: Row(
+                                      spacing: 4,
+                                      children: [
+                                        Icon(Icons.location_pin, size: 16),
+                                        Expanded(child: Text(state.venue!.address)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               if (state.maxPrice != null && state.minPrice != null ||
                                   state.minDuration != null && state.maxDuration != null)
                                 SliverPadding(
-                                  padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
                                   sliver: SliverToBoxAdapter(
                                     child: Opacity(
                                       opacity: 0.5,
@@ -192,13 +205,8 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                 ),
                               if (state.venue?.description.isNotEmpty ?? false)
                                 SliverPadding(
-                                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                                  sliver: SliverToBoxAdapter(
-                                    child: Text(
-                                      state.venue!.description,
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
-                                  ),
+                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                                  sliver: SliverToBoxAdapter(child: Text(state.venue!.description)),
                                 ),
                               SliverOverlapAbsorber(
                                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),

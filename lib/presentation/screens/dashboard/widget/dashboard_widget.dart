@@ -97,7 +97,6 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                                       itemBuilder:
                                           (context, index) => VenueListItem(
                                             venue: venuesState.data[index],
-                                            shrinkDescription: true,
                                             onClick:
                                                 () => context.pushRoute(
                                                   VenueDetailsRoute(

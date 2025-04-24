@@ -9,7 +9,6 @@ class _OrderVenueInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return VenueListItem(
       venue: order.venue,
-      shrinkDescription: true,
       onClick: () => context.pushRoute(VenueDetailsRoute(venueId: order.venue.id, venue: order.venue)),
       showLocationButton: true,
     );

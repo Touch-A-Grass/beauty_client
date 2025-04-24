@@ -46,7 +46,6 @@ class VenueListWidget extends StatelessWidget {
                     itemBuilder:
                         (context, index) => VenueListItem(
                           venue: state.venues.data[index],
-                          shrinkDescription: true,
                           onClick: () {
                             final venue = state.venues.data[index];
                             context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
