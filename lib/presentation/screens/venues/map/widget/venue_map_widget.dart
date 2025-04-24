@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/domain/models/venue_map_clusters.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/map/bloc/venue_map_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
 import 'package:beauty_client/presentation/util/theme_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -27,23 +30,49 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
 
   final mapController = MapController();
 
+  late final AnimationController mapAnimationController;
+  late final Animation<double> mapAnimation;
+
   Venue? selectedVenue;
+
+  @override
+  void initState() {
+    mapAnimationController = AnimationController(duration: const Duration(milliseconds: 250), vsync: this);
+    mapAnimation = CurvedAnimation(parent: mapAnimationController, curve: Curves.decelerate);
+
+    mapController.mapEventStream.listen((data) {
+      final context = this.context;
+      if (context.mounted && data is MapEventWithMove) {
+        final bounds = data.camera.visibleBounds;
+        context.read<VenueMapBloc>().add(
+          VenueMapEvent.mapLocationChanged(
+            minLongitude: bounds.west,
+            maxLongitude: bounds.east,
+            minLatitude: bounds.south,
+            maxLatitude: bounds.north,
+            zoom: data.camera.zoom.round(),
+          ),
+        );
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
         BlocListener<VenueMapBloc, VenueMapState>(
-          listenWhen: (prev, curr) => prev.venues != curr.venues && curr.venues.isNotEmpty,
+          listenWhen: (prev, curr) => prev.cluster != curr.cluster,
           listener: (context, state) async {
-            await mapLoadingCompleter.future;
+            mapAnimationController.forward(from: 0);
           },
         ),
         BlocListener<VenueMapBloc, VenueMapState>(
           listenWhen: (prev, curr) => !(prev.location?.isReal ?? false) && curr.location?.isReal == true,
           listener: (context, state) async {
             await mapLoadingCompleter.future;
-            mapController.move(fromLocation(state.location!), 16);
+            mapController.move(fromLocation(state.location!), 14);
           },
         ),
       ],
@@ -51,22 +80,35 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
         builder:
             (context, state) => Stack(
               children: [
-                FlutterMap(
-                  options: MapOptions(
-                    initialCenter: fromLocation(context.read<LocationStorage>().value),
-                    onMapReady: () {
-                      mapLoadingCompleter.complete();
-                    },
-                  ),
-                  mapController: mapController,
-                  children: [
-                    TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.example.flutter_map_example',
-                      tileBuilder: context.isDark ? _darkModeTileBuilder : null,
-                    ),
-                    MarkerLayer(markers: buildMarkers(state.venues)),
-                  ],
+                AnimatedBuilder(
+                  animation: mapAnimation,
+                  builder:
+                      (context, _) => FlutterMap(
+                        options: MapOptions(
+                          minZoom: 0,
+                          initialCenter: fromLocation(context.read<LocationStorage>().value),
+                          onMapReady: () {
+                            if (!mapLoadingCompleter.isCompleted) {
+                              mapLoadingCompleter.complete();
+                            }
+                          },
+                        ),
+                        mapController: mapController,
+                        children: [
+                          TileLayer(
+                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'com.example.flutter_map_example',
+                            tileBuilder: context.isDark ? _darkModeTileBuilder : null,
+                          ),
+                          MarkerLayer(markers: buildClusterMarkers(state.cluster)),
+                          MarkerLayer(
+                            markers: buildMarkers(state.venues, {
+                              for (var venue in state.venues)
+                                venue.id: state.prevClusters.firstWhereOrNull((e) => e.venueIds.contains(venue.id)),
+                            }),
+                          ),
+                        ],
+                      ),
                 ),
                 Positioned(
                   bottom: 16,
@@ -95,14 +137,55 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
     );
   }
 
-  List<Marker> buildMarkers(List<Venue> venues) =>
+  List<Marker> buildClusterMarkers(List<VenueCluster> clusters) =>
+      clusters
+          .map(
+            (cluster) => Marker(
+              point: fromLocation(Location(latitude: cluster.latitude, longitude: cluster.longitude)),
+              width: 64,
+              height: 64,
+              rotate: true,
+              child: GestureDetector(
+                onTap: () {
+                  _animatedMapMove(
+                    fromLocation(Location(latitude: cluster.latitude, longitude: cluster.longitude)),
+                    14,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                  ),
+                  child: Center(
+                    child: Text(
+                      cluster.count.toString(),
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+          .toList();
+
+  List<Marker> buildMarkers(List<Venue> venues, Map<String, VenueCluster?> clustersMap) =>
       venues
           .map(
             (venue) => Marker(
-              point: fromLocation(venue.location),
+              point:
+                  clustersMap[venue.id] == null
+                      ? fromLocation(venue.location)
+                      : LatLng(
+                        lerpDouble(clustersMap[venue.id]!.latitude, venue.location.latitude, mapAnimation.value)!,
+                        lerpDouble(clustersMap[venue.id]!.longitude, venue.location.longitude, mapAnimation.value)!,
+                      ),
               width: 64,
               height: 64,
-              rotate: false,
+              rotate: true,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 decoration: BoxDecoration(

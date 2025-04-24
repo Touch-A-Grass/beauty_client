@@ -11,6 +11,7 @@ import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/domain/models/venue_map_clusters.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -72,4 +73,14 @@ abstract class BeautyClient {
 
   @PATCH('/user/record')
   Future<void> updateOrder(@Body() UpdateRecordRequest request);
+
+  @GET('/venue/clusters')
+  Future<VenueMapClusters> getVenueMapClusters({
+    @Query('minLatitude') required double minLatitude,
+    @Query('maxLatitude') required double maxLatitude,
+    @Query('minLongitude') required double minLongitude,
+    @Query('maxLongitude') required double maxLongitude,
+    @Query('zoom') required int zoom,
+    @Query('searchQuery') String? searchQuery,
+  });
 }

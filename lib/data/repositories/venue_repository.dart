@@ -6,6 +6,7 @@ import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/staff_time_slot.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/domain/models/venue_map_clusters.dart';
 import 'package:beauty_client/domain/repositories/venue_repository.dart';
 
 class VenueRepositoryImpl implements VenueRepository {
@@ -46,4 +47,20 @@ class VenueRepositoryImpl implements VenueRepository {
   Future<Venue> getVenue(String venueId) async {
     return _api.getVenue(venueId);
   }
+
+  @override
+  Future<VenueMapClusters> getClusters({
+    required double minLatitude,
+    required double maxLatitude,
+    required double minLongitude,
+    required double maxLongitude,
+    required int zoom,
+    String? searchQuery,
+  }) => _api.getVenueMapClusters(
+    minLatitude: minLatitude,
+    maxLatitude: maxLatitude,
+    minLongitude: minLongitude,
+    maxLongitude: maxLongitude,
+    zoom: zoom,
+  );
 }
