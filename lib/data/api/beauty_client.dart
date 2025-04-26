@@ -42,6 +42,7 @@ abstract class BeautyClient {
     @Query('longitude') double? longitude,
     @Query('limit') required int limit,
     @Query('offset') required int offset,
+    @Query('search') String? searchQuery,
   });
 
   @GET('/venue/{id}/services')

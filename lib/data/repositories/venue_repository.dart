@@ -1,6 +1,7 @@
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/models/mappers/staff_time_slot_mapper.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
+import 'package:beauty_client/data/util/string_util.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -16,7 +17,12 @@ class VenueRepositoryImpl implements VenueRepository {
   VenueRepositoryImpl(this._api, this.locationStorage);
 
   @override
-  Future<List<Venue>> getVenues({Location? location, required int limit, required int offset}) async {
+  Future<List<Venue>> getVenues({
+    Location? location,
+    required int limit,
+    required int offset,
+    String? searchQuery,
+  }) async {
     final userLocation = location;
 
     return _api.venues(
@@ -24,6 +30,7 @@ class VenueRepositoryImpl implements VenueRepository {
       longitude: userLocation?.longitude,
       limit: limit,
       offset: offset,
+      searchQuery: searchQuery?.trimOrNull,
     );
   }
 

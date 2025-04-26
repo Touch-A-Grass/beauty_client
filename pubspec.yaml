@@ -43,6 +43,8 @@ dependencies:
   markdown_widget: ^2.3.2+6
   image_picker: ^1.1.2
   crop_your_image: ^2.0.0
+  expandable_page_view: ^1.0.17
+  flutter_map_cancellable_tile_provider: ^3.1.0
 
 dev_dependencies:
   flutter_test:

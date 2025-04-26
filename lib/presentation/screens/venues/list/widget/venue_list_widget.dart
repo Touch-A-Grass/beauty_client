@@ -6,11 +6,37 @@ import 'package:beauty_client/presentation/components/shimmer_box.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/list/bloc/venue_list_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
+import 'package:beauty_client/presentation/screens/venues/widget/venues_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class VenueListWidget extends StatelessWidget {
+class VenueListWidget extends StatefulWidget {
   const VenueListWidget({super.key});
+
+  @override
+  State<VenueListWidget> createState() => _VenueListWidgetState();
+}
+
+class _VenueListWidgetState extends State<VenueListWidget> {
+  late final VenuesSearchController venuesSearchController;
+
+  _listenSearch() {
+    context.read<VenueListBloc>().add(VenueListEvent.searchChanged(venuesSearchController.text));
+  }
+
+  @override
+  void initState() {
+    venuesSearchController = context.read<VenuesSearchController>();
+    _listenSearch();
+    venuesSearchController.addListener(_listenSearch);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    venuesSearchController.removeListener(_listenSearch);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

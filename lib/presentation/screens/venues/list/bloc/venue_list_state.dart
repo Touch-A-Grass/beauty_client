@@ -7,5 +7,6 @@ class VenueListState with _$VenueListState {
     AppError? loadingError,
     @Default(true) bool isLoadingVenues,
     Location? location,
+    @Default('') String searchQuery,
   }) = _VenueListState;
 }

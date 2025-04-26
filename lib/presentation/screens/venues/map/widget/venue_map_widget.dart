@@ -9,6 +9,7 @@ import 'package:beauty_client/domain/models/venue_map_clusters.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/venues/map/bloc/venue_map_bloc.dart';
 import 'package:beauty_client/presentation/screens/venues/widget/venue_list_item.dart';
+import 'package:beauty_client/presentation/screens/venues/widget/venues_widget.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
 import 'package:beauty_client/presentation/util/theme_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:latlong2/latlong.dart';
 
 class VenueMapWidget extends StatefulWidget {
@@ -40,8 +42,19 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
 
   Venue? selectedVenue;
 
+  late final VenuesSearchController venuesSearchController;
+
+  final pageController = PageController(viewportFraction: 0.9);
+
+  _listenSearch() {
+    context.read<VenueMapBloc>().add(VenueMapEvent.searchQueryChanged(venuesSearchController.text));
+  }
+
   @override
   void initState() {
+    venuesSearchController = context.read<VenuesSearchController>();
+    _listenSearch();
+    venuesSearchController.addListener(_listenSearch);
     mapAnimationController = AnimationController(duration: const Duration(milliseconds: 250), vsync: this);
     mapAnimation = CurvedAnimation(parent: mapAnimationController, curve: Curves.decelerate);
     final bloc = context.read<VenueMapBloc>();
@@ -82,6 +95,7 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
   @override
   void dispose() {
     ticker.dispose();
+    venuesSearchController.removeListener(_listenSearch);
     super.dispose();
   }
 
@@ -100,6 +114,16 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
           listener: (context, state) async {
             await mapLoadingCompleter.future;
             mapController.move(fromLocation(state.location!), 14);
+          },
+        ),
+        BlocListener<VenueMapBloc, VenueMapState>(
+          listenWhen:
+              (prev, curr) =>
+                  curr.searchVenues.data.isNotEmpty &&
+                  curr.searchVenues.data.first != prev.searchVenues.data.firstOrNull,
+          listener: (context, state) async {
+            await mapLoadingCompleter.future;
+            _animatedMapMove(fromLocation(state.searchVenues.data.first.location), 14);
           },
         ),
       ],
@@ -125,6 +149,7 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                           TileLayer(
                             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                             userAgentPackageName: 'com.example.flutter_map_example',
+                            tileProvider: CancellableNetworkTileProvider(),
                             tileBuilder: context.isDark ? _darkModeTileBuilder : null,
                           ),
                           if (userLocation.value != null)
@@ -133,17 +158,26 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                                 Marker(
                                   rotate: true,
                                   point: userLocation.value!,
-                                  child: const Icon(Icons.location_history, color: Colors.red, size: 48),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(context).colorScheme.primary,
+                                      border: Border.all(color: Theme.of(context).colorScheme.onPrimary, width: 4),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                          MarkerLayer(markers: buildClusterMarkers(state.cluster)),
-                          MarkerLayer(
-                            markers: buildMarkers(state.venues, {
-                              for (var venue in state.venues)
-                                venue.id: state.prevClusters.firstWhereOrNull((e) => e.venueIds.contains(venue.id)),
-                            }),
-                          ),
+                          if (!state.isSearching) MarkerLayer(markers: buildClusterMarkers(state.cluster)),
+                          if (!state.isSearching)
+                            MarkerLayer(
+                              markers: buildMarkers(state.venues, {
+                                for (var venue in state.venues)
+                                  venue.id: state.prevClusters.firstWhereOrNull((e) => e.venueIds.contains(venue.id)),
+                              }),
+                            )
+                          else
+                            MarkerLayer(markers: buildMarkers(state.searchVenues.data, {})),
                         ],
                       ),
                 ),
@@ -160,27 +194,54 @@ class _VenueMapWidgetState extends State<VenueMapWidget> with TickerProviderStat
                       icon: const Icon(Icons.my_location, size: 28),
                     ),
                   ),
-                Positioned(
-                  bottom: 16,
-                  right: 16,
-                  left: 16,
-                  child: Padding(
-                    padding: MediaQuery.of(context).padding,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child:
-                          selectedVenue == null
-                              ? const SizedBox.shrink()
-                              : VenueListItem(
-                                venue: selectedVenue!,
-                                onClick: () {
-                                  final venue = selectedVenue!;
-                                  context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
-                                },
+                if (!state.isSearching)
+                  Positioned(
+                    bottom: 16,
+                    right: 16,
+                    left: 16,
+                    child: Padding(
+                      padding: MediaQuery.of(context).padding,
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        child:
+                            selectedVenue == null
+                                ? const SizedBox.shrink()
+                                : VenueListItem(
+                                  venue: selectedVenue!,
+                                  onClick: () {
+                                    final venue = selectedVenue!;
+                                    context.pushRoute(VenueDetailsRoute(venueId: venue.id, venue: venue));
+                                  },
+                                ),
+                      ),
+                    ),
+                  )
+                else if (state.searchVenues.data.isNotEmpty)
+                  Positioned(
+                    bottom: 16,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: MediaQuery.of(context).padding,
+                      child: SizedBox(
+                        height: 200,
+                        child: PageView.builder(
+                          controller: pageController,
+                          onPageChanged: (index) {
+                            _animatedMapMove(fromLocation(state.searchVenues.data[index].location), 14);
+                          },
+                          padEnds: false,
+                          pageSnapping: true,
+                          itemBuilder:
+                              (context, index) => Padding(
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                child: VenueListItem(venue: state.searchVenues.data[index]),
                               ),
+                          itemCount: state.searchVenues.data.length,
+                        ),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
       ),

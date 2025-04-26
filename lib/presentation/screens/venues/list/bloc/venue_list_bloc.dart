@@ -7,6 +7,7 @@ import 'package:beauty_client/domain/repositories/venue_repository.dart';
 import 'package:beauty_client/presentation/util/subscription_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'venue_list_bloc.freezed.dart';
 part 'venue_list_event.dart';
@@ -28,12 +29,13 @@ class VenueListBloc extends Bloc<VenueListEvent, VenueListState> with Subscripti
           location: state.location,
           offset: state.venues.offset(event.refresh),
           limit: 10,
+          searchQuery: state.searchQuery,
         );
         emit(state.copyWith(venues: state.venues.next(venues, refresh: event.refresh), isLoadingVenues: false));
       } catch (e) {
         emit(state.copyWith(loadingError: AppError.fromObject(e), isLoadingVenues: false));
       }
-    });
+    }, transformer: (events, mapper) => events.debounceTime(Duration(milliseconds: 250)).asyncExpand(mapper));
 
     on<_LocationChanged>((event, emit) {
       final prevLocation = state.location;
@@ -41,6 +43,12 @@ class VenueListBloc extends Bloc<VenueListEvent, VenueListState> with Subscripti
       if (!(prevLocation?.isReal ?? false)) {
         add(const VenueListEvent.requested(refresh: true));
       }
+    });
+
+    on<_SearchChanged>((event, emit) {
+      emit(state.copyWith(searchQuery: event.searchQuery));
+      emit(state.copyWith(isLoadingVenues: true, venues: Paging()));
+      add(const VenueListEvent.requested(refresh: true));
     });
 
     subscribe(_locationStorage.stream, (data) {

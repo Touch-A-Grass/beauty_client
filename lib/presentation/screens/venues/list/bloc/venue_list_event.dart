@@ -7,4 +7,6 @@ class VenueListEvent with _$VenueListEvent {
   const factory VenueListEvent.requested({@Default(false) bool refresh}) = _Requested;
 
   const factory VenueListEvent.locationChanged({required Location location}) = _LocationChanged;
+
+  const factory VenueListEvent.searchChanged(String searchQuery) = _SearchChanged;
 }

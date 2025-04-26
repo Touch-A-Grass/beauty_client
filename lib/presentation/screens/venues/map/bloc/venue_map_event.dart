@@ -8,6 +8,8 @@ class VenueMapEvent with _$VenueMapEvent {
 
   const factory VenueMapEvent.venuesRequested() = _VenuesRequested;
 
+  const factory VenueMapEvent.venuesSearchRequested({@Default(false) bool refresh}) = _VenuesSearchRequested;
+
   const factory VenueMapEvent.mapLocationChanged({
     required double minLatitude,
     required double maxLatitude,
@@ -15,4 +17,6 @@ class VenueMapEvent with _$VenueMapEvent {
     required double maxLongitude,
     required int zoom,
   }) = _MapLocationChanged;
+
+  const factory VenueMapEvent.searchQueryChanged(String searchQuery) = _SearchQueryChanged;
 }

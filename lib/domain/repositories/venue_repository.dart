@@ -6,7 +6,7 @@ import 'package:beauty_client/domain/models/venue.dart';
 import 'package:beauty_client/domain/models/venue_map_clusters.dart';
 
 abstract interface class VenueRepository {
-  Future<List<Venue>> getVenues({Location? location, required int limit, required int offset});
+  Future<List<Venue>> getVenues({Location? location, required int limit, required int offset, String? searchQuery});
 
   Future<Venue> getVenue(String venueId);
 
