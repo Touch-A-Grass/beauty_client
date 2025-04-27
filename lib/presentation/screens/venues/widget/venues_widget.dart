@@ -53,12 +53,13 @@ class _VenuesWidgetState extends State<VenuesWidget> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: !isSearching,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+    return BackButtonListener(
+      onBackButtonPressed: () async {
+        if (isSearching) {
           isSearching = false;
+          return true;
         }
+        return false;
       },
       child: DefaultTabController(
         length: 2,
