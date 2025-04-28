@@ -6,5 +6,7 @@ class OrderDetailsEvent with _$OrderDetailsEvent {
 
   const factory OrderDetailsEvent.orderRequested() = _OrderRequested;
 
+  const factory OrderDetailsEvent.rateOrderRequested(OrderReview review) = _RateOrderRequested;
+
   const factory OrderDetailsEvent.discardRequested() = _DiscardRequested;
 }

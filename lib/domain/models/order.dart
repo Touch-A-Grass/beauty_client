@@ -1,3 +1,4 @@
+import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
@@ -8,6 +9,8 @@ part 'order.g.dart';
 
 @freezed
 class Order with _$Order {
+  const Order._();
+
   const factory Order({
     required String id,
     required Staff staff,
@@ -17,9 +20,12 @@ class Order with _$Order {
     required DateTime endTimestamp,
     @Default('') String comment,
     @Default(OrderStatus.pending) OrderStatus status,
+    OrderReview? review,
   }) = _Record;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+
+  bool get canBeRated => status == OrderStatus.completed && review == null;
 }
 
 @JsonEnum()

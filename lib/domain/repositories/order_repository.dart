@@ -1,4 +1,5 @@
 import 'package:beauty_client/domain/models/order.dart';
+import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
@@ -16,6 +17,8 @@ abstract interface class OrderRepository {
   Future<List<Order>> getOrders({required int limit, required int offset});
 
   Future<Order> getOrder(String id);
+
+  Future<void> rateOrder(String orderId, OrderReview review);
 
   Future<void> discardOrder(String id);
 

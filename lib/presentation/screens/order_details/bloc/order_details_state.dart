@@ -9,6 +9,7 @@ class OrderDetailsState with _$OrderDetailsState {
     @Default(true) bool isLoadingOrder,
     AppError? loadingOrderError,
     @Default(OrderDiscardingState.initial()) OrderDiscardingState discardingState,
+    @Default(OrderRatingState.initial()) OrderRatingState ratingState,
   }) = _OrderDetailsState;
 
   bool get canDiscardOrder => order?.status == OrderStatus.pending && !isLoadingOrder;
@@ -21,4 +22,13 @@ sealed class OrderDiscardingState with _$OrderDiscardingState {
   const factory OrderDiscardingState.loading() = LoadingOrderDiscardingState;
 
   const factory OrderDiscardingState.error(AppError error) = ErrorOrderDiscardingState;
+}
+
+@freezed
+sealed class OrderRatingState with _$OrderRatingState {
+  const factory OrderRatingState.initial() = InitialOrderRatingState;
+
+  const factory OrderRatingState.loading() = LoadingOrderRatingState;
+
+  const factory OrderRatingState.error(AppError error) = ErrorOrderRatingState;
 }

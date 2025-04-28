@@ -7,6 +7,7 @@ import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/update_record_request.dart';
 import 'package:beauty_client/data/util/string_util.dart';
 import 'package:beauty_client/domain/models/order.dart';
+import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
@@ -62,4 +63,14 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Stream<void> watchOrderCreated() => _orderCreatedEventBus.stream;
+
+  @override
+  Future<void> rateOrder(String orderId, OrderReview review) async {
+    await _client.updateOrder(
+      UpdateRecordRequest(
+        recordId: orderId,
+        review: RecordReviewDto(rating: review.rating, comment: review.comment.trimOrNull),
+      ),
+    );
+  }
 }

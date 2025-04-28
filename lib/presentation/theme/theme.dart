@@ -16,6 +16,12 @@ class AppTheme {
         foregroundColor: colorScheme.onPrimary,
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: colorScheme.shadow),
+      ),
+    ),
   );
 
   static _appBarTheme(ColorScheme colorScheme) => AppBarTheme(

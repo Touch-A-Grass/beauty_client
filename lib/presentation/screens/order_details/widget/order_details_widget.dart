@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/order.dart';
+import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
+import 'package:beauty_client/presentation/components/rating_view.dart';
 import 'package:beauty_client/presentation/components/service_info_widget.dart';
 import 'package:beauty_client/presentation/components/staff_info_widget.dart';
 import 'package:beauty_client/presentation/models/order_status.dart';
@@ -20,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 part 'order_info.dart';
 part 'order_info_item.dart';
 part 'order_master_info.dart';
+part 'order_rating_view.dart';
 part 'order_time_info.dart';
 part 'order_venue_info.dart';
 
@@ -31,6 +34,8 @@ class OrderDetailsWidget extends StatefulWidget {
 }
 
 class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
+  final ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return BlocSingleChangeListener<OrderDetailsBloc, OrderDetailsState>(
@@ -51,6 +56,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                             return Stack(
                               children: [
                                 CustomScrollView(
+                                  controller: scrollController,
                                   slivers: [
                                     SliverPadding(
                                       padding: EdgeInsets.all(16),
@@ -128,15 +134,29 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                                           ),
                                                         ),
                                                       ),
-                                                      // _OrderVenueInfo(order: order),
-                                                      // _OrderInfo(order: order),
-                                                      // _OrderMasterInfo(order: order),
                                                     ],
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          if (order.canBeRated)
+                                            SliverPadding(
+                                              padding: const EdgeInsets.only(top: 16),
+                                              sliver: SliverToBoxAdapter(
+                                                child: _OrderNewRatingView(
+                                                  (review) => context.read<OrderDetailsBloc>().add(
+                                                    OrderDetailsEvent.rateOrderRequested(review),
+                                                  ),
+                                                  state.ratingState is LoadingOrderRatingState,
+                                                ),
+                                              ),
+                                            )
+                                          else if (order.review != null)
+                                            SliverPadding(
+                                              padding: const EdgeInsets.only(top: 16),
+                                              sliver: SliverToBoxAdapter(child: _OrderRatingView(order.review!)),
+                                            ),
                                           SliverPadding(
                                             padding: const EdgeInsets.only(top: 32, left: 48, right: 48),
                                             sliver: SliverToBoxAdapter(
