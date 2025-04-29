@@ -32,6 +32,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: CartRoute.page, path: 'cart/:venueId'),
         AutoRoute(page: VenueDetailsRoute.page, usesPathAsKey: true, path: 'venues/:venueId'),
         AutoRoute(page: OrderDetailsRoute.page, usesPathAsKey: true, path: 'orders/:orderId'),
+        AutoRoute(page: OrderChatRoute.page, path: 'orders/:orderId/chat', usesPathAsKey: true),
       ],
     ),
   ];

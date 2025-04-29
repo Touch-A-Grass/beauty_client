@@ -11,3 +11,12 @@ sealed class LoadingState<T> with _$LoadingState {
 
   const factory LoadingState.error(AppError error) = ErrorLoadingState;
 }
+
+@freezed
+sealed class SendingState with _$SendingState {
+  const factory SendingState.initial() = SuccessSendingState;
+
+  const factory SendingState.progress() = ProgressSendingState;
+
+  const factory SendingState.error(AppError error) = ErrorSendingState;
+}

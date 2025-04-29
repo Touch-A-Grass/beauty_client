@@ -16,6 +16,8 @@ abstract interface class AuthRepository {
 
   Future<User> getUser();
 
+  Future<User> getUserOrFetch();
+
   Future<void> updateUser({required String name});
 
   Stream<User?> watchUser();

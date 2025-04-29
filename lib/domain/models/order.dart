@@ -1,6 +1,7 @@
 import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
+import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/domain/models/venue.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -21,6 +22,8 @@ class Order with _$Order {
     @Default('') String comment,
     @Default(OrderStatus.pending) OrderStatus status,
     OrderReview? review,
+    @Default(0) int unreadMessageCount,
+    User? user,
   }) = _Record;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
@@ -28,7 +31,7 @@ class Order with _$Order {
   bool get canBeRated => status == OrderStatus.completed && review == null;
 }
 
-@JsonEnum()
+@JsonEnum(alwaysCreate: true)
 enum OrderStatus {
   @JsonValue('Discarded')
   discarded,
@@ -37,5 +40,10 @@ enum OrderStatus {
   @JsonValue('Approved')
   approved,
   @JsonValue('Completed')
-  completed,
+  completed;
+
+  factory OrderStatus.fromJson(dynamic value) =>
+      $enumDecodeNullable(_$OrderStatusEnumMap, value, unknownValue: OrderStatus.pending) ?? OrderStatus.pending;
+
+  String? toJson() => _$OrderStatusEnumMap[this] ?? _$OrderStatusEnumMap[OrderStatus.pending];
 }

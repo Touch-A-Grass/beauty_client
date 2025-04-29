@@ -1,7 +1,10 @@
+import 'package:beauty_client/data/models/dto/chat_log_dto.dart';
 import 'package:beauty_client/data/models/dto/staff_time_slot_dto.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
+import 'package:beauty_client/data/models/requests/mark_as_read_request.dart';
 import 'package:beauty_client/data/models/requests/send_code_request.dart';
 import 'package:beauty_client/data/models/requests/send_firebase_token_request.dart';
+import 'package:beauty_client/data/models/requests/send_message_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/data/models/requests/update_record_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
@@ -71,6 +74,15 @@ abstract class BeautyClient {
 
   @GET('/user/records')
   Future<List<Order>> getOrders({@Query('limit') required int limit, @Query('offset') required int offset});
+
+  @GET('/record/{recordId}/messages')
+  Future<List<ChatLogDto>> getOrderMessages(@Path('recordId') String orderId);
+
+  @POST('/record/{recordId}/message')
+  Future<List<ChatLogDto>> sendOrderMessage(@Path('recordId') String orderId, @Body() SendMessageRequest request);
+
+  @PATCH('/record/{recordId}/messages')
+  Future<void> markAsRead(@Path('recordId') String orderId, @Body() MarkAsReadRequest request);
 
   @PATCH('/user/record')
   Future<void> updateOrder(@Body() UpdateRecordRequest request);

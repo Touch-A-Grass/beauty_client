@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/order_review.dart';
+import 'package:beauty_client/features/chat/presentation/components/chat_button.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/components/rating_view.dart';
@@ -44,7 +45,18 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
       child: BlocBuilder<OrderDetailsBloc, OrderDetailsState>(
         builder:
             (context, state) => Scaffold(
-              appBar: AppBar(title: Text(S.of(context).orderDetailsTitle)),
+              appBar: AppBar(
+                title: Text(S.of(context).orderDetailsTitle),
+                actions: [
+                  if (state.order != null)
+                    ChatButton(
+                      unreadCount: state.order?.unreadMessageCount ?? 0,
+                      onPressed: () {
+                        context.pushRoute(OrderChatRoute(orderId: state.order!.id));
+                      },
+                    ),
+                ],
+              ),
               body: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 child:

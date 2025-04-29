@@ -1,8 +1,10 @@
+import 'package:beauty_client/features/chat/domain/models/chat_event.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/features/chat/domain/models/chat_live_event.dart';
 
 abstract interface class OrderRepository {
   Future<void> createOrder({
@@ -24,5 +26,13 @@ abstract interface class OrderRepository {
 
   Stream<void> watchOrderCreated();
 
+  Future<List<ChatEventInfo>> getChatEvents(String orderId);
+
+  Future<void> sendChatMessage({required String orderId, required String message, required String messageId});
+
   Stream<Order> watchOrderChanged();
+
+  Stream<ChatLiveEvent> watchOrderChatEvents(String orderId);
+
+  Future<void> markAsRead({required String orderId, required List<String> messageIds});
 }

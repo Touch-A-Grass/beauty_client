@@ -10,6 +10,7 @@ import 'package:beauty_client/data/repositories/venue_repository.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
 import 'package:beauty_client/data/storage/user_storage.dart';
+import 'package:beauty_client/data/websocket_api/websocket_api.dart';
 import 'package:beauty_client/domain/repositories/auth_repository.dart';
 import 'package:beauty_client/domain/repositories/order_repository.dart';
 import 'package:beauty_client/domain/repositories/venue_repository.dart';
@@ -37,6 +38,7 @@ class Di extends StatelessWidget {
         RepositoryProvider(create: (context) => BaseHeadersInterceptor()),
         RepositoryProvider(create: (context) => DioFactory.create(context.read(), context.read())),
         RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: Config.apiBaseUrl)),
+        RepositoryProvider(create: (context) => WebsocketApi(context.read(), baseUrl: Config.websocketBaseUrl)),
         RepositoryProvider(create: (context) => OrderCreatedEventBus()),
         RepositoryProvider(create: (context) => OrderChangedEventBus()),
         //   Repositories
@@ -45,7 +47,7 @@ class Di extends StatelessWidget {
         ),
         RepositoryProvider<VenueRepository>(create: (context) => VenueRepositoryImpl(context.read(), context.read())),
         RepositoryProvider<OrderRepository>(
-          create: (context) => OrderRepositoryImpl(context.read(), context.read(), context.read()),
+          create: (context) => OrderRepositoryImpl(context.read(), context.read(), context.read(), context.read()),
         ),
         //   Logic
         RepositoryProvider(create: (context) => LogoutUseCase(context.read())),

@@ -51,6 +51,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<User> getUserOrFetch() async {
+    return _userStorage.value ?? getUser();
+  }
+
+  @override
   Future<void> updateUser({required String name}) async {
     await _api.updateUser(UpdateUserRequest(name: name));
     getUser();
