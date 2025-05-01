@@ -21,7 +21,7 @@ class _ImageCropScreenState extends State<ImageCropScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Обрезать изображение')),
+      appBar: AppBar(title: Text('Обрезать изображение'), leading: BackButton()),
       body: Stack(
         children: [
           Crop(
@@ -56,7 +56,7 @@ class _ImageCropScreenState extends State<ImageCropScreen> {
                 onPressed: () {
                   controller.crop();
                 },
-                icon: Icon(Icons.check_rounded, size: 32,),
+                icon: Icon(Icons.check_rounded, size: 32),
                 style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.surface)),
               ),
             ),

@@ -26,7 +26,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
       child: BlocBuilder<OrdersBloc, OrdersState>(
         builder:
             (context, state) => Scaffold(
-              appBar: AppBar(title: Text(S.of(context).orders)),
+              appBar: AppBar(title: Text(S.of(context).orders), automaticallyImplyLeading: false),
               body: Builder(
                 builder: (context) {
                   if (state.orders.data.isEmpty && state.isLoading) {

@@ -36,6 +36,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
 
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: AssetIcon('assets/icons/beauty_service.svg', color: Theme.of(context).colorScheme.primary, size: 64),
           actions: [
             IconButton(

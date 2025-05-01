@@ -13,7 +13,7 @@ class OrderChatWidget extends StatelessWidget {
     return BlocBuilder<OrderChatBloc, OrderChatState>(
       builder:
           (context, state) => Scaffold(
-            appBar: AppBar(title: const Text('Чат')),
+            appBar: AppBar(title: const Text('Чат'), leading: BackButton()),
             body: switch (state.messagesState) {
               ProgressLoadingState<List<ChatEvent>>() => Center(child: CircularProgressIndicator()),
               SuccessLoadingState<List<ChatEvent>> messages => ChatView(

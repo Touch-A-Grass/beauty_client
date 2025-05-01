@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:beauty_client/presentation/components/app_back_button.dart';
 import 'package:beauty_client/presentation/components/app_carousel.dart';
 import 'package:beauty_client/presentation/components/dot_painter.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
@@ -83,7 +84,7 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                     title: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        BackButton(style: buttonStyle),
+                                        AppBackButton(style: buttonStyle),
                                         if (state.venue != null)
                                           IconButton(
                                             style: buttonStyle,

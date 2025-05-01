@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/app_back_button.dart';
 import 'package:beauty_client/presentation/components/avatar.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/components/service_info_widget.dart';
@@ -83,10 +84,7 @@ class _CartWidgetState extends State<CartWidget> {
       child: BlocBuilder<CartBloc, CartState>(
         builder:
             (context, state) => Scaffold(
-              appBar: AppBar(
-                leading: BackButton(onPressed: () => context.maybePop()),
-                title: Text(S.of(context).cartTitle),
-              ),
+              appBar: AppBar(leading: AppBackButton(), title: Text(S.of(context).cartTitle)),
               body: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 child:

@@ -32,3 +32,7 @@ class StaffParticipant extends ChatParticipant {
   StaffParticipant(this.staff, {super.isOwner})
     : super(id: staff.id, name: staff.name, initials: staff.initials, avatar: staff.photo);
 }
+
+class UnknownParticipant extends ChatParticipant {
+  UnknownParticipant(String id) : super(id: id, name: 'Unknown', initials: '?', avatar: null);
+}

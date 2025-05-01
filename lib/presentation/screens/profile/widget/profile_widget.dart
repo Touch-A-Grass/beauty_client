@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/user.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/app_back_button.dart';
 import 'package:beauty_client/presentation/components/app_image_picker.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/profile/bloc/profile_bloc.dart';
@@ -26,7 +27,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder:
           (context, state) => Scaffold(
-            appBar: AppBar(title: Text(S.of(context).profile)),
+            appBar: AppBar(title: Text(S.of(context).profile), leading: AppBackButton()),
             body: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child:
