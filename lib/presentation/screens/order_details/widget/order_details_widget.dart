@@ -3,6 +3,7 @@ import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/features/chat/presentation/components/chat_button.dart';
 import 'package:beauty_client/generated/l10n.dart';
+import 'package:beauty_client/presentation/components/app_back_button.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/components/rating_view.dart';
 import 'package:beauty_client/presentation/components/service_info_widget.dart';
@@ -47,6 +48,7 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
             (context, state) => Scaffold(
               appBar: AppBar(
                 title: Text(S.of(context).orderDetailsTitle),
+                leading: AppBackButton(),
                 actions: [
                   if (state.order != null)
                     ChatButton(
@@ -70,143 +72,146 @@ class _OrderDetailsWidgetState extends State<OrderDetailsWidget> {
                                 CustomScrollView(
                                   controller: scrollController,
                                   slivers: [
-                                    SliverPadding(
-                                      padding: EdgeInsets.all(16),
-                                      sliver: SliverMainAxisGroup(
-                                        slivers: [
-                                          SliverToBoxAdapter(child: _OrderVenueInfo(order: order)),
-                                          SliverPadding(
-                                            padding: const EdgeInsets.only(top: 32),
-                                            sliver: SliverToBoxAdapter(
-                                              child: Container(
-                                                padding: EdgeInsets.all(16),
-                                                decoration: BoxDecoration(
-                                                  color: Theme.of(context).colorScheme.surfaceContainer,
-                                                  borderRadius: BorderRadius.circular(16),
-                                                ),
-                                                child: DividerTheme(
-                                                  data: Theme.of(
-                                                    context,
-                                                  ).dividerTheme.copyWith(endIndent: 0, indent: 0, space: 32),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    children: [
-                                                      _OrderInfoItem(
-                                                        Text(S.of(context).cartService),
-                                                        Text(order.service.name),
-                                                      ),
-                                                      Divider(),
-                                                      _OrderInfoItem(
-                                                        Text(S.of(context).cartMaster),
-                                                        Text(order.staff.name),
-                                                      ),
-                                                      Divider(),
-                                                      if (order.status == OrderStatus.discarded &&
-                                                          order.comment.isNotEmpty) ...[
-                                                        _OrderInfoItem(
-                                                          Text(S.of(context).orderCancelReasonTitle),
-                                                          Expanded(
-                                                            child: Text(order.comment, textAlign: TextAlign.end),
-                                                          ),
-                                                        ),
-                                                        Divider(),
-                                                      ],
-                                                      _OrderTimeInfo(order: order),
-                                                      if (order.service.duration != null) ...[
-                                                        Divider(),
-                                                        _OrderInfoItem(
-                                                          Text(S.of(context).serviceDuration),
-                                                          Text('~ ${order.service.duration!.inMinutes} мин.'),
-                                                        ),
-                                                      ],
-                                                      if (order.service.price != null) ...[
-                                                        Divider(),
-                                                        _OrderInfoItem(
-                                                          Text(
-                                                            S.of(context).orderPrice,
-                                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                                          ),
-                                                          Text(
-                                                            order.service.price!.toPriceFormat(),
-                                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      Divider(),
-                                                      _OrderInfoItem(
-                                                        Text(
-                                                          S.of(context).orderStatus,
-                                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                                        ),
-                                                        Text(
-                                                          order.status.statusName(context),
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            color: order.status.color(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          if (order.canBeRated)
+                                    SliverSafeArea(
+                                      top: false,
+                                      sliver: SliverPadding(
+                                        padding: EdgeInsets.all(16),
+                                        sliver: SliverMainAxisGroup(
+                                          slivers: [
+                                            SliverToBoxAdapter(child: _OrderVenueInfo(order: order)),
                                             SliverPadding(
-                                              padding: const EdgeInsets.only(top: 16),
+                                              padding: const EdgeInsets.only(top: 32),
                                               sliver: SliverToBoxAdapter(
-                                                child: _OrderNewRatingView(
-                                                  (review) => context.read<OrderDetailsBloc>().add(
-                                                    OrderDetailsEvent.rateOrderRequested(review),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context).colorScheme.surfaceContainer,
+                                                    borderRadius: BorderRadius.circular(16),
                                                   ),
-                                                  state.ratingState is LoadingOrderRatingState,
+                                                  child: DividerTheme(
+                                                    data: Theme.of(
+                                                      context,
+                                                    ).dividerTheme.copyWith(endIndent: 0, indent: 0, space: 32),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        _OrderInfoItem(
+                                                          Text(S.of(context).cartService),
+                                                          Text(order.service.name),
+                                                        ),
+                                                        Divider(),
+                                                        _OrderInfoItem(
+                                                          Text(S.of(context).cartMaster),
+                                                          Text(order.staff.name),
+                                                        ),
+                                                        Divider(),
+                                                        if (order.status == OrderStatus.discarded &&
+                                                            order.comment.isNotEmpty) ...[
+                                                          _OrderInfoItem(
+                                                            Text(S.of(context).orderCancelReasonTitle),
+                                                            Expanded(
+                                                              child: Text(order.comment, textAlign: TextAlign.end),
+                                                            ),
+                                                          ),
+                                                          Divider(),
+                                                        ],
+                                                        _OrderTimeInfo(order: order),
+                                                        if (order.service.duration != null) ...[
+                                                          Divider(),
+                                                          _OrderInfoItem(
+                                                            Text(S.of(context).serviceDuration),
+                                                            Text('~ ${order.service.duration!.inMinutes} мин.'),
+                                                          ),
+                                                        ],
+                                                        if (order.service.price != null) ...[
+                                                          Divider(),
+                                                          _OrderInfoItem(
+                                                            Text(
+                                                              S.of(context).orderPrice,
+                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                            ),
+                                                            Text(
+                                                              order.service.price!.toPriceFormat(),
+                                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        Divider(),
+                                                        _OrderInfoItem(
+                                                          Text(
+                                                            S.of(context).orderStatus,
+                                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                                          ),
+                                                          Text(
+                                                            order.status.statusName(context),
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              color: order.status.color(),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            )
-                                          else if (order.review != null)
-                                            SliverPadding(
-                                              padding: const EdgeInsets.only(top: 16),
-                                              sliver: SliverToBoxAdapter(child: _OrderRatingView(order.review!)),
                                             ),
-                                          SliverPadding(
-                                            padding: const EdgeInsets.only(top: 32, left: 48, right: 48),
-                                            sliver: SliverToBoxAdapter(
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child: IconButton(
-                                                  iconSize: 32,
-                                                  style: ButtonStyle(
-                                                    shape: WidgetStatePropertyAll(
-                                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                            if (order.canBeRated)
+                                              SliverPadding(
+                                                padding: const EdgeInsets.only(top: 16),
+                                                sliver: SliverToBoxAdapter(
+                                                  child: _OrderNewRatingView(
+                                                    (review) => context.read<OrderDetailsBloc>().add(
+                                                      OrderDetailsEvent.rateOrderRequested(review),
                                                     ),
-                                                    backgroundColor: WidgetStatePropertyAll(
-                                                      Theme.of(context).colorScheme.surfaceContainer,
-                                                    ),
+                                                    state.ratingState is LoadingOrderRatingState,
                                                   ),
-                                                  onPressed:
-                                                      () => showDialog(
-                                                        context: context,
-                                                        builder:
-                                                            (context) => Dialog(
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                  color: Theme.of(context).colorScheme.surfaceContainer,
-                                                                  borderRadius: BorderRadius.circular(16),
-                                                                ),
-                                                                padding: EdgeInsets.all(24),
-                                                                child: QrImageView(
-                                                                  data: 'tagbeautymaster://orders/${order.id}',
+                                                ),
+                                              )
+                                            else if (order.review != null)
+                                              SliverPadding(
+                                                padding: const EdgeInsets.only(top: 16),
+                                                sliver: SliverToBoxAdapter(child: _OrderRatingView(order.review!)),
+                                              ),
+                                            SliverPadding(
+                                              padding: const EdgeInsets.only(top: 32, left: 48, right: 48),
+                                              sliver: SliverToBoxAdapter(
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: IconButton(
+                                                    iconSize: 32,
+                                                    style: ButtonStyle(
+                                                      shape: WidgetStatePropertyAll(
+                                                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                      ),
+                                                      backgroundColor: WidgetStatePropertyAll(
+                                                        Theme.of(context).colorScheme.surfaceContainer,
+                                                      ),
+                                                    ),
+                                                    onPressed:
+                                                        () => showDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (context) => Dialog(
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    color: Theme.of(context).colorScheme.surfaceContainer,
+                                                                    borderRadius: BorderRadius.circular(16),
+                                                                  ),
+                                                                  padding: EdgeInsets.all(24),
+                                                                  child: QrImageView(
+                                                                    data: 'tagbeautymaster://orders/${order.id}',
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                      ),
-                                                  icon: Icon(Icons.qr_code_rounded),
+                                                        ),
+                                                    icon: Icon(Icons.qr_code_rounded),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     if (state.canDiscardOrder)

@@ -30,9 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: child,
                 ),
                 Positioned(
-                  left: 16,
+                  left: 16 + MediaQuery.of(context).padding.left,
                   bottom: 16 + MediaQuery.of(context).padding.bottom,
-                  right: 16,
+                  right: 16 + MediaQuery.of(context).padding.right,
                   child: MeasureSize(
                     onChange:
                         (size) => setState(() {

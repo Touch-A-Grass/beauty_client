@@ -31,29 +31,33 @@ class _ChatViewState extends State<ChatView> {
             reverse: true,
             slivers: [
               if (widget.events.isNotEmpty)
-                SliverPadding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16) +
-                      EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-                  sliver: SliverList.separated(
-                    itemBuilder: (context, index) {
-                      final event = widget.events[index];
-                      final prevEvent = index == 0 ? null : widget.events[index - 1];
-                      return switch (event) {
-                        MessageChatEvent() => ChatMessageView(
-                          message: event.message,
-                          showAvatar:
-                              index == 0 ||
-                              prevEvent is! MessageChatEvent ||
-                              prevEvent.message.participant.id != event.message.participant.id ||
-                              prevEvent.message.createdAt.difference(event.message.createdAt) >
-                                  const Duration(minutes: 2),
-                        ),
-                        StatusLogChatEvent() => Center(child: Text(event.log.text, textAlign: TextAlign.center)),
-                      };
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(height: 16),
-                    itemCount: widget.events.length,
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  sliver: SliverPadding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 16) +
+                        EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                    sliver: SliverList.separated(
+                      itemBuilder: (context, index) {
+                        final event = widget.events[index];
+                        final prevEvent = index == 0 ? null : widget.events[index - 1];
+                        return switch (event) {
+                          MessageChatEvent() => ChatMessageView(
+                            message: event.message,
+                            showAvatar:
+                                index == 0 ||
+                                prevEvent is! MessageChatEvent ||
+                                prevEvent.message.participant.id != event.message.participant.id ||
+                                prevEvent.message.createdAt.difference(event.message.createdAt) >
+                                    const Duration(minutes: 2),
+                          ),
+                          StatusLogChatEvent() => Center(child: Text(event.log.text, textAlign: TextAlign.center)),
+                        };
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      itemCount: widget.events.length,
+                    ),
                   ),
                 )
               else
@@ -65,7 +69,13 @@ class _ChatViewState extends State<ChatView> {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+          padding:
+              const EdgeInsets.all(16) +
+              EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom,
+                left: MediaQuery.of(context).padding.left,
+                right: MediaQuery.of(context).padding.right,
+              ),
           color: Theme.of(context).colorScheme.surfaceContainer,
           child: TextFormField(
             maxLines: 5,

@@ -17,14 +17,22 @@ class RootScreen extends StatelessWidget {
         child: Scaffold(
           body: Shimmer(
             child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.loose(const Size(600, double.infinity)),
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse, PointerDeviceKind.trackpad},
-                  ),
-                  child: child,
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final horizontalPadding = ((constraints.maxWidth - 900) / 2).clamp(0.0, double.infinity);
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      padding: MediaQuery.of(context).padding + EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    ),
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        scrollbars: false,
+                        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse, PointerDeviceKind.trackpad},
+                      ),
+                      child: child,
+                    ),
+                  );
+                },
               ),
             ),
           ),

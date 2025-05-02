@@ -14,6 +14,7 @@ import 'package:beauty_client/presentation/screens/service_details/service_detai
 import 'package:beauty_client/presentation/screens/venue_details/bloc/venue_details_bloc.dart';
 import 'package:beauty_client/presentation/util/bloc_single_change_listener.dart';
 import 'package:beauty_client/presentation/util/navigator_util.dart';
+import 'package:beauty_client/presentation/util/theme_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,7 +80,7 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                     floating: false,
                                     pinned: false,
                                     automaticallyImplyLeading: false,
-                                    expandedHeight: constraints.maxWidth,
+                                    expandedHeight: context.isMobile ? constraints.maxWidth : 400,
                                     backgroundColor: Colors.transparent,
                                     title: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,79 +154,94 @@ class _VenueDetailsWidgetState extends State<VenueDetailsWidget> with TickerProv
                                   ),
                                 ],
                               ),
-                              if (state.venue?.name.isNotEmpty ?? false)
-                                SliverPadding(
-                                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                                  sliver: SliverToBoxAdapter(
-                                    child: Text(state.venue!.name, style: Theme.of(context).textTheme.headlineSmall),
-                                  ),
-                                ),
-                              if (state.venue?.address.isNotEmpty ?? false)
-                                SliverPadding(
-                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
-                                  sliver: SliverToBoxAdapter(
-                                    child: Row(
-                                      spacing: 4,
-                                      children: [
-                                        Icon(Icons.location_pin, size: 16),
-                                        Expanded(child: Text(state.venue!.address)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              if (state.maxPrice != null && state.minPrice != null ||
-                                  state.minDuration != null && state.maxDuration != null)
-                                SliverPadding(
-                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
-                                  sliver: SliverToBoxAdapter(
-                                    child: Opacity(
-                                      opacity: 0.5,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          if (state.maxPrice != null && state.minPrice != null)
-                                            Text(
-                                              '${state.minPrice} – ${state.maxPrice} ₽',
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
-                                              textAlign: TextAlign.end,
-                                            )
-                                          else
-                                            SizedBox.shrink(),
-                                          if (state.minDuration != null && state.maxDuration != null)
-                                            Text(
-                                              '${state.minDuration!.inMinutes} ~ ${state.maxDuration!.inMinutes} мин.',
-                                              style: Theme.of(context).textTheme.labelLarge,
-                                              textAlign: TextAlign.end,
-                                            ),
-                                        ],
+                              SliverSafeArea(
+                                top: false,
+                                bottom: false,
+                                sliver: SliverMainAxisGroup(
+                                  slivers: [
+                                    if (state.venue?.name.isNotEmpty ?? false)
+                                      SliverPadding(
+                                        padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                                        sliver: SliverToBoxAdapter(
+                                          child: Text(
+                                            state.venue!.name,
+                                            style: Theme.of(context).textTheme.headlineSmall,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    if (state.venue?.address.isNotEmpty ?? false)
+                                      SliverPadding(
+                                        padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                                        sliver: SliverToBoxAdapter(
+                                          child: Row(
+                                            spacing: 4,
+                                            children: [
+                                              Icon(Icons.location_pin, size: 16),
+                                              Expanded(child: Text(state.venue!.address)),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    if (state.maxPrice != null && state.minPrice != null ||
+                                        state.minDuration != null && state.maxDuration != null)
+                                      SliverPadding(
+                                        padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                                        sliver: SliverToBoxAdapter(
+                                          child: Opacity(
+                                            opacity: 0.5,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                if (state.maxPrice != null && state.minPrice != null)
+                                                  Text(
+                                                    '${state.minPrice} – ${state.maxPrice} ₽',
+                                                    style: Theme.of(
+                                                      context,
+                                                    ).textTheme.labelLarge!.copyWith(fontWeight: FontWeight.bold),
+                                                    textAlign: TextAlign.end,
+                                                  )
+                                                else
+                                                  SizedBox.shrink(),
+                                                if (state.minDuration != null && state.maxDuration != null)
+                                                  Text(
+                                                    '${state.minDuration!.inMinutes} ~ ${state.maxDuration!.inMinutes} мин.',
+                                                    style: Theme.of(context).textTheme.labelLarge,
+                                                    textAlign: TextAlign.end,
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (state.venue?.description.isNotEmpty ?? false)
+                                      SliverPadding(
+                                        padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                                        sliver: SliverToBoxAdapter(child: Text(state.venue!.description)),
+                                      ),
+                                  ],
                                 ),
-                              if (state.venue?.description.isNotEmpty ?? false)
-                                SliverPadding(
-                                  padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
-                                  sliver: SliverToBoxAdapter(child: Text(state.venue!.description)),
-                                ),
+                              ),
                               SliverOverlapAbsorber(
                                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                                 sliver: SliverPinnedHeader(
-                                  child: AnimatedBuilder(
-                                    animation: scrollController,
-                                    builder:
-                                        (context, _) => Padding(
-                                          padding: EdgeInsets.only(
-                                            top:
-                                                MediaQuery.of(context).padding.top *
-                                                min(1, scrollController.offset / constraints.maxWidth),
+                                  child: SafeArea(
+                                    top: false,
+                                    bottom: false,
+                                    child: AnimatedBuilder(
+                                      animation: scrollController,
+                                      builder:
+                                          (context, _) => Padding(
+                                            padding: EdgeInsets.only(
+                                              top:
+                                                  MediaQuery.of(context).padding.top *
+                                                  min(1, scrollController.offset / constraints.maxWidth),
+                                            ),
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
+                                              child: TabBar(tabs: const [Tab(text: 'Услуги'), Tab(text: 'Мастера')]),
+                                            ),
                                           ),
-                                          child: DecoratedBox(
-                                            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
-                                            child: TabBar(tabs: const [Tab(text: 'Услуги'), Tab(text: 'Мастера')]),
-                                          ),
-                                        ),
+                                    ),
                                   ),
                                 ),
                               ),

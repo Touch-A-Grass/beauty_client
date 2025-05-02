@@ -48,7 +48,12 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                       },
                       child: ListView.separated(
                         padding:
-                            const EdgeInsets.all(16) + EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                            const EdgeInsets.all(16) +
+                            EdgeInsets.only(
+                              bottom: MediaQuery.of(context).padding.bottom,
+                              left: MediaQuery.of(context).padding.left,
+                              right: MediaQuery.of(context).padding.right,
+                            ),
                         itemCount: state.orders.data.length,
                         separatorBuilder: (context, index) => const SizedBox(height: 16),
                         itemBuilder:

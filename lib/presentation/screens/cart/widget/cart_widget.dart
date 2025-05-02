@@ -92,113 +92,117 @@ class _CartWidgetState extends State<CartWidget> {
                         ? const Center(child: CircularProgressIndicator())
                         : CustomScrollView(
                           slivers: [
-                            SliverPadding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              sliver: SliverMainAxisGroup(
-                                slivers: [
-                                  SliverPadding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
-                                    sliver: SliverToBoxAdapter(child: VenueListItem(venue: state.venue!)),
-                                  ),
-                                  SliverPadding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
-                                    sliver: SliverToBoxAdapter(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        children: [
-                                          const SizedBox(height: 32),
-                                          Text(
-                                            S.of(context).cartService,
-                                            style: Theme.of(context).textTheme.headlineSmall,
-                                          ),
-                                          const SizedBox(height: 16),
-                                          if (state.selectedService != null)
-                                            ServiceInfoWidget(
-                                              service: state.selectedService!,
-                                              onTap: () => selectService(context),
-                                            )
-                                          else
-                                            _ServiceInfoPlaceHolder(onTap: () => selectService(context)),
-                                          const SizedBox(height: 32),
-                                          Text(
-                                            S.of(context).cartMaster,
-                                            style: Theme.of(context).textTheme.headlineSmall,
-                                          ),
-                                          const SizedBox(height: 16),
-                                          if (state.selectedStaff != null)
-                                            StaffInfoWidget(
-                                              staff: state.selectedStaff!,
-                                              onTap: () => selectStaff(context),
-                                            )
-                                          else
-                                            _StaffInfoPlaceHolder(onTap: () => selectStaff(context)),
-                                          const SizedBox(height: 32),
-                                          Text(
-                                            S.of(context).cartServiceTime,
-                                            style: Theme.of(context).textTheme.headlineSmall,
-                                          ),
-                                          const SizedBox(height: 16),
-                                          SizedBox(
-                                            height: 48,
-                                            child: OutlinedButton(
-                                              onPressed: switch (state.timeSlotsState) {
-                                                CartTimeSlotsStateEmpty() ||
-                                                CartTimeSlotsStateLoading() ||
-                                                CartTimeSlotsStateError() => null,
-                                                CartTimeSlotsStateLoaded s => () async {
-                                                  final date = await showModalBottomSheet(
-                                                    context: context,
-                                                    backgroundColor: Colors.transparent,
-                                                    useSafeArea: true,
-                                                    isScrollControlled: true,
-                                                    builder:
-                                                        (childContext) => SelectTimeslotSheet(
-                                                          timeSlots: s.timeSlots,
-                                                          service: state.selectedService!,
-                                                        ),
-                                                  );
+                            SliverSafeArea(
+                              top: false,
+                              bottom: false,
+                              sliver: SliverPadding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                sliver: SliverMainAxisGroup(
+                                  slivers: [
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16),
+                                      sliver: SliverToBoxAdapter(child: VenueListItem(venue: state.venue!)),
+                                    ),
+                                    SliverPadding(
+                                      padding: EdgeInsets.symmetric(horizontal: 16),
+                                      sliver: SliverToBoxAdapter(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            const SizedBox(height: 32),
+                                            Text(
+                                              S.of(context).cartService,
+                                              style: Theme.of(context).textTheme.headlineSmall,
+                                            ),
+                                            const SizedBox(height: 16),
+                                            if (state.selectedService != null)
+                                              ServiceInfoWidget(
+                                                service: state.selectedService!,
+                                                onTap: () => selectService(context),
+                                              )
+                                            else
+                                              _ServiceInfoPlaceHolder(onTap: () => selectService(context)),
+                                            const SizedBox(height: 32),
+                                            Text(
+                                              S.of(context).cartMaster,
+                                              style: Theme.of(context).textTheme.headlineSmall,
+                                            ),
+                                            const SizedBox(height: 16),
+                                            if (state.selectedStaff != null)
+                                              StaffInfoWidget(
+                                                staff: state.selectedStaff!,
+                                                onTap: () => selectStaff(context),
+                                              )
+                                            else
+                                              _StaffInfoPlaceHolder(onTap: () => selectStaff(context)),
+                                            const SizedBox(height: 32),
+                                            Text(
+                                              S.of(context).cartServiceTime,
+                                              style: Theme.of(context).textTheme.headlineSmall,
+                                            ),
+                                            const SizedBox(height: 16),
+                                            SizedBox(
+                                              height: 48,
+                                              child: OutlinedButton(
+                                                onPressed: switch (state.timeSlotsState) {
+                                                  CartTimeSlotsStateEmpty() ||
+                                                  CartTimeSlotsStateLoading() ||
+                                                  CartTimeSlotsStateError() => null,
+                                                  CartTimeSlotsStateLoaded s => () async {
+                                                    final date = await showModalBottomSheet(
+                                                      context: context,
+                                                      backgroundColor: Colors.transparent,
+                                                      useSafeArea: true,
+                                                      isScrollControlled: true,
+                                                      builder:
+                                                          (childContext) => SelectTimeslotSheet(
+                                                            timeSlots: s.timeSlots,
+                                                            service: state.selectedService!,
+                                                          ),
+                                                    );
 
-                                                  if (context.mounted && date != null) {
-                                                    context.read<CartBloc>().add(CartEvent.dateChanged(date));
-                                                  }
+                                                    if (context.mounted && date != null) {
+                                                      context.read<CartBloc>().add(CartEvent.dateChanged(date));
+                                                    }
+                                                  },
                                                 },
-                                              },
-                                              child: switch (state.timeSlotsState) {
-                                                CartTimeSlotsStateEmpty() => Text(S.of(context).cartDatePlaceholder),
-                                                CartTimeSlotsStateLoading() => Center(
-                                                  child: SizedBox.square(
-                                                    dimension: 24,
-                                                    child: CircularProgressIndicator(),
+                                                child: switch (state.timeSlotsState) {
+                                                  CartTimeSlotsStateEmpty() => Text(S.of(context).cartDatePlaceholder),
+                                                  CartTimeSlotsStateLoading() => Center(
+                                                    child: SizedBox.square(
+                                                      dimension: 24,
+                                                      child: CircularProgressIndicator(),
+                                                    ),
                                                   ),
-                                                ),
-                                                CartTimeSlotsStateLoaded() => Text(
-                                                  state.date != null
-                                                      ? dateFormat.format(state.date!)
-                                                      : S.of(context).cartDatePlaceholder,
-                                                ),
-                                                CartTimeSlotsStateError() => Text(S.of(context).cartDatePlaceholder),
+                                                  CartTimeSlotsStateLoaded() => Text(
+                                                    state.date != null
+                                                        ? dateFormat.format(state.date!)
+                                                        : S.of(context).cartDatePlaceholder,
+                                                  ),
+                                                  CartTimeSlotsStateError() => Text(S.of(context).cartDatePlaceholder),
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(height: 32),
+                                            TextFormField(
+                                              focusNode: commentFocus,
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                                labelText: S.of(context).cartComment,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 5,
+                                              onChanged: (value) {
+                                                context.read<CartBloc>().add(CartEvent.commentChanged(value));
                                               },
+                                              onTapOutside: (_) => commentFocus.unfocus(),
                                             ),
-                                          ),
-                                          const SizedBox(height: 32),
-                                          TextFormField(
-                                            focusNode: commentFocus,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                                              labelText: S.of(context).cartComment,
-                                            ),
-                                            minLines: 1,
-                                            maxLines: 5,
-                                            onChanged: (value) {
-                                              context.read<CartBloc>().add(CartEvent.commentChanged(value));
-                                            },
-                                            onTapOutside: (_) => commentFocus.unfocus(),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             SliverFillRemaining(
@@ -208,7 +212,11 @@ class _CartWidgetState extends State<CartWidget> {
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.all(16) +
-                                      EdgeInsets.only(bottom: 16 + MediaQuery.of(context).padding.bottom),
+                                      EdgeInsets.only(
+                                        bottom: 16 + MediaQuery.of(context).padding.bottom,
+                                        left: MediaQuery.of(context).padding.left,
+                                        right: MediaQuery.of(context).padding.right,
+                                      ),
                                   child: SizedBox(
                                     width: double.infinity,
                                     height: 48,
