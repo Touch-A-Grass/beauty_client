@@ -1,9 +1,10 @@
-import 'package:beauty_client/features/chat/domain/models/chat_event.dart';
+import 'package:beauty_client/data/event/order_chat_unread_count_changed_event_bus.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/order_review.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/features/chat/domain/models/chat_event.dart';
 import 'package:beauty_client/features/chat/domain/models/chat_live_event.dart';
 
 abstract interface class OrderRepository {
@@ -35,4 +36,8 @@ abstract interface class OrderRepository {
   Stream<ChatLiveEvent> watchOrderChatEvents(String orderId);
 
   Future<void> markAsRead({required String orderId, required List<String> messageIds});
+
+  Stream<int> watchOrderChatUnreadCount(String orderId);
+
+  Stream<OrderChatUnreadCountChangedEvent> watchOrderChatUnreadCountAll();
 }

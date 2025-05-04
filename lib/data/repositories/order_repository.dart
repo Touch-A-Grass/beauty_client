@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/event/order_changed_event_bus.dart';
+import 'package:beauty_client/data/event/order_chat_unread_count_changed_event_bus.dart';
 import 'package:beauty_client/data/event/order_created_event_bus.dart';
 import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/mark_as_read_request.dart';
@@ -25,10 +26,17 @@ class OrderRepositoryImpl implements OrderRepository {
   final BeautyClient _client;
   final OrderChangedEventBus _orderChangedEventBus;
   final OrderCreatedEventBus _orderCreatedEventBus;
+  final OrderChatUnreadCountChangedEventBus _orderChatUnreadCountChangedEventBus;
   final WebsocketApi _websocketApi;
 
   @override
-  OrderRepositoryImpl(this._client, this._orderChangedEventBus, this._orderCreatedEventBus, this._websocketApi);
+  OrderRepositoryImpl(
+    this._client,
+    this._orderChangedEventBus,
+    this._orderCreatedEventBus,
+    this._websocketApi,
+    this._orderChatUnreadCountChangedEventBus,
+  );
 
   @override
   Future<void> createOrder({
@@ -95,8 +103,9 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<void> markAsRead({required String orderId, required List<String> messageIds}) {
-    return _client.markAsRead(orderId, MarkAsReadRequest(messageIds: messageIds));
+  Future<void> markAsRead({required String orderId, required List<String> messageIds}) async {
+    await _client.markAsRead(orderId, MarkAsReadRequest(messageIds: messageIds));
+    _orderChatUnreadCountChangedEventBus.emit(OrderChatUnreadCountChangedEvent(orderId: orderId, count: 0));
   }
 
   @override
@@ -121,4 +130,12 @@ class OrderRepositoryImpl implements OrderRepository {
           },
         );
   }
+
+  @override
+  Stream<int> watchOrderChatUnreadCount(String orderId) =>
+      _orderChatUnreadCountChangedEventBus.stream.where((e) => e.orderId == orderId).map((e) => e.count);
+
+  @override
+  Stream<OrderChatUnreadCountChangedEvent> watchOrderChatUnreadCountAll() =>
+      _orderChatUnreadCountChangedEventBus.stream;
 }

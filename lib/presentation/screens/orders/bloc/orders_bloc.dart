@@ -28,6 +28,21 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> with SubscriptionBloc {
     on<_OrderChanged>((event, emit) async {
       emit(state.copyWith(orders: state.orders.replaceWith(event.order, (order) => order.id)));
     });
+    on<_UnreadMessageCountChanged>((event, emit) {
+      emit(
+        state.copyWith(
+          orders: state.orders.copyWith(
+            data:
+                state.orders.data
+                    .map((order) => order.id == event.orderId ? order.copyWith(unreadMessageCount: event.count) : order)
+                    .toList(),
+          ),
+        ),
+      );
+    });
+    subscribe(_orderRepository.watchOrderChatUnreadCountAll(), (event) {
+      add(OrdersEvent.unreadMessageCountChanged(event.orderId, event.count));
+    });
     subscribe(_orderRepository.watchOrderCreated(), (_) {
       add(OrdersEvent.ordersRequested(refresh: true));
     });
