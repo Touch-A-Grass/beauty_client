@@ -1,4 +1,5 @@
 import 'package:beauty_client/domain/models/staff.dart';
+import 'package:beauty_client/presentation/components/rating_card_view.dart';
 import 'package:beauty_client/presentation/util/image_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class StaffGridItem extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
-              spacing: 16,
+              spacing: 4,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
@@ -52,6 +53,7 @@ class StaffGridItem extends StatelessWidget {
                   ),
                 ),
                 Text(staff.name, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+                if (staff.rating > 0) Align(alignment: Alignment.center, child: RatingStarView(rating: staff.rating)),
               ],
             ),
           ),

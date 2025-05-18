@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/domain/models/venue.dart';
+import 'package:beauty_client/presentation/components/rating_card_view.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/util/hex_color.dart';
 import 'package:beauty_client/presentation/util/navigator_util.dart';
@@ -31,6 +32,16 @@ class VenueListItem extends StatelessWidget {
                   Positioned.fill(
                     child: ClipRRect(borderRadius: BorderRadius.circular(16), child: VenuePhotoFade(venue: venue)),
                   ),
+                  if (venue.rating > 0)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: RatingCardView(
+                        rating: venue.rating,
+                        backgroundColor: venue.theme.color.toMaterial().shade800,
+                        textColor: Theme.of(context).colorScheme.onInverseSurface,
+                      ),
+                    ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

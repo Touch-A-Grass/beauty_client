@@ -10,6 +10,7 @@ import 'package:beauty_client/data/models/requests/create_order_request.dart';
 import 'package:beauty_client/data/models/requests/mark_as_read_request.dart';
 import 'package:beauty_client/data/models/requests/send_message_request.dart';
 import 'package:beauty_client/data/models/requests/update_record_request.dart';
+import 'package:beauty_client/data/storage/venue_theme_storage.dart';
 import 'package:beauty_client/data/util/string_util.dart';
 import 'package:beauty_client/data/websocket_api/websocket_api.dart';
 import 'package:beauty_client/domain/models/order.dart';
@@ -31,6 +32,7 @@ class OrderRepositoryImpl implements OrderRepository {
   final OrderCreatedEventBus _orderCreatedEventBus;
   final OrderChatUnreadCountChangedEventBus _orderChatUnreadCountChangedEventBus;
   final WebsocketApi _websocketApi;
+  final VenueThemeStorage _venueThemeStorage;
 
   @override
   OrderRepositoryImpl(
@@ -39,6 +41,7 @@ class OrderRepositoryImpl implements OrderRepository {
     this._orderCreatedEventBus,
     this._websocketApi,
     this._orderChatUnreadCountChangedEventBus,
+    this._venueThemeStorage,
   );
 
   @override
@@ -65,6 +68,7 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<Order> getOrder(String id) async {
     final order = await _client.getOrder(id);
     _orderChangedEventBus.emit(order);
+    _venueThemeStorage.setTheme(order.venue.id, order.venue.theme);
     return order;
   }
 

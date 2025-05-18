@@ -5,6 +5,7 @@ class VenueDetailsState with _$VenueDetailsState {
   const VenueDetailsState._();
 
   const factory VenueDetailsState({
+    required String venueId,
     Venue? venue,
     @Default([]) List<Service> services,
     @Default([]) List<Staff> staff,

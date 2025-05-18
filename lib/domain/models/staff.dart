@@ -13,6 +13,7 @@ class Staff with _$Staff {
     required String phoneNumber,
     @Default([]) List<String> services,
     String? photo,
+    @Default(0) double rating,
   }) = _Staff;
 
   factory Staff.fromJson(Map<String, dynamic> json) => _$StaffFromJson(json);

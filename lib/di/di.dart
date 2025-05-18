@@ -11,6 +11,7 @@ import 'package:beauty_client/data/repositories/venue_repository.dart';
 import 'package:beauty_client/data/storage/auth_storage.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
 import 'package:beauty_client/data/storage/user_storage.dart';
+import 'package:beauty_client/data/storage/venue_theme_storage.dart';
 import 'package:beauty_client/data/websocket_api/websocket_api.dart';
 import 'package:beauty_client/domain/repositories/auth_repository.dart';
 import 'package:beauty_client/domain/repositories/order_repository.dart';
@@ -36,6 +37,7 @@ class Di extends StatelessWidget {
         RepositoryProvider.value(value: authStorage),
         RepositoryProvider.value(value: userStorage),
         RepositoryProvider(create: (context) => LocationStorage()),
+        RepositoryProvider(create: (context) => VenueThemeStorage()),
         RepositoryProvider(create: (context) => BaseHeadersInterceptor()),
         RepositoryProvider(create: (context) => DioFactory.create(context.read(), context.read())),
         RepositoryProvider(create: (context) => BeautyClient(context.read(), baseUrl: Config.apiBaseUrl)),
@@ -47,11 +49,19 @@ class Di extends StatelessWidget {
         RepositoryProvider<AuthRepository>(
           create: (context) => AuthRepositoryImpl(context.read(), context.read(), context.read()),
         ),
-        RepositoryProvider<VenueRepository>(create: (context) => VenueRepositoryImpl(context.read(), context.read())),
+        RepositoryProvider<VenueRepository>(
+          create: (context) => VenueRepositoryImpl(context.read(), context.read(), context.read()),
+        ),
         RepositoryProvider<OrderRepository>(
           create:
-              (context) =>
-                  OrderRepositoryImpl(context.read(), context.read(), context.read(), context.read(), context.read()),
+              (context) => OrderRepositoryImpl(
+                context.read(),
+                context.read(),
+                context.read(),
+                context.read(),
+                context.read(),
+                context.read(),
+              ),
         ),
         //   Logic
         RepositoryProvider(create: (context) => LogoutUseCase(context.read())),

@@ -15,11 +15,8 @@ part 'venue_details_state.dart';
 class VenueDetailsBloc extends Bloc<VenueDetailsEvent, VenueDetailsState> {
   final VenueRepository venueRepository;
 
-  VenueDetailsBloc(
-    this.venueRepository, {
-    required String venueId,
-    Venue? venue,
-  }) : super(VenueDetailsState(venue: venue)) {
+  VenueDetailsBloc(this.venueRepository, {required String venueId, Venue? venue})
+    : super(VenueDetailsState(venue: venue, venueId: venueId)) {
     on<_Started>((event, emit) async {
       add(const VenueDetailsEvent.servicesRequested());
       add(const VenueDetailsEvent.venuesRequested());
@@ -32,10 +29,7 @@ class VenueDetailsBloc extends Bloc<VenueDetailsEvent, VenueDetailsState> {
         final staff = await venueRepository.getStaff(venueId);
         emit(state.copyWith(staff: staff, isLoadingStaff: false));
       } catch (e) {
-        emit(state.copyWith(
-          staffLoadingError: AppError(message: e.toString()),
-          isLoadingStaff: false,
-        ));
+        emit(state.copyWith(staffLoadingError: AppError(message: e.toString()), isLoadingStaff: false));
       }
     });
 
@@ -45,10 +39,7 @@ class VenueDetailsBloc extends Bloc<VenueDetailsEvent, VenueDetailsState> {
         final services = await venueRepository.getServices(venueId);
         emit(state.copyWith(services: services, isLoadingServices: false));
       } catch (e) {
-        emit(state.copyWith(
-          servicesLoadingError: AppError(message: e.toString()),
-          isLoadingServices: false,
-        ));
+        emit(state.copyWith(servicesLoadingError: AppError(message: e.toString()), isLoadingServices: false));
       }
     });
 
@@ -56,17 +47,9 @@ class VenueDetailsBloc extends Bloc<VenueDetailsEvent, VenueDetailsState> {
       emit(state.copyWith(isLoadingVenue: true));
       try {
         final venue = await venueRepository.getVenue(venueId);
-        emit(
-          state.copyWith(
-            venue: venue,
-            isLoadingVenue: false,
-          ),
-        );
+        emit(state.copyWith(venue: venue, isLoadingVenue: false));
       } catch (e) {
-        emit(state.copyWith(
-          venueLoadingError: AppError(message: e.toString()),
-          isLoadingVenue: false,
-        ));
+        emit(state.copyWith(venueLoadingError: AppError(message: e.toString()), isLoadingVenue: false));
       }
     });
   }

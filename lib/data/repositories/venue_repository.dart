@@ -1,6 +1,7 @@
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/models/mappers/staff_time_slot_mapper.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
+import 'package:beauty_client/data/storage/venue_theme_storage.dart';
 import 'package:beauty_client/data/util/string_util.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/service.dart';
@@ -13,8 +14,9 @@ import 'package:beauty_client/domain/repositories/venue_repository.dart';
 class VenueRepositoryImpl implements VenueRepository {
   final BeautyClient _api;
   final LocationStorage locationStorage;
+  final VenueThemeStorage _venueThemeStorage;
 
-  VenueRepositoryImpl(this._api, this.locationStorage);
+  VenueRepositoryImpl(this._api, this.locationStorage, this._venueThemeStorage);
 
   @override
   Future<List<Venue>> getVenues({
@@ -52,7 +54,9 @@ class VenueRepositoryImpl implements VenueRepository {
 
   @override
   Future<Venue> getVenue(String venueId) async {
-    return _api.getVenue(venueId);
+    final venue = await _api.getVenue(venueId);
+    _venueThemeStorage.setTheme(venueId, venue.theme);
+    return venue;
   }
 
   @override
