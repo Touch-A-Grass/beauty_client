@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:beauty_client/data/event/order_chat_unread_count_changed_event_bus.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/order_review.dart';
@@ -30,6 +32,8 @@ abstract interface class OrderRepository {
   Future<List<ChatEventInfo>> getChatEvents(String orderId);
 
   Future<void> sendChatMessage({required String orderId, required String message, required String messageId});
+
+  Future<void> sendChatImage({required String orderId, required Uint8List image, required String messageId});
 
   Stream<Order> watchOrderChanged();
 
