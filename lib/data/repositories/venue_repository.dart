@@ -1,8 +1,10 @@
 import 'package:beauty_client/data/api/beauty_client.dart';
 import 'package:beauty_client/data/models/mappers/staff_time_slot_mapper.dart';
+import 'package:beauty_client/data/models/responses/page_response.dart';
 import 'package:beauty_client/data/storage/location_storage.dart';
 import 'package:beauty_client/data/storage/venue_theme_storage.dart';
 import 'package:beauty_client/data/util/string_util.dart';
+import 'package:beauty_client/domain/models/coupon.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -74,4 +76,9 @@ class VenueRepositoryImpl implements VenueRepository {
     maxLongitude: maxLongitude,
     zoom: zoom,
   );
+
+  @override
+  Future<PageResponse<Coupon>> getCoupons() {
+    return _api.getCoupons();
+  }
 }

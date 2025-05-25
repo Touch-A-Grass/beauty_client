@@ -62,5 +62,8 @@
   "gallery": "Галерея",
   "venues": "Салоны",
   "send": "Отправить",
-  "cancel": "Отменить"
+  "cancel": "Отменить",
+  "cartAddCoupon": "Добавить купон",
+  "cartCoupon": "Купон",
+  "cartTotal": "Итого"
 }

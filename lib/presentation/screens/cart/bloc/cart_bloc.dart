@@ -1,4 +1,5 @@
 import 'package:beauty_client/domain/models/app_error.dart';
+import 'package:beauty_client/domain/models/coupon.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
 import 'package:beauty_client/domain/models/staff_time_slot.dart';
@@ -71,6 +72,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       emit(state.copyWith(selectedStaff: event.staff, selectedService: service));
     });
+    on<_CouponSelected>((event, emit) => emit(state.copyWith(coupon: event.coupon)));
+    on<_CouponRemoved>((event, emit) => emit(state.copyWith(coupon: null)));
     on<_StaffTimeSlotsRequested>((event, emit) async {
       final staff = state.selectedStaff;
 

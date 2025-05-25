@@ -1,3 +1,5 @@
+import 'package:beauty_client/data/models/responses/page_response.dart';
+import 'package:beauty_client/domain/models/coupon.dart';
 import 'package:beauty_client/domain/models/location.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -24,4 +26,6 @@ abstract interface class VenueRepository {
   Future<List<Staff>> getStaff(String venueId);
 
   Future<List<StaffTimeSlot>> getVenueStaffTimeSlots({required String staffId, required String venueId});
+
+  Future<PageResponse<Coupon>> getCoupons();
 }

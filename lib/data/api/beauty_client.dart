@@ -8,7 +8,9 @@ import 'package:beauty_client/data/models/requests/send_message_request.dart';
 import 'package:beauty_client/data/models/requests/send_phone_request.dart';
 import 'package:beauty_client/data/models/requests/update_record_request.dart';
 import 'package:beauty_client/data/models/requests/update_user_request.dart';
+import 'package:beauty_client/data/models/responses/page_response.dart';
 import 'package:beauty_client/domain/models/auth.dart';
+import 'package:beauty_client/domain/models/coupon.dart';
 import 'package:beauty_client/domain/models/order.dart';
 import 'package:beauty_client/domain/models/service.dart';
 import 'package:beauty_client/domain/models/staff.dart';
@@ -96,4 +98,7 @@ abstract class BeautyClient {
     @Query('zoom') required int zoom,
     @Query('searchQuery') String? searchQuery,
   });
+
+  @GET('/coupon')
+  Future<PageResponse<Coupon>> getCoupons();
 }

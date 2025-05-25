@@ -20,6 +20,10 @@ class CartEvent with _$CartEvent {
 
   const factory CartEvent.staffSelected(Staff staff) = _StaffSelected;
 
+  const factory CartEvent.couponSelected(Coupon coupon) = _CouponSelected;
+
+  const factory CartEvent.couponRemoved() = _CouponRemoved;
+
   const factory CartEvent.commentChanged(String comment) = _CommentChanged;
 
   const factory CartEvent.createRequested() = _CreateRequested;

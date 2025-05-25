@@ -2,12 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:beauty_client/generated/l10n.dart';
 import 'package:beauty_client/presentation/components/app_back_button.dart';
 import 'package:beauty_client/presentation/components/avatar.dart';
+import 'package:beauty_client/presentation/components/coupon_item.dart';
 import 'package:beauty_client/presentation/components/error_snackbar.dart';
 import 'package:beauty_client/presentation/components/service_info_widget.dart';
 import 'package:beauty_client/presentation/components/staff_info_widget.dart';
 import 'package:beauty_client/presentation/components/venue_theme_builder.dart';
 import 'package:beauty_client/presentation/navigation/app_router.gr.dart';
 import 'package:beauty_client/presentation/screens/cart/bloc/cart_bloc.dart';
+import 'package:beauty_client/presentation/screens/cart/widget/select_coupon_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_service_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_staff_dialog.dart';
 import 'package:beauty_client/presentation/screens/cart/widget/select_timeslot_sheet.dart';
@@ -48,6 +50,24 @@ class _CartWidgetState extends State<CartWidget> {
     );
     if (context.mounted && service != null) {
       context.read<CartBloc>().add(CartEvent.serviceSelected(service));
+    }
+  }
+
+  void selectCoupon(BuildContext context) async {
+    final coupon = await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder:
+          (childContext) => VenueThemeBuilder(
+            venueId: context.read<CartBloc>().state.venue?.id,
+            builder:
+                (innerContext) => SelectCouponDialog(selectedService: context.read<CartBloc>().state.selectedService),
+          ),
+    );
+    if (context.mounted && coupon != null) {
+      context.read<CartBloc>().add(CartEvent.couponSelected(coupon));
     }
   }
 
@@ -204,6 +224,55 @@ class _CartWidgetState extends State<CartWidget> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: 32),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          S.of(context).cartCoupon,
+                                                          style: Theme.of(context).textTheme.headlineSmall,
+                                                        ),
+                                                      ),
+                                                      if (state.coupon != null)
+                                                        IconButton(
+                                                          onPressed:
+                                                              () => context.read<CartBloc>().add(
+                                                                CartEvent.couponRemoved(),
+                                                              ),
+                                                          icon: const Icon(Icons.delete),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                  if (state.coupon != null)
+                                                    CouponItem(
+                                                      onTap: () => selectCoupon(context),
+                                                      coupon: state.coupon!,
+                                                    )
+                                                  else
+                                                    OutlinedButton(
+                                                      onPressed: () => selectCoupon(context),
+                                                      child: Text(S.of(context).cartAddCoupon),
+                                                    ),
+                                                  const SizedBox(height: 32),
+                                                  if (state.totalPrice != null) ...[
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Text(
+                                                            S.of(context).cartTotal,
+                                                            style: Theme.of(context).textTheme.titleMedium,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '${state.totalPrice!} ₽',
+                                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 32),
+                                                  ],
                                                   TextFormField(
                                                     focusNode: commentFocus,
                                                     decoration: InputDecoration(
